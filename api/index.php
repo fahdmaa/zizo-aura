@@ -1,5 +1,13 @@
 <?php
 
+// Forward APP_KEY_1 to APP_KEY if set on Vercel
+$appKey1 = $_ENV['APP_KEY_1'] ?? getenv('APP_KEY_1') ?? $_SERVER['APP_KEY_1'] ?? null;
+if (!empty($appKey1)) {
+    $_ENV['APP_KEY'] = $appKey1;
+    $_SERVER['APP_KEY'] = $appKey1;
+    putenv('APP_KEY=' . $appKey1);
+}
+
 // Prepare serverless storage in /tmp if running on Vercel
 $storageDirs = [
     '/tmp/storage/framework/views',
