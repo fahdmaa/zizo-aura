@@ -185,46 +185,6 @@
             @endforelse
         </div>
 
-        <!-- Trust Features Strip -->
-        <div class="reveal-on-scroll mt-16 sm:mt-24 p-8 bg-[#f8f9fa] rounded-3xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 border border-zinc-100">
-            <div class="flex items-center gap-3.5">
-                <div class="w-10 h-10 rounded-full bg-pink-100 text-pink-600 flex items-center justify-center shrink-0">
-                    <i class="ti ti-truck text-xl"></i>
-                </div>
-                <div>
-                    <h4 class="text-xs font-bold text-zinc-900 uppercase tracking-wider">Livraison Offerte</h4>
-                    <p class="text-[11px] text-zinc-500">Dès 500 DH partout au Maroc</p>
-                </div>
-            </div>
-            <div class="flex items-center gap-3.5">
-                <div class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0">
-                    <i class="ti ti-leaf text-xl"></i>
-                </div>
-                <div>
-                    <h4 class="text-xs font-bold text-zinc-900 uppercase tracking-wider">100% Vegan &amp; Clean</h4>
-                    <p class="text-[11px] text-zinc-500">Sans parabènes ni phtalates</p>
-                </div>
-            </div>
-            <div class="flex items-center gap-3.5">
-                <div class="w-10 h-10 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center shrink-0">
-                    <i class="ti ti-refresh text-xl"></i>
-                </div>
-                <div>
-                    <h4 class="text-xs font-bold text-zinc-900 uppercase tracking-wider">Retours 14 Jours</h4>
-                    <p class="text-[11px] text-zinc-500">Garantie satisfait ou remboursé</p>
-                </div>
-            </div>
-            <div class="flex items-center gap-3.5">
-                <div class="w-10 h-10 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center shrink-0">
-                    <i class="ti ti-shield-check text-xl"></i>
-                </div>
-                <div>
-                    <h4 class="text-xs font-bold text-zinc-900 uppercase tracking-wider">Paiement Sécurisé</h4>
-                    <p class="text-[11px] text-zinc-500">3D Secure, Apple Pay &amp; CB</p>
-                </div>
-            </div>
-        </div>
-
     </div>
 </div>
 @endsection
