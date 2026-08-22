@@ -1,0 +1,283 @@
+@import "@tabler/icons-webfont/dist/tabler-icons.min.css";
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg-main: #ffffff;
+    --text-main: #111827;
+    --text-muted: #6b7280;
+    --accent-pink: #ff1b7a;
+    --accent-magenta: #e11d48;
+    --accent-cyan: #2dd4bf;
+    --moroccan-terracotta: #c2410c;
+    --moroccan-gold: #d97706;
+  }
+
+  body {
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4 {
+    letter-spacing: -0.03em;
+    font-weight: 800;
+  }
+}
+
+/* Custom Keyframe Animations */
+@keyframes floatText {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(1deg);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.03);
+  }
+}
+
+@keyframes badgeBounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+.animate-float {
+  animation: floatText 6s ease-in-out infinite;
+}
+
+.animate-badge {
+  animation: badgeBounce 3s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 4s ease-in-out infinite;
+}
+
+/* Page-to-Page Appearing Transition Animations */
+@keyframes pageFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.page-transition-enter {
+  animation: pageFadeIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: opacity, transform;
+}
+
+/* Scroll Reveal Appearing Animations */
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(28px) scale(0.98);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.reveal-on-scroll.is-revealed {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* Hide native browser number spinner buttons */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* Watermark typography in cards */
+.watermark-discount {
+  font-family: Impact, "Arial Black", sans-serif;
+  font-size: 5.5rem;
+  line-height: 0.85;
+  letter-spacing: -0.04em;
+  user-select: none;
+  pointer-events: none;
+}
+
+/* ========================================================
+   UNIFIED BUTTON SYSTEM & HOVER ANIMATIONS
+   All buttons share identical elevation, scaling and pink glow
+   ======================================================== */
+
+/* 1. Primary Card Pill Button (Add to cart) */
+.btn-card-pill {
+  background: #000000;
+  color: #ffffff;
+  border-radius: 9999px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 700;
+  font-size: 0.875rem;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+
+.btn-card-pill:hover {
+  background: #ff1b7a;
+  color: #ffffff;
+  border-color: #ff1b7a;
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 22px rgba(255, 27, 122, 0.32);
+}
+
+.btn-card-pill:active {
+  transform: scale(0.97);
+}
+
+/* 2. Hero Primary Pill Button */
+.btn-hero-pill {
+  background: #000000;
+  color: #ffffff;
+  border-radius: 9999px;
+  padding: 0.95rem 2.25rem;
+  font-weight: 800;
+  font-size: 0.9375rem;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+
+.btn-hero-pill:hover {
+  background: #ff1b7a;
+  color: #ffffff;
+  border-color: #ff1b7a;
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 22px rgba(255, 27, 122, 0.32);
+}
+
+.btn-hero-pill:active {
+  transform: scale(0.97);
+}
+
+/* 3. Hero / Secondary Pill Button */
+.btn-secondary-pill {
+  background: #ffffff;
+  color: #111827;
+  border: 2px solid #e5e7eb;
+  border-radius: 9999px;
+  padding: 0.95rem 2.25rem;
+  font-weight: 800;
+  font-size: 0.9375rem;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.btn-secondary-pill:hover {
+  background: #ff1b7a;
+  color: #ffffff;
+  border-color: #ff1b7a;
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 22px rgba(255, 27, 122, 0.32);
+}
+
+.btn-secondary-pill:active {
+  transform: scale(0.97);
+}
+
+/* 4. Carousel / Circle Action Buttons */
+.btn-circle-action {
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+}
+
+.btn-circle-action:hover {
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 8px 20px rgba(255, 27, 122, 0.28);
+}
+
+.btn-circle-action:active {
+  transform: scale(0.96);
+}
+
+/* Toast */
+.toast-hismile {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background: #000000;
+  color: #ffffff;
+  padding: 0.9rem 1.5rem;
+  border-radius: 9999px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  z-index: 999;
+  transform: translateY(120px);
+  opacity: 0;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+.toast-hismile.show {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Custom Scrollbars */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Smooth Infinite Horizontal Marquee */
+@keyframes marquee-scroll {
+    0% {
+        transform: translateX(0%);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+.animate-marquee-infinite {
+    display: flex;
+    width: max-content;
+    animation: marquee-scroll 32s linear infinite;
+}
+
+.animate-marquee-infinite:hover {
+    animation-play-state: paused;
+}
