@@ -24,7 +24,7 @@
     <x-footer />
 
     <!-- Promo Popup Modal (Landing Page Only) -->
-    @if(request()->routeIs('home') || request()->is('/'))
+    @if(request()->routeIs('home') || request()->routeIs('brand.*') || request()->is('/') || request()->is('marques*'))
         <x-promo-modal />
     @endif
 

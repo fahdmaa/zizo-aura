@@ -542,7 +542,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // =========================================================================
-    // 6. Summer Discount Promo Popup Modal (Session Storage Guard)
+    // 6. Summer Discount Promo Popup Modal
     // =========================================================================
     const promoBackdrop = document.getElementById('promo-modal-backdrop');
     const promoCard = document.getElementById('promo-modal-card');
@@ -550,7 +550,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const copyPromoBtn = document.getElementById('copy-promo-code');
     const promoCodeText = document.getElementById('promo-code-text');
     const copyText = document.getElementById('copy-text');
-    const PROMO_SESSION_KEY = 'zizo_promo_seen_session';
 
     const openPromoModal = () => {
         if (!promoBackdrop || !promoCard) return;
@@ -562,9 +561,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const closePromoModal = () => {
         if (!promoBackdrop || !promoCard) return;
-        try {
-            sessionStorage.setItem(PROMO_SESSION_KEY, 'true');
-        } catch {}
         promoBackdrop.classList.remove('opacity-100', 'pointer-events-auto');
         promoBackdrop.classList.add('opacity-0', 'pointer-events-none');
         promoCard.classList.remove('scale-100');
@@ -572,12 +568,9 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     if (promoBackdrop) {
-        const hasSeenPromo = sessionStorage.getItem(PROMO_SESSION_KEY) === 'true';
-        if (!hasSeenPromo) {
-            setTimeout(() => {
-                openPromoModal();
-            }, 900);
-        }
+        setTimeout(() => {
+            openPromoModal();
+        }, 600);
 
         if (closePromoBtn) {
             closePromoBtn.addEventListener('click', closePromoModal);
