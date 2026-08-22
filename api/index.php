@@ -20,6 +20,8 @@ $serverlessEnv = [
     'CACHE_DRIVER' => 'array',
     'SESSION_DRIVER' => 'cookie',
     'LOG_CHANNEL' => 'stderr',
+    'APP_MAINTENANCE_DRIVER' => 'file',
+    'APP_MAINTENANCE_STORE' => 'array',
     'DB_CONNECTION' => 'sqlite',
     'DB_DATABASE' => '/tmp/database.sqlite',
 ];

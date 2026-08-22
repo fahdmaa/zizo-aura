@@ -23,9 +23,10 @@
                     {{ count($products) }} produit{{ count($products) > 1 ? 's' : '' }}
                 </span>
 
-                <!-- Custom Theme Dropdown Menu -->
+                <!-- Custom Theme Dropdown Menu with Touch/Click Support -->
                 <div class="relative group" id="custom-sort-dropdown">
                     <button type="button"
+                            id="sort-dropdown-btn"
                             class="px-4 py-2 bg-white hover:bg-pink-50/50 border border-zinc-200 hover:border-pink-300 rounded-full text-xs font-bold text-zinc-800 uppercase tracking-wider focus:outline-none transition-all flex items-center gap-2 cursor-pointer shadow-xs">
                         <span class="text-zinc-900 font-extrabold">
                             @if($sortBy === 'rating') Mieux notés
@@ -34,11 +35,12 @@
                             @else Popularité
                             @endif
                         </span>
-                        <i class="ti ti-chevron-down text-xs text-zinc-400 group-hover:rotate-180 transition-transform duration-200"></i>
+                        <i id="sort-dropdown-chevron" class="ti ti-chevron-down text-xs text-zinc-400 group-hover:rotate-180 transition-transform duration-200"></i>
                     </button>
 
                     <!-- Custom Floating Dropdown Panel -->
-                    <div class="absolute right-0 top-full mt-2 w-52 bg-white/95 backdrop-blur-md rounded-2xl shadow-[0_15px_35px_rgba(0,0,0,0.12)] border border-zinc-100 p-1.5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                    <div id="sort-dropdown-panel"
+                         class="absolute right-0 top-full mt-2 w-52 bg-white/95 backdrop-blur-md rounded-2xl shadow-[0_15px_35px_rgba(0,0,0,0.12)] border border-zinc-100 p-1.5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                         <a href="{{ route('shop.index', ['category' => $selectedCategory, 'sort' => 'popular']) }}"
                            class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all {{ $sortBy === 'popular' ? 'bg-pink-50 text-pink-600' : 'text-zinc-700 hover:bg-zinc-50 hover:text-black' }}">
                             <span>Popularité</span>
@@ -170,7 +172,9 @@
                         <!-- Black Pill "Ajouter au panier" Button -->
                         <button class="btn-card-pill w-full mt-auto"
                                 data-product-name="{{ $product['name'] }}"
-                                data-product-price="{{ $product['price'] }}">
+                                data-product-price="{{ $product['price'] }}"
+                                data-product-image="{{ $product['image'] }}"
+                                data-product-slug="{{ $product['slug'] }}">
                             <i class="ti ti-shopping-bag-plus text-base"></i>
                             <span>Ajouter au panier</span>
                         </button>

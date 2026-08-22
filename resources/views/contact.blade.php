@@ -149,16 +149,16 @@
                     </div>
                 </div>
 
-                <!-- Phone Card -->
+                <!-- Phone & WhatsApp Card -->
                 <div class="p-6 bg-white rounded-2xl border border-zinc-100 shadow-sm flex items-start gap-4 transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] hover:shadow-[0_12px_28px_rgba(255,27,122,0.12)] hover:border-pink-200 cursor-pointer group">
                     <div class="w-12 h-12 rounded-2xl bg-pink-50 text-pink-600 flex items-center justify-center shrink-0 group-hover:bg-pink-100 group-hover:scale-110 transition-all">
-                        <i class="ti ti-phone text-2xl"></i>
+                        <i class="ti ti-phone-call text-2xl"></i>
                     </div>
                     <div>
-                        <h3 class="text-sm font-bold text-zinc-900 mb-1 group-hover:text-pink-600 transition-colors">Téléphone</h3>
-                        <p class="text-xs text-zinc-500 mb-2">Du Lundi au Samedi : 9h00 – 19h00</p>
-                        <a href="tel:+33189712200" class="text-sm font-bold text-zinc-900 hover:text-pink-600 transition-colors">
-                            +33 (0)1 89 71 22 00
+                        <h3 class="text-sm font-bold text-zinc-900 mb-1 group-hover:text-pink-600 transition-colors">Téléphone &amp; WhatsApp</h3>
+                        <p class="text-xs text-zinc-500 mb-2">Du Lundi au Samedi : 9h00 – 19h30 (Maroc 🇲🇦)</p>
+                        <a href="tel:+212522000000" class="text-sm font-bold text-zinc-900 hover:text-pink-600 transition-colors">
+                            +212 (0) 5 22 40 50 60
                         </a>
                     </div>
                 </div>

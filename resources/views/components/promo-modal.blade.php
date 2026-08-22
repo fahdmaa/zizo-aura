@@ -1,10 +1,11 @@
 <!-- Summer Discount Promo Modal -->
-<div id="promo-modal-backdrop" class="fixed inset-0 bg-black/65 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-400 ease-out">
+<div id="promo-modal-backdrop" class="fixed inset-0 bg-black/65 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4 opacity-0 pointer-events-none transition-opacity duration-400 ease-out" role="dialog" aria-modal="true" aria-labelledby="promo-modal-title">
     
-    <div id="promo-modal-card" class="bg-white rounded-3xl overflow-hidden shadow-[0_25px_60px_rgba(0,0,0,0.3)] max-w-3xl w-full grid grid-cols-1 md:grid-cols-12 relative transform scale-90 transition-transform duration-400 ease-out border border-zinc-100">
+    <div id="promo-modal-card" class="bg-white rounded-3xl overflow-hidden shadow-[0_25px_60px_rgba(0,0,0,0.3)] max-w-3xl w-full grid grid-cols-1 md:grid-cols-12 relative transform scale-90 transition-transform duration-400 ease-out border border-zinc-100 max-h-[92vh] overflow-y-auto no-scrollbar">
         
         <!-- Close Button -->
         <button id="close-promo-modal"
+                type="button"
                 aria-label="Fermer la promotion"
                 class="absolute top-3.5 right-3.5 z-30 w-9 h-9 rounded-full bg-white/90 hover:bg-black hover:text-white text-zinc-700 flex items-center justify-center shadow-md transition-all duration-200 hover:scale-110 cursor-pointer">
             <i class="ti ti-x text-lg"></i>
@@ -36,7 +37,7 @@
                 </div>
 
                 <!-- Headline -->
-                <h3 class="text-2xl sm:text-3xl font-extrabold text-zinc-900 tracking-tight leading-tight mb-2">
+                <h3 id="promo-modal-title" class="text-2xl sm:text-3xl font-extrabold text-zinc-900 tracking-tight leading-tight mb-2">
                     Sublimez votre été avec les packs Sol de Janeiro !
                 </h3>
 

@@ -18,7 +18,6 @@
     },
     "dependencies": {
         "@tabler/icons": "^3.46.0",
-        "@tabler/icons-webfont": "^3.46.0",
-        "lucide": "^1.33.0"
+        "@tabler/icons-webfont": "^3.46.0"
     }
 }

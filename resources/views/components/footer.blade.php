@@ -22,19 +22,19 @@
             </a>
 
             <!-- Facebook -->
-            <a href="https://facebook.com/"
+            <a href="https://facebook.com/zizoaura"
                target="_blank"
                rel="noopener noreferrer"
-               aria-label="Facebook"
+               aria-label="Facebook @zizoaura"
                class="btn-circle-action w-12 h-12 rounded-full bg-[#f8f9fa] hover:bg-[#ff1b7a] text-zinc-800 hover:text-white border-2 border-zinc-200 hover:border-[#ff1b7a] flex items-center justify-center text-xl shadow-xs">
                 <i class="ti ti-brand-facebook"></i>
             </a>
 
             <!-- TikTok -->
-            <a href="https://tiktok.com/"
+            <a href="https://www.tiktok.com/@zizo_aura_"
                target="_blank"
                rel="noopener noreferrer"
-               aria-label="TikTok"
+               aria-label="TikTok @zizo_aura_"
                class="btn-circle-action w-12 h-12 rounded-full bg-[#f8f9fa] hover:bg-[#ff1b7a] text-zinc-800 hover:text-white border-2 border-zinc-200 hover:border-[#ff1b7a] flex items-center justify-center text-xl shadow-xs">
                 <i class="ti ti-brand-tiktok"></i>
             </a>

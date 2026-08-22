@@ -26,10 +26,10 @@
         </div>
 
         <!-- Right: Aligned to the Max Right and Flush Bottom of the Viewport -->
-        <div class="lg:col-span-6 flex items-end justify-end w-full h-[480px] sm:h-[560px] lg:h-[660px] overflow-hidden select-none pointer-events-none pr-0 mr-0">
+        <div class="lg:col-span-6 flex items-end justify-center lg:justify-end w-full h-[420px] sm:h-[520px] lg:h-[660px] overflow-hidden select-none pointer-events-none pr-0 mr-0">
             <img src="/images/hero_cutout_with_aaahh.png"
                  alt="Offrez à votre peau 4 nouvelles saveurs - zizo aura"
-                 class="h-full w-auto max-w-none object-contain object-bottom-right lg:translate-x-1 select-none pointer-events-auto hover:scale-[1.01] transition-transform duration-500 ease-out" />
+                 class="h-full w-auto max-w-full lg:max-w-none object-contain object-bottom select-none pointer-events-auto hover:scale-[1.01] transition-transform duration-500 ease-out" />
         </div>
 
     </div>

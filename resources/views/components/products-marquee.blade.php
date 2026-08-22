@@ -84,7 +84,9 @@
                             <!-- Quick Add to Cart Button -->
                             <button class="btn-card-pill w-full mt-auto py-2.5 text-xs font-bold"
                                     data-product-name="{{ $product['name'] }}"
-                                    data-product-price="{{ $product['price'] }}">
+                                    data-product-price="{{ $product['price'] }}"
+                                    data-product-image="{{ $product['image'] }}"
+                                    data-product-slug="{{ $product['slug'] }}">
                                 <i class="ti ti-shopping-bag-plus text-sm"></i>
                                 <span>Ajouter au panier</span>
                             </button>
