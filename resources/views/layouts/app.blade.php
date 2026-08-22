@@ -28,6 +28,9 @@
         <x-promo-modal />
     @endif
 
+    <!-- Slide-over Cart Drawer -->
+    <x-cart-drawer />
+
     <!-- Toast Notification with Tabler Icon -->
     <div id="app-toast" class="toast-hismile">
         <i class="ti ti-circle-check text-emerald-400 text-lg"></i>

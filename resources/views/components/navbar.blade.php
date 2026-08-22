@@ -22,29 +22,39 @@
 
     <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
         
-        <!-- Left: Brand Logo -->
-        <div class="flex-1 flex items-center justify-start">
+        <!-- Left: Hamburger Button (Mobile) + Brand Logo -->
+        <div class="flex-1 flex items-center justify-start gap-2">
+            <button type="button"
+                    id="mobile-menu-open-btn"
+                    aria-label="Ouvrir le menu de navigation"
+                    class="md:hidden p-2 -ml-1 text-zinc-900 hover:text-pink-600 focus:outline-none transition-colors cursor-pointer">
+                <i class="ti ti-menu-2 text-2xl"></i>
+            </button>
+
             <a href="{{ route('home') }}" class="text-2xl sm:text-[28px] font-extrabold tracking-tight text-black hover:opacity-80 transition-opacity lowercase">
                 <span>zizo aura</span>
             </a>
         </div>
 
-        <!-- Center: Navigation Menu in the Middle of Banner -->
+        <!-- Center: Navigation Menu in the Middle of Banner (Desktop) -->
         <nav class="hidden md:flex items-center justify-center gap-8 font-bold text-xs uppercase tracking-wider text-zinc-900">
             <!-- Home Link -->
             <a href="{{ route('home') }}" class="hover:text-pink-600 transition-colors {{ (request()->routeIs('home') || request()->is('/')) && !request()->routeIs('shop.*') && !request()->routeIs('contact') ? 'text-pink-600' : '' }}">
                 <span>ACCUEIL</span>
             </a>
 
-            <!-- Boutique Dropdown Menu -->
-            <div class="relative group py-4">
-                <a href="{{ route('shop.index') }}" class="flex items-center gap-1.5 hover:text-pink-600 transition-colors {{ request()->routeIs('shop.*') ? 'text-pink-600' : '' }}">
+            <!-- Boutique Dropdown Menu with Touch & Click Support -->
+            <div class="relative group py-4" id="nav-boutique-wrapper">
+                <a href="{{ route('shop.index') }}"
+                   id="nav-boutique-link"
+                   class="flex items-center gap-1.5 hover:text-pink-600 transition-colors {{ request()->routeIs('shop.*') ? 'text-pink-600' : '' }}">
                     <span>BOUTIQUE</span>
-                    <i class="ti ti-chevron-down text-xs group-hover:rotate-180 transition-transform duration-200"></i>
+                    <i class="ti ti-chevron-down text-xs group-hover:rotate-180 transition-transform duration-200" id="nav-boutique-chevron"></i>
                 </a>
 
                 <!-- Custom Dropdown Sub-menu Panel matching Website Theme -->
-                <div class="absolute top-full left-1/2 -translate-x-1/2 w-64 bg-white/95 backdrop-blur-md rounded-2xl shadow-[0_20px_45px_rgba(0,0,0,0.12)] border border-zinc-100 p-2 opacity-0 invisible translate-y-1 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-200 z-50">
+                <div id="nav-boutique-dropdown"
+                     class="absolute top-full left-1/2 -translate-x-1/2 w-64 bg-white/95 backdrop-blur-md rounded-2xl shadow-[0_20px_45px_rgba(0,0,0,0.12)] border border-zinc-100 p-2 opacity-0 invisible translate-y-1 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-200 z-50">
                     <a href="{{ route('shop.index') }}" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold text-zinc-800 hover:bg-pink-50 hover:text-pink-600 transition-colors group/item">
                         <span>Tous les packs &amp; produits</span>
                         <i class="ti ti-chevron-right text-xs opacity-0 group-hover/item:opacity-100 -translate-x-1 group-hover/item:translate-x-0 transition-all text-pink-600"></i>
@@ -115,7 +125,10 @@
             </div>
 
             <!-- Cart Bag Button -->
-            <button aria-label="Panier" class="relative p-2 text-zinc-900 hover:text-pink-600 transition-colors shrink-0 cursor-pointer">
+            <button type="button"
+                    id="navbar-cart-btn"
+                    aria-label="Voir mon panier"
+                    class="relative p-2 text-zinc-900 hover:text-pink-600 transition-colors shrink-0 cursor-pointer">
                 <i class="ti ti-shopping-bag text-2xl"></i>
                 <span id="cart-count-badge" class="absolute -top-1 -right-1 w-5 h-5 bg-black text-white text-[10px] font-black rounded-full flex items-center justify-center">
                     0
@@ -124,5 +137,97 @@
 
         </div>
 
+    </div>
+
+    <!-- Mobile Slide-over Navigation Drawer -->
+    <div id="mobile-menu-backdrop" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 opacity-0 pointer-events-none transition-opacity duration-300">
+        
+        <div id="mobile-menu-drawer" class="fixed inset-y-0 left-0 w-[310px] max-w-[85vw] bg-white z-50 shadow-2xl flex flex-col justify-between transform -translate-x-full transition-transform duration-300 ease-out">
+            
+            <!-- Mobile Menu Header -->
+            <div>
+                <div class="p-5 border-b border-zinc-100 flex items-center justify-between">
+                    <a href="{{ route('home') }}" class="text-2xl font-extrabold tracking-tight text-black lowercase">
+                        <span>zizo aura</span>
+                    </a>
+                    
+                    <button type="button"
+                            id="mobile-menu-close-btn"
+                            aria-label="Fermer le menu"
+                            class="w-9 h-9 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-700 flex items-center justify-center transition-colors cursor-pointer">
+                        <i class="ti ti-x text-lg"></i>
+                    </button>
+                </div>
+
+                <!-- Navigation Links List -->
+                <div class="p-4 space-y-1">
+                    <a href="{{ route('home') }}" class="flex items-center justify-between px-4 py-3 rounded-2xl text-xs font-extrabold uppercase tracking-wider transition-colors {{ (request()->routeIs('home') || request()->is('/')) && !request()->routeIs('shop.*') && !request()->routeIs('contact') ? 'bg-pink-50 text-pink-600' : 'text-zinc-900 hover:bg-zinc-50' }}">
+                        <span>Accueil</span>
+                        <i class="ti ti-home text-base"></i>
+                    </a>
+
+                    <!-- Boutique Accordion / Submenu -->
+                    <div class="rounded-2xl {{ request()->routeIs('shop.*') ? 'bg-zinc-50/80' : '' }}">
+                        <button type="button"
+                                id="mobile-boutique-toggle"
+                                class="w-full flex items-center justify-between px-4 py-3 text-xs font-extrabold uppercase tracking-wider text-zinc-900 hover:text-pink-600 transition-colors cursor-pointer">
+                            <span class="flex items-center gap-2">
+                                <span>Boutique</span>
+                                <span class="px-1.5 py-0.5 rounded-full bg-pink-100 text-pink-600 text-[10px] font-black">16</span>
+                            </span>
+                            <i id="mobile-boutique-chevron" class="ti ti-chevron-down text-xs transition-transform duration-200"></i>
+                        </button>
+
+                        <div id="mobile-boutique-sublinks" class="space-y-1 px-3 pb-2">
+                            <a href="{{ route('shop.index') }}" class="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-bold text-zinc-700 hover:text-pink-600 hover:bg-pink-50/60 transition-colors">
+                                <span>Tous les produits</span>
+                                <i class="ti ti-chevron-right text-xs text-pink-600"></i>
+                            </a>
+                            <a href="{{ route('shop.index', ['category' => 'sol-de-janeiro']) }}" class="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-bold text-zinc-700 hover:text-pink-600 hover:bg-pink-50/60 transition-colors">
+                                <span>Sol de Janeiro Packs</span>
+                                <i class="ti ti-chevron-right text-xs text-pink-600"></i>
+                            </a>
+                            <a href="{{ route('shop.index', ['category' => 'victorias-secret']) }}" class="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-bold text-zinc-700 hover:text-pink-600 hover:bg-pink-50/60 transition-colors">
+                                <span>Victoria's Secret Duos</span>
+                                <i class="ti ti-chevron-right text-xs text-pink-600"></i>
+                            </a>
+                            <a href="{{ route('shop.index', ['category' => 'rituals']) }}" class="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-bold text-zinc-700 hover:text-pink-600 hover:bg-pink-50/60 transition-colors">
+                                <span>Rituals Coffrets</span>
+                                <i class="ti ti-chevron-right text-xs text-pink-600"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <a href="{{ route('contact') }}" class="flex items-center justify-between px-4 py-3 rounded-2xl text-xs font-extrabold uppercase tracking-wider transition-colors {{ request()->routeIs('contact') ? 'bg-pink-50 text-pink-600' : 'text-zinc-900 hover:bg-zinc-50' }}">
+                        <span>Contact &amp; Support</span>
+                        <i class="ti ti-mail text-base"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Mobile Menu Footer -->
+            <div class="p-5 border-t border-zinc-100 bg-[#fbfbfc] space-y-3">
+                <div class="p-3 bg-pink-50 rounded-2xl border border-pink-100 text-center">
+                    <p class="text-xs font-black text-pink-600 uppercase tracking-wider flex items-center justify-center gap-1.5">
+                        <i class="ti ti-truck-delivery text-base"></i>
+                        <span>Livraison Offerte dès 550 DH</span>
+                    </p>
+                    <p class="text-[10px] text-zinc-500 font-semibold mt-0.5">Partout au Maroc 🇲🇦 sous 24/48h</p>
+                </div>
+
+                <div class="flex items-center justify-center gap-4 text-zinc-600 pt-1">
+                    <a href="https://www.instagram.com/zizo_aura_/" target="_blank" rel="noopener noreferrer" class="w-9 h-9 rounded-full bg-white border border-zinc-200 hover:border-pink-500 hover:text-pink-600 flex items-center justify-center text-base shadow-2xs transition-colors">
+                        <i class="ti ti-brand-instagram"></i>
+                    </a>
+                    <a href="https://facebook.com/" target="_blank" rel="noopener noreferrer" class="w-9 h-9 rounded-full bg-white border border-zinc-200 hover:border-pink-500 hover:text-pink-600 flex items-center justify-center text-base shadow-2xs transition-colors">
+                        <i class="ti ti-brand-facebook"></i>
+                    </a>
+                    <a href="https://tiktok.com/" target="_blank" rel="noopener noreferrer" class="w-9 h-9 rounded-full bg-white border border-zinc-200 hover:border-pink-500 hover:text-pink-600 flex items-center justify-center text-base shadow-2xs transition-colors">
+                        <i class="ti ti-brand-tiktok"></i>
+                    </a>
+                </div>
+            </div>
+
+        </div>
     </div>
 </header>

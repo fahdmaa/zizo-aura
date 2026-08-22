@@ -94,11 +94,13 @@
                 @if(!empty($product['flavors']))
                     <div class="mb-6">
                         <label class="block text-xs font-bold uppercase tracking-wider text-zinc-900 mb-2.5">
-                            Fragrance sélectionnée : <span class="text-pink-600 font-extrabold ml-1">{{ $product['flavors'][0]['name'] }}</span>
+                            Fragrance sélectionnée : <span id="selected-flavor-label" class="text-pink-600 font-extrabold ml-1">{{ $product['flavors'][0]['name'] }}</span>
                         </label>
                         <div class="flex flex-wrap gap-2">
                             @foreach($product['flavors'] as $fIndex => $flavor)
-                                <button class="px-4 py-2 rounded-full border text-xs font-bold flex items-center gap-2 transition-all {{ $fIndex === 0 ? 'border-black bg-zinc-900 text-white shadow-sm' : 'border-zinc-200 bg-white text-zinc-700 hover:border-zinc-400' }}">
+                                <button type="button"
+                                        class="flavor-swatch-btn px-4 py-2 rounded-full border text-xs font-bold flex items-center gap-2 transition-all cursor-pointer {{ $fIndex === 0 ? 'border-black bg-zinc-900 text-white shadow-sm ring-2 ring-black/10' : 'border-zinc-200 bg-white text-zinc-700 hover:border-zinc-400' }}"
+                                        data-flavor-name="{{ $flavor['name'] }}">
                                     <span class="w-3 h-3 rounded-full shrink-0" style="background-color: {{ $flavor['color'] }};"></span>
                                     <span>{{ $flavor['name'] }}</span>
                                 </button>
@@ -111,11 +113,13 @@
                 @if(!empty($product['sizes']))
                     <div class="mb-8">
                         <label class="block text-xs font-bold uppercase tracking-wider text-zinc-900 mb-2.5">
-                            Format disponible
+                            Format sélectionné : <span id="selected-size-label" class="text-pink-600 font-extrabold ml-1">{{ $product['sizes'][0] }}</span>
                         </label>
                         <div class="flex flex-wrap gap-2">
                             @foreach($product['sizes'] as $sIndex => $size)
-                                <button class="px-4 py-2.5 rounded-xl border text-xs font-bold transition-all {{ $sIndex === 0 ? 'border-black bg-zinc-50 text-zinc-900 ring-1 ring-black' : 'border-zinc-200 text-zinc-600 hover:border-zinc-400' }}">
+                                <button type="button"
+                                        class="size-option-btn px-4 py-2.5 rounded-xl border text-xs font-bold transition-all cursor-pointer {{ $sIndex === 0 ? 'border-black bg-zinc-50 text-zinc-900 ring-2 ring-black shadow-xs' : 'border-zinc-200 text-zinc-600 hover:border-zinc-400 bg-white' }}"
+                                        data-size-name="{{ $size }}">
                                     {{ $size }}
                                 </button>
                             @endforeach
@@ -151,10 +155,13 @@
 
                         <!-- Compact Add to Cart Button -->
                         <button id="product-add-cart-btn"
+                                type="button"
                                 class="btn-card-pill h-11 px-5 sm:px-6 py-2 text-xs sm:text-sm font-extrabold uppercase tracking-wider flex items-center justify-center gap-2 shadow-sm"
                                 data-product-name="{{ $product['name'] }}"
                                 data-unit-price="{{ $product['raw_price'] ?? $product['price'] }}"
-                                data-product-price="{{ $product['price'] }}">
+                                data-product-price="{{ $product['price'] }}"
+                                data-product-image="{{ $product['image'] }}"
+                                data-product-slug="{{ $product['slug'] }}">
                             <i class="ti ti-shopping-bag-plus text-base"></i>
                             <span id="btn-cart-text">Ajouter au panier &bull; {{ $product['price'] }} DH</span>
                         </button>
@@ -249,7 +256,10 @@
                             </div>
                             <button class="btn-card-pill w-full mt-auto"
                                     data-product-name="{{ $rel['name'] }}"
-                                    data-product-price="{{ $rel['price'] }}">
+                                    data-product-price="{{ $rel['price'] }}"
+                                    data-product-image="{{ $rel['image'] }}"
+                                    data-product-slug="{{ $rel['slug'] }}">
+                                <i class="ti ti-shopping-bag-plus text-base"></i>
                                 <span>Ajouter au panier</span>
                             </button>
                         </div>
