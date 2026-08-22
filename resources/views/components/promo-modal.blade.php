@@ -69,7 +69,7 @@
                 </a>
 
                 <p class="text-center text-[10px] text-zinc-400 font-medium">
-                    *Livraison offerte dès 500 DH &bull; Expédié sous 24h
+                    *Livraison offerte dès 550 DH &bull; Expédié sous 24h
                 </p>
             </div>
         </div>

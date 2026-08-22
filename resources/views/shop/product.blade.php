@@ -162,7 +162,7 @@
 
                     <p class="text-left text-[11px] text-zinc-400 font-semibold flex items-center gap-1.5">
                         <i class="ti ti-truck text-sm text-emerald-500"></i>
-                        <span>Livraison offerte dès 500 DH &bull; Expédié sous 24h &bull; Paiement sécurisé</span>
+                        <span>Livraison offerte dès 550 DH &bull; Expédié sous 24h &bull; Paiement sécurisé</span>
                     </p>
                 </div>
 

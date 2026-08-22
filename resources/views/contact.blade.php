@@ -169,7 +169,7 @@
                         <i class="ti ti-truck-delivery"></i>
                     </div>
                     <div>
-                        <h4 class="text-sm font-bold mb-1">Livraison offerte dès 500 DH</h4>
+                        <h4 class="text-sm font-bold mb-1">Livraison offerte dès 550 DH</h4>
                         <p class="text-xs text-white/90 leading-relaxed">Expédition express suivie sous 24h avec échantillons offerts dans chaque commande.</p>
                     </div>
                 </div>

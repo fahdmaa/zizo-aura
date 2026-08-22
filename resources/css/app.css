@@ -69,6 +69,27 @@
   animation: pulseGlow 4s ease-in-out infinite;
 }
 
+/* Continuous Marquee Ticker for Top Announcement Banner */
+@keyframes marqueeContinuous {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee-top {
+  display: flex;
+  width: max-content;
+  animation: marqueeContinuous 24s linear infinite;
+  will-change: transform;
+}
+
+.animate-marquee-top:hover {
+  animation-play-state: paused;
+}
+
 /* Page-to-Page Appearing Transition Animations */
 @keyframes pageFadeIn {
   0% {
