@@ -40,6 +40,12 @@ if (file_exists($maintenance = __DIR__.'/../storage/framework/maintenance.php'))
     require $maintenance;
 }
 
-require __DIR__.'/../vendor/autoload.php';
-$app = require_once __DIR__.'/../bootstrap/app.php';
-$app->handleRequest(Illuminate\Http\Request::capture());
+try {
+    require __DIR__.'/../vendor/autoload.php';
+    $app = require_once __DIR__.'/../bootstrap/app.php';
+    $app->handleRequest(Illuminate\Http\Request::capture());
+} catch (\Throwable $e) {
+    http_response_code(500);
+    echo "<h1>Vercel PHP Error</h1>";
+    echo "<pre>" . htmlspecialchars((string) $e) . "</pre>";
+}
