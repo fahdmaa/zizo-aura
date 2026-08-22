@@ -33,6 +33,7 @@
   "env": {
     "APP_ENV": "production",
     "APP_DEBUG": "true",
+    "APP_URL": "https://zizo-aura.vercel.app",
     "APP_KEY": "base64:Utvu1bOBgcOR/swzjMjQ0lwYSFGnMNTAo0b9fKeKJNE=",
     "APP_STORAGE": "/tmp/storage",
     "VIEW_COMPILED_PATH": "/tmp/storage/framework/views",
