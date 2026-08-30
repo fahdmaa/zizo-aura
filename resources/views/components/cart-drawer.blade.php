@@ -1,5 +1,5 @@
 <!-- Slide-over Cart Drawer Component -->
-<div id="cart-drawer-backdrop" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 opacity-0 pointer-events-none transition-opacity duration-300">
+<div id="cart-drawer-backdrop" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 opacity-0 pointer-events-none transition-opacity duration-300" role="dialog" aria-modal="true" aria-labelledby="cart-drawer-title">
     
     <div id="cart-drawer-panel" class="fixed inset-y-0 right-0 w-[400px] max-w-[92vw] bg-white z-50 shadow-2xl flex flex-col justify-between transform translate-x-full transition-transform duration-300 ease-out">
         
@@ -7,7 +7,7 @@
         <div class="p-4 sm:p-5 border-b border-zinc-100 flex items-center justify-between">
             <div class="flex items-center gap-2">
                 <i class="ti ti-shopping-bag text-2xl text-zinc-900"></i>
-                <h3 class="text-base font-extrabold text-zinc-900 tracking-tight uppercase">Mon Panier</h3>
+                <h3 id="cart-drawer-title" class="text-base font-extrabold text-zinc-900 tracking-tight uppercase">Mon Panier</h3>
                 <span id="cart-drawer-count" class="px-2 py-0.5 rounded-full bg-pink-100 text-pink-600 text-xs font-black">0</span>
             </div>
             
@@ -63,14 +63,14 @@
                    rel="noopener noreferrer"
                    class="btn-card-pill w-full py-3.5 text-xs font-extrabold uppercase tracking-wider bg-emerald-600 hover:bg-emerald-700 hover:border-emerald-700 hover:shadow-[0_8px_20px_rgba(16,185,129,0.3)]">
                     <i class="ti ti-brand-whatsapp text-lg"></i>
-                    <span>Commander rapidement</span>
+                    <span>Commander via WhatsApp</span>
                 </a>
 
-                <a href="{{ route('shop.index') }}"
-                   id="cart-continue-shopping-btn"
-                   class="w-full py-2.5 text-center text-xs font-bold text-zinc-500 hover:text-black transition-colors block">
+                <button type="button"
+                        id="cart-continue-shopping-btn"
+                        class="w-full py-2.5 text-center text-xs font-bold text-zinc-500 hover:text-black transition-colors block cursor-pointer">
                     Continuer mes achats &rarr;
-                </a>
+                </button>
             </div>
 
             <p class="text-[10px] text-center text-zinc-400 font-medium">

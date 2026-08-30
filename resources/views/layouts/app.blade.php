@@ -4,12 +4,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="zizo aura — Offrez à votre peau des formules solaires & duos d'exception : Victoria's Secret, Rituals, Sol de Janeiro.">
+    <meta name="theme-color" content="#ffffff">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <title>@yield('title', 'zizo aura — Sol de Janeiro, Victoria\'s Secret & Rituals')</title>
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,700;1,800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,700;1,800&display=swap" rel="stylesheet">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
@@ -32,7 +34,7 @@
     <x-cart-drawer />
 
     <!-- Toast Notification with Tabler Icon -->
-    <div id="app-toast" class="toast-hismile">
+    <div id="app-toast" class="app-toast toast-hismile" role="status" aria-live="polite">
         <i class="ti ti-circle-check text-emerald-400 text-lg"></i>
         <span id="toast-message">Ajouté au panier !</span>
     </div>

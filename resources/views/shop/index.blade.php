@@ -112,10 +112,10 @@
                         
                         <!-- Watermark Typography Discount -->
                         <div class="absolute inset-0 flex flex-col justify-between p-3 select-none pointer-events-none z-0">
-                            <span class="watermark-discount text-emerald-400/40 text-left font-black tracking-tighter">
+                            <span class="watermark-discount text-zinc-200/70 text-left font-black tracking-tighter">
                                 {{ $product['discount'] }}
                             </span>
-                            <span class="watermark-discount text-emerald-400/40 text-right font-black tracking-tighter">
+                            <span class="watermark-discount text-zinc-200/70 text-right font-black tracking-tighter">
                                 off
                             </span>
                         </div>
@@ -171,6 +171,7 @@
 
                         <!-- Black Pill "Ajouter au panier" Button -->
                         <button class="btn-card-pill w-full mt-auto"
+                                data-add-to-cart
                                 data-product-name="{{ $product['name'] }}"
                                 data-product-price="{{ $product['price'] }}"
                                 data-product-image="{{ $product['image'] }}"

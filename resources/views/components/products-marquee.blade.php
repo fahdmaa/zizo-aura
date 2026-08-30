@@ -38,10 +38,10 @@
                             
                             <!-- Watermark Discount -->
                             <div class="absolute inset-0 flex flex-col justify-between p-3 select-none pointer-events-none z-0">
-                                <span class="watermark-discount text-emerald-400/40 text-left font-black tracking-tighter">
+                                <span class="watermark-discount text-zinc-200/70 text-left font-black tracking-tighter">
                                     {{ $product['discount'] }}
                                 </span>
-                                <span class="watermark-discount text-emerald-400/40 text-right font-black tracking-tighter">
+                                <span class="watermark-discount text-zinc-200/70 text-right font-black tracking-tighter">
                                     off
                                 </span>
                             </div>
@@ -61,6 +61,16 @@
 
                         <!-- Product Info -->
                         <div class="flex flex-col items-center text-center flex-1">
+                            <!-- Rating Stars -->
+                            <div class="flex items-center gap-1 text-amber-400 text-xs mb-1">
+                                <div class="flex items-center">
+                                    @for($i = 1; $i <= 5; $i++)
+                                        <i class="ti ti-star-filled text-[10px] {{ $i <= round($product['rating'] ?? 5) ? 'text-amber-400' : 'text-zinc-200' }}"></i>
+                                    @endfor
+                                </div>
+                                <span class="text-[10px] font-bold text-zinc-400">({{ $product['review_count'] ?? 100 }})</span>
+                            </div>
+
                             <span class="text-[10px] font-extrabold uppercase tracking-widest text-pink-600 mb-1">
                                 {{ $product['brand'] ?? 'zizo aura' }}
                             </span>
@@ -83,6 +93,7 @@
 
                             <!-- Quick Add to Cart Button -->
                             <button class="btn-card-pill w-full mt-auto py-2.5 text-xs font-bold"
+                                    data-add-to-cart
                                     data-product-name="{{ $product['name'] }}"
                                     data-product-price="{{ $product['price'] }}"
                                     data-product-image="{{ $product['image'] }}"

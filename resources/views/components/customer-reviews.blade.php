@@ -16,34 +16,36 @@
             <div class="flex items-center gap-3 shrink-0">
                 <button id="review-prev"
                         aria-label="Avis précédent"
-                        class="btn-circle-action w-12 h-12 rounded-full border-2 border-zinc-200 hover:border-pink-600 hover:text-pink-600 text-zinc-800 flex items-center justify-center text-lg bg-white shadow-xs">
+                        class="btn-circle-action w-11 h-11 rounded-full bg-white hover:bg-pink-50 border border-zinc-200 hover:border-pink-300 text-zinc-800 hover:text-pink-600 flex items-center justify-center text-base shadow-2xs transition-all">
                     <i class="ti ti-arrow-left"></i>
                 </button>
                 <button id="review-next"
                         aria-label="Avis suivant"
-                        class="btn-circle-action w-12 h-12 rounded-full bg-pink-600 hover:bg-[#ff1b7a] border-2 border-pink-600 hover:border-[#ff1b7a] text-white flex items-center justify-center text-lg shadow-md shadow-pink-600/25">
+                        class="btn-circle-action w-11 h-11 rounded-full bg-zinc-900 hover:bg-pink-600 border border-zinc-900 hover:border-pink-600 text-white flex items-center justify-center text-base shadow-sm transition-all">
                     <i class="ti ti-arrow-right"></i>
                 </button>
             </div>
         </div>
 
         <!-- Reviews Horizontal Slider Track -->
-        <div id="reviews-slider" class="flex gap-6 overflow-x-auto scroll-smooth no-scrollbar pb-6 -mx-4 px-4 sm:mx-0 sm:px-0">
+        <div id="reviews-slider" class="flex gap-6 overflow-x-auto scroll-smooth no-scrollbar pt-3 pb-8 -mx-4 px-4 sm:mx-0 sm:px-0">
             
             <!-- Review 1 -->
-            <div class="review-slide-card w-[300px] sm:w-[380px] lg:w-[420px] shrink-0 bg-white rounded-3xl p-6 sm:p-8 border border-zinc-100 shadow-[0_10px_35px_rgba(0,0,0,0.05)] hover:shadow-[0_16px_40px_rgba(244,63,94,0.08)] transition-all duration-300 flex flex-col justify-between">
+            <div class="review-slide-card w-[300px] sm:w-[380px] lg:w-[420px] shrink-0 bg-zinc-100/90 rounded-3xl p-6 sm:p-8 border border-zinc-200 shadow-xs hover:-translate-y-2 hover:bg-zinc-100 hover:border-zinc-300 hover:shadow-lg hover:shadow-zinc-900/5 transition-all duration-300 ease-out flex flex-col justify-between">
                 <div>
                     <!-- Top: Avatar, Name & Product Role -->
                     <div class="flex items-center gap-3.5 mb-5">
-                        <div class="w-12 h-12 rounded-full bg-pink-100 text-pink-700 font-bold flex items-center justify-center text-sm ring-2 ring-pink-50 overflow-hidden shrink-0">
-                            <span class="font-extrabold">SL</span>
+                        <div class="w-12 h-12 rounded-full overflow-hidden shrink-0 ring-2 ring-pink-500/20 shadow-xs">
+                            <img src="/images/reviews/sarah.jpg"
+                                 alt="Sarah Laurent"
+                                 class="w-full h-full object-cover object-center select-none" />
                         </div>
                         <div>
                             <h3 class="text-sm sm:text-base font-extrabold text-zinc-900 leading-tight flex items-center gap-1.5">
                                 <span>Sarah Laurent</span>
                                 <i class="ti ti-circle-check-filled text-pink-600 text-sm" title="Achat vérifié"></i>
                             </h3>
-                            <p class="text-xs text-zinc-400 font-medium">Cliente vérifiée &bull; Bare Vanilla Duo</p>
+                            <p class="text-xs text-zinc-500 font-medium">Cliente vérifiée &bull; Bare Vanilla Duo</p>
                         </div>
                     </div>
 
@@ -64,19 +66,21 @@
             </div>
 
             <!-- Review 2 -->
-            <div class="review-slide-card w-[300px] sm:w-[380px] lg:w-[420px] shrink-0 bg-white rounded-3xl p-6 sm:p-8 border border-zinc-100 shadow-[0_10px_35px_rgba(0,0,0,0.05)] hover:shadow-[0_16px_40px_rgba(244,63,94,0.08)] transition-all duration-300 flex flex-col justify-between">
+            <div class="review-slide-card w-[300px] sm:w-[380px] lg:w-[420px] shrink-0 bg-zinc-100/90 rounded-3xl p-6 sm:p-8 border border-zinc-200 shadow-xs hover:-translate-y-2 hover:bg-zinc-100 hover:border-zinc-300 hover:shadow-lg hover:shadow-zinc-900/5 transition-all duration-300 ease-out flex flex-col justify-between">
                 <div>
                     <!-- Top: Avatar, Name & Product Role -->
                     <div class="flex items-center gap-3.5 mb-5">
-                        <div class="w-12 h-12 rounded-full bg-amber-100 text-amber-800 font-bold flex items-center justify-center text-sm ring-2 ring-amber-50 overflow-hidden shrink-0">
-                            <span class="font-extrabold">YB</span>
+                        <div class="w-12 h-12 rounded-full overflow-hidden shrink-0 ring-2 ring-amber-500/20 shadow-xs">
+                            <img src="/images/reviews/yasmine.jpg"
+                                 alt="Yasmine Benali"
+                                 class="w-full h-full object-cover object-center select-none" />
                         </div>
                         <div>
                             <h3 class="text-sm sm:text-base font-extrabold text-zinc-900 leading-tight flex items-center gap-1.5">
                                 <span>Yasmine Benali</span>
                                 <i class="ti ti-circle-check-filled text-pink-600 text-sm" title="Achat vérifié"></i>
                             </h3>
-                            <p class="text-xs text-zinc-400 font-medium">Cliente vérifiée &bull; Rituals Sakura Set</p>
+                            <p class="text-xs text-zinc-500 font-medium">Cliente vérifiée &bull; Rituals Sakura Set</p>
                         </div>
                     </div>
 
@@ -97,19 +101,21 @@
             </div>
 
             <!-- Review 3 -->
-            <div class="review-slide-card w-[300px] sm:w-[380px] lg:w-[420px] shrink-0 bg-white rounded-3xl p-6 sm:p-8 border border-zinc-100 shadow-[0_10px_35px_rgba(0,0,0,0.05)] hover:shadow-[0_16px_40px_rgba(244,63,94,0.08)] transition-all duration-300 flex flex-col justify-between">
+            <div class="review-slide-card w-[300px] sm:w-[380px] lg:w-[420px] shrink-0 bg-zinc-100/90 rounded-3xl p-6 sm:p-8 border border-zinc-200 shadow-xs hover:-translate-y-2 hover:bg-zinc-100 hover:border-zinc-300 hover:shadow-lg hover:shadow-zinc-900/5 transition-all duration-300 ease-out flex flex-col justify-between">
                 <div>
                     <!-- Top: Avatar, Name & Product Role -->
                     <div class="flex items-center gap-3.5 mb-5">
-                        <div class="w-12 h-12 rounded-full bg-rose-100 text-rose-800 font-bold flex items-center justify-center text-sm ring-2 ring-rose-50 overflow-hidden shrink-0">
-                            <span class="font-extrabold">CM</span>
+                        <div class="w-12 h-12 rounded-full overflow-hidden shrink-0 ring-2 ring-rose-500/20 shadow-xs">
+                            <img src="/images/reviews/camille.jpg"
+                                 alt="Camille Moreau"
+                                 class="w-full h-full object-cover object-center select-none" />
                         </div>
                         <div>
                             <h3 class="text-sm sm:text-base font-extrabold text-zinc-900 leading-tight flex items-center gap-1.5">
                                 <span>Camille Moreau</span>
                                 <i class="ti ti-circle-check-filled text-pink-600 text-sm" title="Achat vérifié"></i>
                             </h3>
-                            <p class="text-xs text-zinc-400 font-medium">Cliente vérifiée &bull; Bum Bum Jet Set</p>
+                            <p class="text-xs text-zinc-500 font-medium">Cliente vérifiée &bull; Bum Bum Jet Set</p>
                         </div>
                     </div>
 
@@ -130,19 +136,21 @@
             </div>
 
             <!-- Review 4 -->
-            <div class="review-slide-card w-[300px] sm:w-[380px] lg:w-[420px] shrink-0 bg-white rounded-3xl p-6 sm:p-8 border border-zinc-100 shadow-[0_10px_35px_rgba(0,0,0,0.05)] hover:shadow-[0_16px_40px_rgba(244,63,94,0.08)] transition-all duration-300 flex flex-col justify-between">
+            <div class="review-slide-card w-[300px] sm:w-[380px] lg:w-[420px] shrink-0 bg-zinc-100/90 rounded-3xl p-6 sm:p-8 border border-zinc-200 shadow-xs hover:-translate-y-2 hover:bg-zinc-100 hover:border-zinc-300 hover:shadow-lg hover:shadow-zinc-900/5 transition-all duration-300 ease-out flex flex-col justify-between">
                 <div>
                     <!-- Top: Avatar, Name & Product Role -->
                     <div class="flex items-center gap-3.5 mb-5">
-                        <div class="w-12 h-12 rounded-full bg-purple-100 text-purple-800 font-bold flex items-center justify-center text-sm ring-2 ring-purple-50 overflow-hidden shrink-0">
-                            <span class="font-extrabold">LD</span>
+                        <div class="w-12 h-12 rounded-full overflow-hidden shrink-0 ring-2 ring-purple-500/20 shadow-xs">
+                            <img src="/images/reviews/lea.jpg"
+                                 alt="Léa Dubois"
+                                 class="w-full h-full object-cover object-center select-none" />
                         </div>
                         <div>
                             <h3 class="text-sm sm:text-base font-extrabold text-zinc-900 leading-tight flex items-center gap-1.5">
                                 <span>Léa Dubois</span>
                                 <i class="ti ti-circle-check-filled text-pink-600 text-sm" title="Achat vérifié"></i>
                             </h3>
-                            <p class="text-xs text-zinc-400 font-medium">Cliente vérifiée &bull; VS Bombshell Prestige</p>
+                            <p class="text-xs text-zinc-500 font-medium">Cliente vérifiée &bull; VS Bombshell Prestige</p>
                         </div>
                     </div>
 
@@ -163,19 +171,21 @@
             </div>
 
             <!-- Review 5 -->
-            <div class="review-slide-card w-[300px] sm:w-[380px] lg:w-[420px] shrink-0 bg-white rounded-3xl p-6 sm:p-8 border border-zinc-100 shadow-[0_10px_35px_rgba(0,0,0,0.05)] hover:shadow-[0_16px_40px_rgba(244,63,94,0.08)] transition-all duration-300 flex flex-col justify-between">
+            <div class="review-slide-card w-[300px] sm:w-[380px] lg:w-[420px] shrink-0 bg-zinc-100/90 rounded-3xl p-6 sm:p-8 border border-zinc-200 shadow-xs hover:-translate-y-2 hover:bg-zinc-100 hover:border-zinc-300 hover:shadow-lg hover:shadow-zinc-900/5 transition-all duration-300 ease-out flex flex-col justify-between">
                 <div>
                     <!-- Top: Avatar, Name & Product Role -->
                     <div class="flex items-center gap-3.5 mb-5">
-                        <div class="w-12 h-12 rounded-full bg-emerald-100 text-emerald-800 font-bold flex items-center justify-center text-sm ring-2 ring-emerald-50 overflow-hidden shrink-0">
-                            <span class="font-extrabold">NF</span>
+                        <div class="w-12 h-12 rounded-full overflow-hidden shrink-0 ring-2 ring-emerald-500/20 shadow-xs">
+                            <img src="/images/reviews/nadia.jpg"
+                                 alt="Nadia Fourati"
+                                 class="w-full h-full object-cover object-center select-none" />
                         </div>
                         <div>
                             <h3 class="text-sm sm:text-base font-extrabold text-zinc-900 leading-tight flex items-center gap-1.5">
                                 <span>Nadia Fourati</span>
                                 <i class="ti ti-circle-check-filled text-pink-600 text-sm" title="Achat vérifié"></i>
                             </h3>
-                            <p class="text-xs text-zinc-400 font-medium">Cliente vérifiée &bull; Rituals Ayurveda</p>
+                            <p class="text-xs text-zinc-500 font-medium">Cliente vérifiée &bull; Rituals Ayurveda</p>
                         </div>
                     </div>
 
@@ -196,19 +206,21 @@
             </div>
 
             <!-- Review 6 -->
-            <div class="review-slide-card w-[300px] sm:w-[380px] lg:w-[420px] shrink-0 bg-white rounded-3xl p-6 sm:p-8 border border-zinc-100 shadow-[0_10px_35px_rgba(0,0,0,0.05)] hover:shadow-[0_16px_40px_rgba(244,63,94,0.08)] transition-all duration-300 flex flex-col justify-between">
+            <div class="review-slide-card w-[300px] sm:w-[380px] lg:w-[420px] shrink-0 bg-zinc-100/90 rounded-3xl p-6 sm:p-8 border border-zinc-200 shadow-xs hover:-translate-y-2 hover:bg-zinc-100 hover:border-zinc-300 hover:shadow-lg hover:shadow-zinc-900/5 transition-all duration-300 ease-out flex flex-col justify-between">
                 <div>
                     <!-- Top: Avatar, Name & Product Role -->
                     <div class="flex items-center gap-3.5 mb-5">
-                        <div class="w-12 h-12 rounded-full bg-teal-100 text-teal-800 font-bold flex items-center justify-center text-sm ring-2 ring-teal-50 overflow-hidden shrink-0">
-                            <span class="font-extrabold">EV</span>
+                        <div class="w-12 h-12 rounded-full overflow-hidden shrink-0 ring-2 ring-teal-500/20 shadow-xs">
+                            <img src="/images/reviews/emma.jpg"
+                                 alt="Emma Vidal"
+                                 class="w-full h-full object-cover object-center select-none" />
                         </div>
                         <div>
                             <h3 class="text-sm sm:text-base font-extrabold text-zinc-900 leading-tight flex items-center gap-1.5">
                                 <span>Emma Vidal</span>
                                 <i class="ti ti-circle-check-filled text-pink-600 text-sm" title="Achat vérifié"></i>
                             </h3>
-                            <p class="text-xs text-zinc-400 font-medium">Cliente vérifiée &bull; Beija Flor Jet Set</p>
+                            <p class="text-xs text-zinc-500 font-medium">Cliente vérifiée &bull; Beija Flor Jet Set</p>
                         </div>
                     </div>
 

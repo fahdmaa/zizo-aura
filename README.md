@@ -33,7 +33,7 @@
 - **Menus déroulants sur-mesure (*Glassmorphism*) :** Remplacement complet des éléments natifs par des panneaux flottants floutés avec coches actives roses.
 - **Modal promotionnel d'été :** Carte pop-up sur la page d'accueil avec code promotionnel copiable en 1 clic (`RIO35`).
 - **Système de boutons unifié :** Effets de survol standardisés avec élévation et halo rose signature (`#ff1b7a`).
-- **Carrousel d'Avis Clientes :** Slider horizontal fluide avec navigation tactile et avis d'acheteurs vérifiés.
+- **Carrousel d'Avis Clientes :** Slider horizontal fluide avec navigation tactile, cartes épurées gris clair (`zinc-100`), photos de profil photoréalistes et élévation au survol sans clipping.
 - **Typographie soignée :** Intégration de *Plus Jakarta Sans* et *Syne* pour une identité visuelle moderne et épurée.
 
 ---
@@ -63,13 +63,15 @@ sephora-laravel/
 │       │   ├── hero-hismile.blade.php      # Section Hero D2C
 │       │   ├── products-marquee.blade.php  # Carrousel des meilleures offres
 │       │   ├── delivery-process.blade.php  # Grille des 4 étapes de livraison
-│       │   ├── customer-reviews.blade.php  # Slider des avis clientes
+│       │   ├── customer-reviews.blade.php  # Slider des avis clientes avec photos de profil & survol fluide
 │       │   └── promo-modal.blade.php       # Pop-up promotionnel d'été
 │       └── shop/
 │           ├── index.blade.php     # Catalogue complet de la boutique
 │           └── product.blade.php   # Page de détails produit avec sélecteur d'unités
 ├── public/
-│   └── images/                     # Visuels officiels des duos et coffrets
+│   └── images/
+│       ├── reviews/                # Photos de profil réelles des clientes (Sarah, Yasmine, etc.)
+│       └── ...                     # Visuels officiels des duos et coffrets
 └── routes/
     └── web.php                     # Définition des routes et points de terminaison API
 ```
@@ -107,10 +109,10 @@ php artisan key:generate
 npm run build
 
 # Lancement du serveur de développement Laravel
-php artisan serve --port=8008
+php artisan serve --port=8000
 ```
 
-👉 Ouvrez votre navigateur sur **[http://localhost:8008](http://localhost:8008)**.
+👉 Ouvrez votre navigateur sur **[http://localhost:8000](http://localhost:8000)**.
 
 ---
 

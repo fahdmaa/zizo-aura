@@ -32,11 +32,20 @@ Welcome to **zizo aura** (`🇪🇺🇫🇷🇲🇦`), a luxury beauty and bodyc
 - **Page Transitions:** Content container inherits `.page-transition-enter` (`pageFadeIn` opacity `0 -> 1` and `translateY(12px) -> 0`).
 - **Scroll Reveal:** `.reveal-on-scroll` with `IntersectionObserver` triggering `.is-revealed` and staggered delays on row cards (`0ms`, `80ms`, `160ms`, `240ms`).
 
+### 6. Customer Reviews & Feedback Cards
+- **Card Styling:** Light grey surface (`bg-zinc-100/90`), defined hairline border (`border-zinc-200`), micro-shadow (`shadow-xs`).
+- **Customer Avatars:** Photorealistic portraits in `public/images/reviews/` in circular frames (`w-12 h-12 rounded-full overflow-hidden ring-2 shadow-xs`).
+- **Smooth Hover Interaction:** Silky elevation (`hover:-translate-y-2 hover:border-zinc-300 hover:shadow-lg`) with vertical track padding (`pt-3 pb-8`) to eliminate overflow clipping.
+
+### 7. Promotional Modal
+- **Clean Headline:** Elevated spacing (`pt-2 sm:pt-4`) with top promotional tag removed for a minimal, high-conversion look.
+- **Copyable Code:** Dedicated coupon pill (`RIO35`) with one-click clipboard copy.
+
 ---
 
 ## 🛠️ Tech Stack & Runtime Architecture
 
-- **Backend:** Laravel 12 on **PHP 8.3**
+- **Backend:** Laravel 12 on **PHP 8.3 / 8.5**
 - **Frontend Assets:** Tailwind CSS v4, Vite 8, `@tabler/icons-webfont`
 - **Serverless Hosting (Vercel):**
   - Config: `vercel.json` targeting `outputDirectory: "public"`
@@ -69,13 +78,15 @@ sephora-laravel/
 │       │   ├── hero-hismile.blade.php      # Hero section
 │       │   ├── products-marquee.blade.php  # Best discount offers marquee
 │       │   ├── delivery-process.blade.php  # 4-step delivery grid
-│       │   ├── customer-reviews.blade.php  # Reviews carousel slider
+│       │   ├── customer-reviews.blade.php  # Reviews carousel slider with photo avatars & smooth hover
 │       │   └── promo-modal.blade.php       # Summer sale promo popup (RIO35)
 │       └── shop/
 │           ├── index.blade.php    # Shop catalog grid
 │           └── product.blade.php  # Product detail view with compact quantity selector
 ├── public/
-│   └── images/                    # Product images (VS, Rituals, Sol de Janeiro)
+│   └── images/
+│       ├── reviews/               # Customer review avatars (sarah.jpg, yasmine.jpg, etc.)
+│       └── ...                    # Product visuals (VS, Rituals, Sol de Janeiro)
 ├── api/index.php                  # Vercel serverless forwarder
 ├── vercel.json                    # Vercel deployment configuration
 └── agy.md                         # Antigravity project memory & guidelines
@@ -88,7 +99,7 @@ sephora-laravel/
 ```bash
 # Local development server
 export PATH="/opt/homebrew/bin:$PATH"
-php artisan serve --port=8008
+php artisan serve --port=8000
 
 # Compile production assets
 npm run build

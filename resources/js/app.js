@@ -175,26 +175,27 @@ document.addEventListener('DOMContentLoaded', () => {
             let html = '';
             cart.forEach((item, index) => {
                 const variantInfo = [item.flavor, item.size].filter(Boolean).join(' • ');
+                const productUrl = item.slug ? `/boutique/produit/${item.slug}` : '/boutique';
                 html += `
                     <div class="py-3.5 flex items-center gap-3.5 group">
-                        <div class="w-16 h-16 rounded-xl bg-[#f8f9fa] border border-zinc-100 p-1 flex items-center justify-center shrink-0 overflow-hidden">
+                        <a href="${productUrl}" class="w-16 h-16 rounded-xl bg-[#f8f9fa] border border-zinc-100 p-1 flex items-center justify-center shrink-0 overflow-hidden hover:border-pink-300 transition-colors">
                             <img src="${item.image || '/images/sdj_bum_bum_set.jpg'}" alt="${item.name}" class="w-full h-full object-contain" />
-                        </div>
+                        </a>
                         <div class="flex-1 min-w-0">
-                            <h4 class="text-xs font-bold text-zinc-900 truncate mb-0.5 leading-snug">
+                            <a href="${productUrl}" class="text-xs font-bold text-zinc-900 truncate mb-0.5 leading-snug hover:text-pink-600 transition-colors block">
                                 ${item.name}
-                            </h4>
+                            </a>
                             ${variantInfo ? `<p class="text-[10px] text-zinc-400 font-semibold truncate mb-1">${variantInfo}</p>` : ''}
                             <div class="flex items-center justify-between mt-1">
                                 <span class="text-xs font-black text-pink-600">${item.price} DH</span>
                                 
                                 <!-- Quantity Buttons -->
                                 <div class="flex items-center gap-1.5 bg-zinc-100 border border-zinc-200 rounded-full px-1 py-0.5">
-                                    <button type="button" data-cart-action="dec" data-index="${index}" class="w-5 h-5 rounded-full bg-white hover:bg-zinc-200 text-zinc-800 flex items-center justify-center text-[10px] font-bold cursor-pointer transition-colors shadow-2xs">
+                                    <button type="button" data-cart-action="dec" data-index="${index}" class="w-5 h-5 rounded-full bg-white hover:bg-zinc-200 text-zinc-800 flex items-center justify-center text-[10px] font-bold cursor-pointer transition-colors shadow-2xs" aria-label="Diminuer la quantité">
                                         <i class="ti ti-minus text-[9px]"></i>
                                     </button>
                                     <span class="w-5 text-center text-xs font-black text-zinc-900">${item.quantity}</span>
-                                    <button type="button" data-cart-action="inc" data-index="${index}" class="w-5 h-5 rounded-full bg-white hover:bg-zinc-200 text-zinc-800 flex items-center justify-center text-[10px] font-bold cursor-pointer transition-colors shadow-2xs">
+                                    <button type="button" data-cart-action="inc" data-index="${index}" class="w-5 h-5 rounded-full bg-white hover:bg-zinc-200 text-zinc-800 flex items-center justify-center text-[10px] font-bold cursor-pointer transition-colors shadow-2xs" aria-label="Augmenter la quantité">
                                         <i class="ti ti-plus text-[9px]"></i>
                                     </button>
                                 </div>
@@ -295,11 +296,8 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // Generic Add-to-Cart Buttons across Catalog, Marquee, Home
-    document.querySelectorAll('.btn-card-pill').forEach(button => {
+    document.querySelectorAll('button[data-add-to-cart]').forEach(button => {
         button.addEventListener('click', (e) => {
-            if (button.tagName.toLowerCase() === 'a') return; // Don't intercept anchor links
-            if (button.id === 'product-add-cart-btn') return; // Handled by dedicated product view listener
-            if (button.id === 'cart-whatsapp-btn') return;
             e.preventDefault();
 
             const name = button.dataset.productName || 'Produit';
@@ -363,11 +361,11 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.addEventListener('click', (e) => {
             e.preventDefault();
             document.querySelectorAll('.size-option-btn').forEach(b => {
-                b.classList.remove('border-black', 'bg-zinc-50', 'text-zinc-900', 'ring-2', 'ring-black', 'shadow-xs');
-                b.classList.add('border-zinc-200', 'text-zinc-600', 'bg-white');
+                b.classList.remove('border-black', 'bg-zinc-900', 'text-white', 'ring-2', 'ring-black/10', 'shadow-sm');
+                b.classList.add('border-zinc-200', 'text-zinc-700', 'bg-white');
             });
-            btn.classList.remove('border-zinc-200', 'text-zinc-600', 'bg-white');
-            btn.classList.add('border-black', 'bg-zinc-50', 'text-zinc-900', 'ring-2', 'ring-black', 'shadow-xs');
+            btn.classList.remove('border-zinc-200', 'text-zinc-700', 'bg-white');
+            btn.classList.add('border-black', 'bg-zinc-900', 'text-white', 'ring-2', 'ring-black/10', 'shadow-sm');
 
             const size = btn.dataset.sizeName || '';
             currentSize = size;
@@ -568,16 +566,34 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     if (promoBackdrop) {
-        setTimeout(() => {
-            openPromoModal();
-        }, 600);
+        const promoDismissed = sessionStorage.getItem('zizo_aura_promo_seen');
+        if (!promoDismissed) {
+            setTimeout(() => {
+                openPromoModal();
+                sessionStorage.setItem('zizo_aura_promo_seen', 'true');
+            }, 800);
+        }
 
         if (closePromoBtn) {
-            closePromoBtn.addEventListener('click', closePromoModal);
+            closePromoBtn.addEventListener('click', () => {
+                closePromoModal();
+                sessionStorage.setItem('zizo_aura_promo_seen', 'true');
+            });
         }
 
         promoBackdrop.addEventListener('click', (e) => {
-            if (e.target === promoBackdrop) closePromoModal();
+            if (e.target === promoBackdrop) {
+                closePromoModal();
+                sessionStorage.setItem('zizo_aura_promo_seen', 'true');
+            }
+        });
+
+        // Allow manual trigger if user clicks any promo trigger button/banner
+        document.querySelectorAll('[data-open-promo]').forEach(el => {
+            el.addEventListener('click', (e) => {
+                e.preventDefault();
+                openPromoModal();
+            });
         });
     }
 
@@ -610,6 +626,26 @@ document.addEventListener('DOMContentLoaded', () => {
             return firstCard ? firstCard.offsetWidth + 24 : 360;
         };
 
+        const updateArrowStates = () => {
+            const maxScroll = reviewsSlider.scrollWidth - reviewsSlider.clientWidth;
+            const atStart = reviewsSlider.scrollLeft <= 5;
+            const atEnd = reviewsSlider.scrollLeft >= maxScroll - 5;
+
+            if (atStart) {
+                prevBtn.classList.add('opacity-40', 'cursor-not-allowed');
+                prevBtn.classList.remove('hover:border-pink-600', 'hover:text-pink-600');
+            } else {
+                prevBtn.classList.remove('opacity-40', 'cursor-not-allowed');
+                prevBtn.classList.add('hover:border-pink-600', 'hover:text-pink-600');
+            }
+
+            if (atEnd) {
+                nextBtn.classList.add('opacity-40', 'cursor-not-allowed');
+            } else {
+                nextBtn.classList.remove('opacity-40', 'cursor-not-allowed');
+            }
+        };
+
         prevBtn.addEventListener('click', () => {
             reviewsSlider.scrollBy({ left: -getScrollStep(), behavior: 'smooth' });
         });
@@ -617,6 +653,10 @@ document.addEventListener('DOMContentLoaded', () => {
         nextBtn.addEventListener('click', () => {
             reviewsSlider.scrollBy({ left: getScrollStep(), behavior: 'smooth' });
         });
+
+        reviewsSlider.addEventListener('scroll', updateArrowStates, { passive: true });
+        window.addEventListener('resize', updateArrowStates);
+        updateArrowStates();
     }
 
     // =========================================================================
@@ -636,7 +676,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const expandSearchBar = () => {
         if (!searchPill || !navbarInput) return;
         searchPill.classList.remove('w-10', 'bg-transparent', 'border-transparent');
-        searchPill.classList.add('w-36', 'xs:w-44', 'sm:w-56', 'md:w-60', 'bg-zinc-100', 'border-zinc-200', 'shadow-2xs');
+        searchPill.classList.add('w-36', 'sm:w-56', 'md:w-60', 'bg-zinc-100', 'border-zinc-200', 'shadow-2xs');
         navbarInput.classList.remove('w-0', 'opacity-0');
         navbarInput.classList.add('w-full', 'opacity-100');
         navbarInput.focus();
@@ -645,7 +685,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const collapseSearchBar = () => {
         if (!searchPill || !navbarInput) return;
         if (navbarInput.value.trim().length === 0) {
-            searchPill.classList.remove('w-36', 'xs:w-44', 'sm:w-56', 'md:w-60', 'bg-zinc-100', 'border-zinc-200', 'shadow-2xs');
+            searchPill.classList.remove('w-36', 'sm:w-56', 'md:w-60', 'bg-zinc-100', 'border-zinc-200', 'shadow-2xs');
             searchPill.classList.add('w-10', 'bg-transparent', 'border-transparent');
             navbarInput.classList.remove('w-full', 'opacity-100');
             navbarInput.classList.add('w-0', 'opacity-0');

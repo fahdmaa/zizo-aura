@@ -24,6 +24,21 @@
             </div>
         @endif
 
+        <!-- Validation Errors Alert -->
+        @if($errors->any())
+            <div class="max-w-2xl mx-auto mb-8 p-4 bg-rose-50 border border-rose-200 rounded-2xl flex items-start gap-3 text-rose-800 text-sm font-semibold">
+                <i class="ti ti-alert-circle text-rose-500 text-xl shrink-0 mt-0.5"></i>
+                <div>
+                    <p class="font-bold mb-1">Veuillez corriger les erreurs suivantes :</p>
+                    <ul class="list-disc list-inside text-xs space-y-0.5 font-normal">
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
+        @endif
+
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
             
             <!-- Contact Form -->
@@ -136,7 +151,7 @@
             <div class="lg:col-span-5 space-y-6">
                 
                 <!-- Email Card -->
-                <div class="p-6 bg-white rounded-2xl border border-zinc-100 shadow-sm flex items-start gap-4 transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] hover:shadow-[0_12px_28px_rgba(255,27,122,0.12)] hover:border-pink-200 cursor-pointer group">
+                <div class="p-6 bg-white rounded-2xl border border-zinc-100 shadow-sm flex items-start gap-4 transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] hover:shadow-[0_12px_28px_rgba(255,27,122,0.12)] hover:border-pink-200 group">
                     <div class="w-12 h-12 rounded-2xl bg-pink-50 text-pink-600 flex items-center justify-center shrink-0 group-hover:bg-pink-100 group-hover:scale-110 transition-all">
                         <i class="ti ti-mail text-2xl"></i>
                     </div>
@@ -150,7 +165,7 @@
                 </div>
 
                 <!-- Phone & WhatsApp Card -->
-                <div class="p-6 bg-white rounded-2xl border border-zinc-100 shadow-sm flex items-start gap-4 transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] hover:shadow-[0_12px_28px_rgba(255,27,122,0.12)] hover:border-pink-200 cursor-pointer group">
+                <div class="p-6 bg-white rounded-2xl border border-zinc-100 shadow-sm flex items-start gap-4 transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] hover:shadow-[0_12px_28px_rgba(255,27,122,0.12)] hover:border-pink-200 group">
                     <div class="w-12 h-12 rounded-2xl bg-pink-50 text-pink-600 flex items-center justify-center shrink-0 group-hover:bg-pink-100 group-hover:scale-110 transition-all">
                         <i class="ti ti-phone-call text-2xl"></i>
                     </div>
@@ -164,7 +179,7 @@
                 </div>
 
                 <!-- Free Delivery Card with Delivery Tabler Icon & Hover Animation -->
-                <div class="p-6 bg-gradient-to-br from-pink-500 to-rose-600 rounded-3xl text-white shadow-lg shadow-pink-500/20 flex items-center gap-4 transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] hover:shadow-xl hover:shadow-pink-500/35 cursor-pointer group">
+                <div class="p-6 bg-gradient-to-br from-pink-500 to-rose-600 rounded-3xl text-white shadow-lg shadow-pink-500/20 flex items-center gap-4 transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] hover:shadow-xl hover:shadow-pink-500/35 group">
                     <div class="w-12 h-12 rounded-2xl bg-white/20 text-white flex items-center justify-center text-2xl shrink-0 group-hover:scale-110 group-hover:bg-white/30 transition-all">
                         <i class="ti ti-truck-delivery"></i>
                     </div>

@@ -28,16 +28,9 @@
         <!-- Right Column: Promo Content & Call to Action -->
         <div class="md:col-span-7 p-6 sm:p-8 flex flex-col justify-between">
             <div>
-                <!-- Top Tag -->
-                <div class="flex items-center gap-2 mb-3">
-                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-pink-50 text-[11px] font-black uppercase tracking-wider text-pink-600 border border-pink-100">
-                        <i class="ti ti-sun text-xs"></i>
-                        <span>Offre Spéciale Été</span>
-                    </span>
-                </div>
 
                 <!-- Headline -->
-                <h3 id="promo-modal-title" class="text-2xl sm:text-3xl font-extrabold text-zinc-900 tracking-tight leading-tight mb-2">
+                <h3 id="promo-modal-title" class="text-2xl sm:text-3xl font-extrabold text-zinc-900 tracking-tight leading-tight mb-2 pt-2 sm:pt-4">
                     Sublimez votre été avec les packs Sol de Janeiro !
                 </h3>
 

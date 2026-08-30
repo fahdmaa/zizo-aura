@@ -27,6 +27,8 @@
             <button type="button"
                     id="mobile-menu-open-btn"
                     aria-label="Ouvrir le menu de navigation"
+                    aria-expanded="false"
+                    aria-controls="mobile-menu-drawer"
                     class="md:hidden p-2 -ml-1 text-zinc-900 hover:text-pink-600 focus:outline-none transition-colors cursor-pointer">
                 <i class="ti ti-menu-2 text-2xl"></i>
             </button>
@@ -47,6 +49,8 @@
             <div class="relative group py-4" id="nav-boutique-wrapper">
                 <a href="{{ route('shop.index') }}"
                    id="nav-boutique-link"
+                   aria-haspopup="true"
+                   aria-expanded="false"
                    class="flex items-center gap-1.5 hover:text-pink-600 transition-colors {{ request()->routeIs('shop.*') ? 'text-pink-600' : '' }}">
                     <span>BOUTIQUE</span>
                     <i class="ti ti-chevron-down text-xs group-hover:rotate-180 transition-transform duration-200" id="nav-boutique-chevron"></i>
@@ -93,6 +97,8 @@
                         <button type="button"
                                 id="search-expand-btn"
                                 aria-label="Rechercher"
+                                aria-expanded="false"
+                                aria-controls="navbar-search-input"
                                 class="w-10 h-10 flex items-center justify-center text-zinc-800 hover:text-pink-600 shrink-0 transition-colors cursor-pointer">
                             <i class="ti ti-search text-xl"></i>
                         </button>
@@ -101,6 +107,7 @@
                         <input type="text"
                                id="navbar-search-input"
                                name="q"
+                               aria-label="Rechercher un produit ou rituel"
                                value="{{ request('q', '') }}"
                                autocomplete="off"
                                placeholder="Rechercher..."
@@ -142,7 +149,7 @@
     <!-- Mobile Slide-over Navigation Drawer -->
     <div id="mobile-menu-backdrop" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 opacity-0 pointer-events-none transition-opacity duration-300">
         
-        <div id="mobile-menu-drawer" class="fixed inset-y-0 left-0 w-[310px] max-w-[85vw] bg-white z-50 shadow-2xl flex flex-col justify-between transform -translate-x-full transition-transform duration-300 ease-out">
+        <div id="mobile-menu-drawer" role="dialog" aria-modal="true" aria-label="Menu de navigation mobile" class="fixed inset-y-0 left-0 w-[310px] max-w-[85vw] bg-white z-50 shadow-2xl flex flex-col justify-between transform -translate-x-full transition-transform duration-300 ease-out">
             
             <!-- Mobile Menu Header -->
             <div>
@@ -170,6 +177,8 @@
                     <div class="rounded-2xl {{ request()->routeIs('shop.*') ? 'bg-zinc-50/80' : '' }}">
                         <button type="button"
                                 id="mobile-boutique-toggle"
+                                aria-expanded="false"
+                                aria-controls="mobile-boutique-sublinks"
                                 class="w-full flex items-center justify-between px-4 py-3 text-xs font-extrabold uppercase tracking-wider text-zinc-900 hover:text-pink-600 transition-colors cursor-pointer">
                             <span class="flex items-center gap-2">
                                 <span>Boutique</span>
@@ -180,7 +189,7 @@
 
                         <div id="mobile-boutique-sublinks" class="space-y-1 px-3 pb-2">
                             <a href="{{ route('shop.index') }}" class="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-bold text-zinc-700 hover:text-pink-600 hover:bg-pink-50/60 transition-colors">
-                                <span>Tous les produits</span>
+                                <span>Tous les packs &amp; produits</span>
                                 <i class="ti ti-chevron-right text-xs text-pink-600"></i>
                             </a>
                             <a href="{{ route('shop.index', ['category' => 'sol-de-janeiro']) }}" class="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-bold text-zinc-700 hover:text-pink-600 hover:bg-pink-50/60 transition-colors">
@@ -216,13 +225,13 @@
                 </div>
 
                 <div class="flex items-center justify-center gap-4 text-zinc-600 pt-1">
-                    <a href="https://www.instagram.com/zizo_aura_/" target="_blank" rel="noopener noreferrer" class="w-9 h-9 rounded-full bg-white border border-zinc-200 hover:border-pink-500 hover:text-pink-600 flex items-center justify-center text-base shadow-2xs transition-colors">
+                    <a href="https://www.instagram.com/zizo_aura_/" target="_blank" rel="noopener noreferrer" aria-label="Instagram @zizo_aura_" class="w-9 h-9 rounded-full bg-white border border-zinc-200 hover:border-pink-500 hover:text-pink-600 flex items-center justify-center text-base shadow-2xs transition-colors">
                         <i class="ti ti-brand-instagram"></i>
                     </a>
-                    <a href="https://facebook.com/" target="_blank" rel="noopener noreferrer" class="w-9 h-9 rounded-full bg-white border border-zinc-200 hover:border-pink-500 hover:text-pink-600 flex items-center justify-center text-base shadow-2xs transition-colors">
+                    <a href="https://facebook.com/zizoaura" target="_blank" rel="noopener noreferrer" aria-label="Facebook @zizoaura" class="w-9 h-9 rounded-full bg-white border border-zinc-200 hover:border-pink-500 hover:text-pink-600 flex items-center justify-center text-base shadow-2xs transition-colors">
                         <i class="ti ti-brand-facebook"></i>
                     </a>
-                    <a href="https://tiktok.com/" target="_blank" rel="noopener noreferrer" class="w-9 h-9 rounded-full bg-white border border-zinc-200 hover:border-pink-500 hover:text-pink-600 flex items-center justify-center text-base shadow-2xs transition-colors">
+                    <a href="https://www.tiktok.com/@zizo_aura_" target="_blank" rel="noopener noreferrer" aria-label="TikTok @zizo_aura_" class="w-9 h-9 rounded-full bg-white border border-zinc-200 hover:border-pink-500 hover:text-pink-600 flex items-center justify-center text-base shadow-2xs transition-colors">
                         <i class="ti ti-brand-tiktok"></i>
                     </a>
                 </div>

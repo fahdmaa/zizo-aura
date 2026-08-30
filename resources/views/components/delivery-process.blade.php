@@ -16,7 +16,7 @@
             
             <!-- Step 1 -->
             <div class="reveal-on-scroll relative bg-white rounded-3xl p-6 sm:p-8 border border-zinc-100 shadow-sm hover:shadow-md transition-shadow group" style="transition-delay: 0ms;">
-                <div class="absolute top-6 right-6 text-2xl font-black text-zinc-100 group-hover:text-pink-200 transition-colors select-none">
+                <div class="absolute top-6 right-6 text-2xl font-black text-zinc-200 group-hover:text-pink-300 transition-colors select-none">
                     01
                 </div>
                 <div class="w-14 h-14 rounded-2xl bg-pink-50 text-pink-600 flex items-center justify-center text-2xl mb-6 shadow-xs group-hover:scale-110 group-hover:bg-pink-100 transition-all">
@@ -32,7 +32,7 @@
 
             <!-- Step 2 -->
             <div class="reveal-on-scroll relative bg-white rounded-3xl p-6 sm:p-8 border border-zinc-100 shadow-sm hover:shadow-md transition-shadow group" style="transition-delay: 80ms;">
-                <div class="absolute top-6 right-6 text-2xl font-black text-zinc-100 group-hover:text-pink-200 transition-colors select-none">
+                <div class="absolute top-6 right-6 text-2xl font-black text-zinc-200 group-hover:text-pink-300 transition-colors select-none">
                     02
                 </div>
                 <div class="w-14 h-14 rounded-2xl bg-pink-50 text-pink-600 flex items-center justify-center text-2xl mb-6 shadow-xs group-hover:scale-110 group-hover:bg-pink-100 transition-all">
@@ -48,7 +48,7 @@
 
             <!-- Step 3 -->
             <div class="reveal-on-scroll relative bg-white rounded-3xl p-6 sm:p-8 border border-zinc-100 shadow-sm hover:shadow-md transition-shadow group" style="transition-delay: 160ms;">
-                <div class="absolute top-6 right-6 text-2xl font-black text-zinc-100 group-hover:text-pink-200 transition-colors select-none">
+                <div class="absolute top-6 right-6 text-2xl font-black text-zinc-200 group-hover:text-pink-300 transition-colors select-none">
                     03
                 </div>
                 <div class="w-14 h-14 rounded-2xl bg-pink-50 text-pink-600 flex items-center justify-center text-2xl mb-6 shadow-xs group-hover:scale-110 group-hover:bg-pink-100 transition-all">
@@ -58,13 +58,13 @@
                     Livraison Express Suivie
                 </h3>
                 <p class="text-xs text-zinc-500 leading-relaxed font-medium">
-                    Acheminement en 48-72h à domicile ou en point relais avec lien de suivi temps réel par e-mail et SMS.
+                    Acheminement en 24-48h à domicile ou en point relais avec lien de suivi temps réel par e-mail et SMS.
                 </p>
             </div>
 
             <!-- Step 4 -->
             <div class="reveal-on-scroll relative bg-white rounded-3xl p-6 sm:p-8 border border-zinc-100 shadow-sm hover:shadow-md transition-shadow group" style="transition-delay: 240ms;">
-                <div class="absolute top-6 right-6 text-2xl font-black text-zinc-100 group-hover:text-pink-200 transition-colors select-none">
+                <div class="absolute top-6 right-6 text-2xl font-black text-zinc-200 group-hover:text-pink-300 transition-colors select-none">
                     04
                 </div>
                 <div class="w-14 h-14 rounded-2xl bg-pink-50 text-pink-600 flex items-center justify-center text-2xl mb-6 shadow-xs group-hover:scale-110 group-hover:bg-pink-100 transition-all">

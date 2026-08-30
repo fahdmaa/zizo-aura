@@ -28,10 +28,10 @@
                     
                     <!-- Watermark Discount in Background -->
                     <div class="absolute inset-0 flex flex-col justify-between p-6 select-none pointer-events-none z-0">
-                        <span class="watermark-discount text-emerald-400/40 text-left font-black tracking-tighter">
+                        <span class="watermark-discount text-zinc-200/70 text-left font-black tracking-tighter">
                             {{ $product['discount'] }}
                         </span>
-                        <span class="watermark-discount text-emerald-400/40 text-right font-black tracking-tighter">
+                        <span class="watermark-discount text-zinc-200/70 text-right font-black tracking-tighter">
                             off
                         </span>
                     </div>
@@ -118,7 +118,7 @@
                         <div class="flex flex-wrap gap-2">
                             @foreach($product['sizes'] as $sIndex => $size)
                                 <button type="button"
-                                        class="size-option-btn px-4 py-2.5 rounded-xl border text-xs font-bold transition-all cursor-pointer {{ $sIndex === 0 ? 'border-black bg-zinc-50 text-zinc-900 ring-2 ring-black shadow-xs' : 'border-zinc-200 text-zinc-600 hover:border-zinc-400 bg-white' }}"
+                                        class="size-option-btn px-4 py-2 rounded-full border text-xs font-bold transition-all cursor-pointer {{ $sIndex === 0 ? 'border-black bg-zinc-900 text-white shadow-sm ring-2 ring-black/10' : 'border-zinc-200 text-zinc-700 hover:border-zinc-400 bg-white' }}"
                                         data-size-name="{{ $size }}">
                                     {{ $size }}
                                 </button>
@@ -239,29 +239,66 @@
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     @foreach($relatedProducts as $rel)
-                        <div class="product-card group flex flex-col bg-white rounded-2xl p-4 border border-zinc-100 shadow-[0_2px_10px_rgba(0,0,0,0.03)] hover:shadow-[0_12px_30px_rgba(0,0,0,0.08)] transition-all duration-300">
+                        <div class="product-card group flex flex-col bg-white rounded-2xl p-3 sm:p-4 border border-zinc-100 shadow-[0_2px_10px_rgba(0,0,0,0.03)] hover:shadow-[0_12px_30px_rgba(0,0,0,0.08)] transition-all duration-300">
                             <a href="{{ route('shop.product', $rel['slug']) }}" class="relative aspect-square w-full bg-[#f8f9fa] rounded-xl overflow-hidden flex items-center justify-center p-6 mb-4 block">
+                                @if(!empty($rel['discount']))
+                                    <!-- Watermark Typography Discount -->
+                                    <div class="absolute inset-0 flex flex-col justify-between p-3 select-none pointer-events-none z-0">
+                                        <span class="watermark-discount text-zinc-200/70 text-left font-black tracking-tighter">
+                                            {{ $rel['discount'] }}
+                                        </span>
+                                        <span class="watermark-discount text-zinc-200/70 text-right font-black tracking-tighter">
+                                            off
+                                        </span>
+                                    </div>
+                                @endif
+
+                                @if(!empty($rel['badge']))
+                                    <!-- Floating Pill Badge -->
+                                    <div class="absolute top-2.5 inset-x-0 flex justify-center z-20">
+                                        <span class="px-2.5 py-0.5 rounded-full text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider shadow-sm {{ $rel['badge_color'] }}">
+                                            {{ $rel['badge'] }}
+                                        </span>
+                                    </div>
+                                @endif
+
                                 <img src="{{ $rel['image'] }}"
                                      alt="{{ $rel['name'] }}"
-                                     class="w-full h-full object-contain max-h-[180px] group-hover:scale-105 transition-transform duration-500 ease-out" />
+                                     class="relative z-10 w-full h-full object-contain max-h-[180px] group-hover:scale-105 transition-transform duration-500 ease-out" />
                             </a>
-                            <h3 class="text-sm font-bold text-zinc-900 mb-1 text-center">
-                                <a href="{{ route('shop.product', $rel['slug']) }}" class="hover:text-pink-600 transition-colors">
-                                    {{ $rel['name'] }}
-                                </a>
-                            </h3>
-                            <div class="flex items-center justify-center gap-2 mb-4">
-                                <span class="text-base font-extrabold text-pink-600">{{ $rel['price'] }} DH</span>
-                                <span class="text-xs text-zinc-400 line-through">{{ $rel['original_price'] }} DH</span>
+
+                            <div class="flex flex-col items-center text-center flex-1">
+                                <!-- Rating Stars -->
+                                <div class="flex items-center gap-1 text-amber-400 text-xs mb-1.5">
+                                    <div class="flex items-center">
+                                        @for($i = 1; $i <= 5; $i++)
+                                            <i class="ti ti-star-filled text-[11px] {{ $i <= round($rel['rating'] ?? 5) ? 'text-amber-400' : 'text-zinc-200' }}"></i>
+                                        @endfor
+                                    </div>
+                                    <span class="text-[10px] font-bold text-zinc-400">({{ $rel['review_count'] ?? 100 }})</span>
+                                </div>
+
+                                <h3 class="text-sm font-bold text-zinc-900 leading-snug mb-1 min-h-[40px] flex items-center justify-center">
+                                    <a href="{{ route('shop.product', $rel['slug']) }}" class="hover:text-pink-600 transition-colors">
+                                        {{ $rel['name'] }}
+                                    </a>
+                                </h3>
+
+                                <div class="flex items-center justify-center gap-2 mb-4">
+                                    <span class="text-base sm:text-lg font-extrabold text-pink-600">{{ $rel['price'] }} DH</span>
+                                    <span class="text-xs text-zinc-400 line-through">{{ $rel['original_price'] }} DH</span>
+                                </div>
+
+                                <button class="btn-card-pill w-full mt-auto"
+                                        data-add-to-cart
+                                        data-product-name="{{ $rel['name'] }}"
+                                        data-product-price="{{ $rel['price'] }}"
+                                        data-product-image="{{ $rel['image'] }}"
+                                        data-product-slug="{{ $rel['slug'] }}">
+                                    <i class="ti ti-shopping-bag-plus text-base"></i>
+                                    <span>Ajouter au panier</span>
+                                </button>
                             </div>
-                            <button class="btn-card-pill w-full mt-auto"
-                                    data-product-name="{{ $rel['name'] }}"
-                                    data-product-price="{{ $rel['price'] }}"
-                                    data-product-image="{{ $rel['image'] }}"
-                                    data-product-slug="{{ $rel['slug'] }}">
-                                <i class="ti ti-shopping-bag-plus text-base"></i>
-                                <span>Ajouter au panier</span>
-                            </button>
                         </div>
                     @endforeach
                 </div>
