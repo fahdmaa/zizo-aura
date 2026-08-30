@@ -31,6 +31,7 @@ $serverlessEnv = [
     'DATABASE_URL' => $neonUrl,
     'DB_SSLMODE' => 'require',
     'DB_DATABASE' => '/tmp/database.sqlite',
+    'ADMIN_PASSWORD' => 'zizoaura2025!',
 ];
 
 foreach ($serverlessEnv as $key => $val) {

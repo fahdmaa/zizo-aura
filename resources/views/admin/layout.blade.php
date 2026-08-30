@@ -147,7 +147,7 @@
 
             <div class="pt-4 pb-2 px-3 text-[10px] font-extrabold uppercase tracking-wider text-zinc-400 border-t border-zinc-100 mt-4">Liens Externes</div>
 
-            <a href="{{ route('boutique.index', [], false) ?: url('/boutique') }}" target="_blank" class="flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs font-semibold text-zinc-500 hover:bg-zinc-50 hover:text-zinc-800 transition">
+            <a href="{{ url('/boutique') }}" target="_blank" class="flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs font-semibold text-zinc-500 hover:bg-zinc-50 hover:text-zinc-800 transition">
                 <div class="flex items-center gap-3">
                     <i class="ti ti-external-link text-base text-zinc-400"></i>
                     <span>Voir la boutique</span>

@@ -50,6 +50,7 @@
     "APP_MAINTENANCE_STORE": "array",
     "DB_CONNECTION": "pgsql",
     "DATABASE_URL": "postgresql://neondb_owner:npg_mytqdzT3sn2f@ep-rough-snow-aezarrgy-pooler.c-2.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require",
-    "DB_SSLMODE": "require"
+    "DB_SSLMODE": "require",
+    "ADMIN_PASSWORD": "zizoaura2025!"
   }
 }

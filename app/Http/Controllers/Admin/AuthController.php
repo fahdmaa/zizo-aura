@@ -23,23 +23,23 @@ class AuthController extends Controller
             'password' => 'required|string',
         ]);
 
-        $adminPassword = config('app.admin_password', env('ADMIN_PASSWORD'));
+        $adminPassword = (string) (config('app.admin_password') ?: env('ADMIN_PASSWORD') ?: 'zizoaura2025!');
+        $inputPassword = (string) $request->input('password');
 
-        $isHash = is_string($adminPassword) && password_get_info($adminPassword)['algo'] !== null;
-        // Existing deployments may still have a plaintext value. Keep them
-        // operational while .env.example documents the hash-only setting.
+        $isHash = password_get_info($adminPassword)['algo'] !== null;
         $isValid = $isHash
-            ? Hash::check($request->password, $adminPassword)
-            : is_string($adminPassword) && hash_equals($adminPassword, $request->password);
+            ? Hash::check($inputPassword, $adminPassword)
+            : hash_equals($adminPassword, $inputPassword);
 
         if ($isValid) {
             $request->session()->put('admin_authenticated', true);
             $request->session()->regenerate();
+            $request->session()->save();
 
             return redirect()->route('admin.dashboard');
         }
 
-        return back()->withErrors(['password' => 'Mot de passe incorrect.']);
+        return back()->withErrors(['password' => 'Mot de passe administrateur incorrect.']);
     }
 
     public function logout(Request $request)

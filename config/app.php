@@ -123,4 +123,11 @@ return [
         'store' => env('APP_MAINTENANCE_STORE') ?: 'array',
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Admin Panel Authentication Password
+    |--------------------------------------------------------------------------
+    */
+    'admin_password' => env('ADMIN_PASSWORD', 'zizoaura2025!'),
+
 ];
