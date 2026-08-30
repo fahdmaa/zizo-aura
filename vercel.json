@@ -48,7 +48,8 @@
     "LOG_CHANNEL": "stderr",
     "APP_MAINTENANCE_DRIVER": "file",
     "APP_MAINTENANCE_STORE": "array",
-    "DB_CONNECTION": "sqlite",
-    "DB_DATABASE": "/tmp/database.sqlite"
+    "DB_CONNECTION": "pgsql",
+    "DATABASE_URL": "postgresql://neondb_owner:npg_mytqdzT3sn2f@ep-rough-snow-aezarrgy-pooler.c-2.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require",
+    "DB_SSLMODE": "require"
   }
 }

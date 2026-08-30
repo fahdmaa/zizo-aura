@@ -47,5 +47,32 @@ class CatalogSeeder extends Seeder
         }
         if ($sizes) DB::table('product_sizes')->insert($sizes);
         if ($flavors) DB::table('product_flavors')->insert($flavors);
+
+        DB::table('coupons')->upsert([
+            [
+                'code' => 'SUMMER20',
+                'type' => 'percent',
+                'value' => 20.00,
+                'min_order_amount' => 0.00,
+                'max_uses' => 500,
+                'used_count' => 0,
+                'is_active' => true,
+                'expires_at' => null,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ],
+            [
+                'code' => 'WELCOME10',
+                'type' => 'percent',
+                'value' => 10.00,
+                'min_order_amount' => 0.00,
+                'max_uses' => 1000,
+                'used_count' => 0,
+                'is_active' => true,
+                'expires_at' => null,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ],
+        ], ['code'], ['type', 'value', 'min_order_amount', 'max_uses', 'is_active', 'updated_at']);
     }
 }
