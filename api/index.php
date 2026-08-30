@@ -5,6 +5,11 @@ ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL);
 
+// Check if pdo_pgsql is available
+$hasPgsql = extension_loaded('pdo_pgsql');
+$neonUrl = 'postgresql://neondb_owner:npg_mytqdzT3sn2f@ep-rough-snow-aezarrgy-pooler.c-2.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require';
+$dbConnection = ($hasPgsql && (!empty(getenv('DATABASE_URL')) || !empty(getenv('DB_HOST')) || !empty($neonUrl))) ? 'pgsql' : 'sqlite';
+
 // Ensure essential serverless environment variables are populated
 $serverlessEnv = [
     'APP_ENV' => 'production',
@@ -22,9 +27,10 @@ $serverlessEnv = [
     'LOG_CHANNEL' => 'stderr',
     'APP_MAINTENANCE_DRIVER' => 'file',
     'APP_MAINTENANCE_STORE' => 'array',
-    'DB_CONNECTION' => 'pgsql',
-    'DATABASE_URL' => 'postgresql://neondb_owner:npg_mytqdzT3sn2f@ep-rough-snow-aezarrgy-pooler.c-2.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require',
+    'DB_CONNECTION' => $dbConnection,
+    'DATABASE_URL' => $neonUrl,
     'DB_SSLMODE' => 'require',
+    'DB_DATABASE' => '/tmp/database.sqlite',
 ];
 
 foreach ($serverlessEnv as $key => $val) {
@@ -71,9 +77,15 @@ foreach ($storageDirs as $dir) {
     }
 }
 
-// Create in-memory/tmp sqlite database
-if (!file_exists('/tmp/database.sqlite')) {
-    @touch('/tmp/database.sqlite');
+// Prepare pre-migrated sqlite database copy for serverless environment if sqlite is used
+$sqliteSource = __DIR__ . '/../database/database.sqlite';
+$sqliteDest = '/tmp/database.sqlite';
+if (!file_exists($sqliteDest) || filesize($sqliteDest) === 0) {
+    if (file_exists($sqliteSource) && filesize($sqliteSource) > 0) {
+        @copy($sqliteSource, $sqliteDest);
+    } else {
+        @touch($sqliteDest);
+    }
 }
 
 // Bootstrap Laravel and handle the request
