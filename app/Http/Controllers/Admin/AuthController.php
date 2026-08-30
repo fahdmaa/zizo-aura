@@ -8,10 +8,10 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    public function showLogin()
+    public function showLogin(Request $request)
     {
-        if (session('admin_authenticated')) {
-            return redirect()->route('admin.dashboard');
+        if ($request->session()->get('admin_authenticated') || $request->cookie('admin_logged_in') === '1') {
+            return redirect()->to('/admin');
         }
 
         return view('admin.auth.login');
@@ -33,10 +33,11 @@ class AuthController extends Controller
 
         if ($isValid) {
             $request->session()->put('admin_authenticated', true);
-            $request->session()->regenerate();
             $request->session()->save();
 
-            return redirect()->to('/admin');
+            $adminCookie = cookie('admin_logged_in', '1', 60 * 24, '/', null, true, true, false, 'lax');
+
+            return redirect()->to('/admin')->withCookie($adminCookie);
         }
 
         return back()->withErrors(['password' => 'Mot de passe administrateur incorrect.']);
@@ -44,9 +45,12 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
+        $request->session()->forget('admin_authenticated');
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('admin.login');
+        $forgetCookie = cookie()->forget('admin_logged_in', '/', null);
+
+        return redirect()->route('admin.login')->withCookie($forgetCookie);
     }
 }

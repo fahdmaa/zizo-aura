@@ -13,6 +13,15 @@ $app = Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->trustProxies(at: '*');
+        $middleware->validateCsrfTokens(except: [
+            'admin/login',
+            'api/*',
+        ]);
+        $middleware->encryptCookies(except: [
+            'zizo_aura_session',
+            'admin_session',
+            'admin_logged_in',
+        ]);
         $middleware->alias([
             'admin.auth' => \App\Http\Middleware\AdminAuth::class,
         ]);
