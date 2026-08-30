@@ -52,6 +52,8 @@ putenv('APP_KEY=' . $appKey);
 $host = $_SERVER['HTTP_X_FORWARDED_HOST'] ?? $_SERVER['HTTP_HOST'] ?? parse_url(getenv('APP_URL') ?: 'https://zizo-aura.vercel.app', PHP_URL_HOST) ?? 'zizo-aura.vercel.app';
 $_SERVER['HTTP_HOST'] = $host;
 $_SERVER['SERVER_NAME'] = $host;
+$_SERVER['SCRIPT_NAME'] = '/index.php';
+$_SERVER['PHP_SELF'] = '/index.php';
 
 $proto = $_SERVER['HTTP_X_FORWARDED_PROTO'] ?? (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'https');
 if ($proto === 'https') {
