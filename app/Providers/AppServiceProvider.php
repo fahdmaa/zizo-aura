@@ -22,7 +22,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        RateLimiter::for('checkout', fn (Request $request) => Limit::perMinute(10)->by($request->ip()));
-        RateLimiter::for('admin-login', fn (Request $request) => Limit::perMinute(5)->by($request->ip()));
+        if (app()->environment('production') || str_starts_with((string) config('app.url'), 'https://') || isset($_SERVER['HTTP_X_FORWARDED_PROTO'])) {
+            \Illuminate\Support\Facades\URL::forceScheme('https');
+        }
+
+        RateLimiter::for('checkout', fn (Request $request) => Limit::perMinute(20)->by($request->ip()));
+        RateLimiter::for('admin-login', fn (Request $request) => Limit::perMinute(60)->by($request->ip()));
     }
 }

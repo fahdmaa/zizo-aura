@@ -43,7 +43,7 @@ foreach ($serverlessEnv as $key => $val) {
 }
 
 // Forward APP_KEY_1 or use fallback APP_KEY if missing
-$appKey = $_ENV['APP_KEY'] ?? getenv('APP_KEY') ?? $_SERVER['APP_KEY'] ?? $_ENV['APP_KEY_1'] ?? getenv('APP_KEY_1') ?? $_SERVER['APP_KEY_1'] ?? 'base64:Utvu1bOBgcOR/swzjMjQ0lwYSFGnMNTAo0b9fKeKJNE=';
+$appKey = $_ENV['APP_KEY'] ?? getenv('APP_KEY') ?? $_SERVER['APP_KEY'] ?? $_ENV['APP_KEY_1'] ?? getenv('APP_KEY_1') ?? $_SERVER['APP_KEY_1'] ?? 'base64:4z8HFIKItnIjE/dO3tOARyVh34exBajykG+aPQEDnZQ=';
 $_ENV['APP_KEY'] = $appKey;
 $_SERVER['APP_KEY'] = $appKey;
 putenv('APP_KEY=' . $appKey);

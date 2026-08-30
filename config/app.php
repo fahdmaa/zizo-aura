@@ -97,9 +97,10 @@ return [
 
     'cipher' => 'AES-256-CBC',
 
-    'key' => env('APP_KEY_1') ?: env('APP_KEY') ?: 'base64:Utvu1bOBgcOR/swzjMjQ0lwYSFGnMNTAo0b9fKeKJNE=',
+    'key' => env('APP_KEY_1') ?: env('APP_KEY') ?: 'base64:4z8HFIKItnIjE/dO3tOARyVh34exBajykG+aPQEDnZQ=',
 
     'previous_keys' => [
+        'base64:Utvu1bOBgcOR/swzjMjQ0lwYSFGnMNTAo0b9fKeKJNE=',
         ...array_filter(
             explode(',', (string) env('APP_PREVIOUS_KEYS', ''))
         ),
