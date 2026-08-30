@@ -8,7 +8,7 @@ class BrandController extends Controller
 {
     public function show(Request $request)
     {
-        $allProducts = ShopController::getProducts();
+        $allProducts = ShopController::catalogProducts();
 
         // Sort by discount percentage descending and take top 8
         $discountProducts = $allProducts;

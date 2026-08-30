@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class ShopController extends Controller
@@ -443,10 +445,45 @@ class ShopController extends Controller
         ];
     }
 
+    /**
+     * Database-backed catalog. The static catalog is retained only as a safe
+     * fallback until the initial import has been run.
+     */
+    public static function catalogProducts(): array
+    {
+        $products = Product::query()
+            ->with(['category', 'sizes', 'flavors'])
+            ->active()
+            ->whereHas('category', fn ($query) => $query->where('is_active', true))
+            ->orderBy('sort_order')
+            ->get();
+
+        return $products->isNotEmpty()
+            ? $products->map(fn (Product $product) => $product->toStorefrontArray())->all()
+            : self::getProducts();
+    }
+
+    public static function catalogCategories(): array
+    {
+        $categories = Category::query()
+            ->where('is_active', true)
+            ->withCount(['activeProducts as count'])
+            ->orderBy('sort_order')
+            ->get();
+
+        if ($categories->isEmpty()) {
+            return self::getCategories();
+        }
+
+        return array_merge([['slug' => 'all', 'name' => 'Tous les packs & produits', 'count' => Product::active()->count()]], $categories
+            ->map(fn (Category $category) => ['slug' => $category->slug, 'name' => $category->name, 'count' => $category->count])
+            ->all());
+    }
+
     public function index(Request $request, $category = null)
     {
-        $allProducts = self::getProducts();
-        $categories = self::getCategories();
+        $allProducts = self::catalogProducts();
+        $categories = self::catalogCategories();
 
         $selectedCategory = $category ?? $request->query('category', 'all');
         $sortBy = $request->query('sort', 'popular');
@@ -496,7 +533,7 @@ class ShopController extends Controller
             return response()->json(['results' => [], 'count' => 0]);
         }
 
-        $allProducts = self::getProducts();
+        $allProducts = self::catalogProducts();
         $results = [];
 
         foreach ($allProducts as $p) {
@@ -534,7 +571,7 @@ class ShopController extends Controller
 
     public function showProduct($slug)
     {
-        $allProducts = self::getProducts();
+        $allProducts = self::catalogProducts();
         $product = null;
 
         foreach ($allProducts as $p) {

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ContactMessage;
 use Illuminate\Http\Request;
 
 class ContactController extends Controller
@@ -19,6 +20,8 @@ class ContactController extends Controller
             'subject' => 'required|string|max:150',
             'message' => 'required|string|max:2000',
         ]);
+
+        ContactMessage::create($validated);
 
         return redirect()->route('contact')->with('success', 'Merci pour votre message ! Notre équipe zizo aura vous répondra sous 24h.');
     }

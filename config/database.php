@@ -84,19 +84,38 @@ return [
             ]) : [],
         ],
 
+        // ── Pooled connection — app queries, cart, sessions, cache ──────────────
         'pgsql' => [
             'driver' => 'pgsql',
-            'url' => env('DB_URL'),
+            'url' => env('DATABASE_URL'),
             'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '5432'),
-            'database' => env('DB_DATABASE', 'laravel'),
-            'username' => env('DB_USERNAME', 'root'),
+            'database' => env('DB_DATABASE', 'neondb'),
+            'username' => env('DB_USERNAME', 'neondb_owner'),
             'password' => env('DB_PASSWORD', ''),
-            'charset' => env('DB_CHARSET', 'utf8'),
+            'charset' => 'utf8',
             'prefix' => '',
             'prefix_indexes' => true,
             'search_path' => 'public',
-            'sslmode' => env('DB_SSLMODE', 'prefer'),
+            'sslmode' => env('DB_SSLMODE', 'require'),
+        ],
+
+        // ── Direct/unpooled — migrations, pg_dump, logical replication ─────────
+        // Per Neon best practices: never run migrations over the pooled connection.
+        // Usage: php artisan migrate --database=pgsql_direct
+        'pgsql_direct' => [
+            'driver' => 'pgsql',
+            'url' => env('DATABASE_URL_UNPOOLED'),
+            'host' => env('DB_HOST_DIRECT', env('DB_HOST', '127.0.0.1')),
+            'port' => env('DB_PORT', '5432'),
+            'database' => env('DB_DATABASE', 'neondb'),
+            'username' => env('DB_USERNAME', 'neondb_owner'),
+            'password' => env('DB_PASSWORD', ''),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'search_path' => 'public',
+            'sslmode' => env('DB_SSLMODE', 'require'),
         ],
 
         'sqlsrv' => [
