@@ -61,23 +61,22 @@
             animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
-        /* Bottom Floating Navbar with Scoop Notch Animation */
-        #admin-bottom-notch {
-            transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-            will-change: transform;
-        }
+        /* Bottom Floating Dock Styles & Color Transition */
         .admin-dock-tab {
-            transition: color 0.2s ease, transform 0.2s ease;
+            transition: color 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .admin-dock-tab .tab-icon {
-            transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.2s ease;
+            transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .admin-dock-tab .tab-label {
+            transition: color 0.2s cubic-bezier(0.16, 1, 0.3, 1), font-weight 0.2s ease;
         }
         .admin-dock-tab.active .tab-icon {
-            transform: translateY(-2px) scale(1.08);
-            color: #ff1b7a;
+            transform: translateY(-2px) scale(1.1);
+            color: #ff1b7a !important;
         }
         .admin-dock-tab.active .tab-label {
-            color: #ff1b7a;
+            color: #ff1b7a !important;
             font-weight: 700;
         }
     </style>
@@ -155,23 +154,13 @@
     </main>
 
     <!-- ═══════════════════════════════════════════════════════════════════════════
-         BOTTOM FLOATING NAVBAR (Middle Reference Style with Notch & Floating Dot)
+         BOTTOM FLOATING NAVBAR (Pill Dock with Clean Color Transitions)
          ═══════════════════════════════════════════════════════════════════════════ -->
     <div class="fixed bottom-4 sm:bottom-6 left-0 right-0 z-40 flex justify-center px-3 pointer-events-none">
-        <nav id="admin-bottom-dock" class="pointer-events-auto relative bg-white border border-zinc-200/90 rounded-[32px] shadow-[0_12px_40px_rgba(0,0,0,0.12)] w-full max-w-xl md:max-w-2xl px-2 py-1.5 flex items-center justify-between overflow-visible">
+        <nav id="admin-bottom-dock" class="pointer-events-auto relative bg-white/95 backdrop-blur-md border border-zinc-200/90 rounded-[32px] shadow-[0_12px_40px_rgba(0,0,0,0.1)] w-full max-w-xl md:max-w-2xl px-3 py-2 flex items-center justify-between">
             
-            <!-- Sliding Scoop Notch with Floating Circular Dot on Top -->
-            <div id="admin-bottom-notch" class="absolute -top-[1px] left-0 pointer-events-none z-20 flex flex-col items-center" style="width: 76px; transform: translate3d(0px, 0px, 0px);">
-                <!-- Floating Circular Indicator Dot in the Scoop -->
-                <div class="w-2.5 h-2.5 rounded-full bg-[#ff1b7a] shadow-[0_2px_8px_rgba(255,27,122,0.6)] border-2 border-white -translate-y-1.5 transition-transform duration-300"></div>
-                <!-- Scooped Mask Cutout SVG matching background #faf9f6 -->
-                <svg class="w-[76px] h-[10px] text-[#faf9f6] -mt-[1px]" viewBox="0 0 76 10" fill="currentColor">
-                    <path d="M0,0 C22,0 24,10 38,10 C52,10 54,0 76,0 L76,0 Z" />
-                </svg>
-            </div>
-
             <!-- 1. Accueil / Dashboard -->
-            <a href="#dashboard" data-view="dashboard" class="admin-dock-tab relative flex-1 flex flex-col items-center justify-center pt-2 pb-1.5 px-1 rounded-2xl group cursor-pointer text-zinc-600 hover:text-zinc-900 select-none">
+            <a href="#dashboard" data-view="dashboard" class="admin-dock-tab relative flex-1 flex flex-col items-center justify-center py-1 px-1 rounded-2xl group cursor-pointer text-zinc-600 hover:text-zinc-900 select-none">
                 <div class="tab-icon text-zinc-700">
                     <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
@@ -182,7 +171,7 @@
             </a>
 
             <!-- 2. Produits -->
-            <a href="#products" data-view="products" class="admin-dock-tab relative flex-1 flex flex-col items-center justify-center pt-2 pb-1.5 px-1 rounded-2xl group cursor-pointer text-zinc-600 hover:text-zinc-900 select-none">
+            <a href="#products" data-view="products" class="admin-dock-tab relative flex-1 flex flex-col items-center justify-center py-1 px-1 rounded-2xl group cursor-pointer text-zinc-600 hover:text-zinc-900 select-none">
                 <div class="tab-icon text-zinc-700">
                     <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
@@ -194,7 +183,7 @@
             </a>
 
             <!-- 3. Catégories -->
-            <a href="#categories" data-view="categories" class="admin-dock-tab relative flex-1 flex flex-col items-center justify-center pt-2 pb-1.5 px-1 rounded-2xl group cursor-pointer text-zinc-600 hover:text-zinc-900 select-none">
+            <a href="#categories" data-view="categories" class="admin-dock-tab relative flex-1 flex flex-col items-center justify-center py-1 px-1 rounded-2xl group cursor-pointer text-zinc-600 hover:text-zinc-900 select-none">
                 <div class="tab-icon text-zinc-700">
                     <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="7" height="7" rx="1.5"></rect>
@@ -207,7 +196,7 @@
             </a>
 
             <!-- 4. Remises -->
-            <a href="#discounts" data-view="discounts" class="admin-dock-tab relative flex-1 flex flex-col items-center justify-center pt-2 pb-1.5 px-1 rounded-2xl group cursor-pointer text-zinc-600 hover:text-zinc-900 select-none">
+            <a href="#discounts" data-view="discounts" class="admin-dock-tab relative flex-1 flex flex-col items-center justify-center py-1 px-1 rounded-2xl group cursor-pointer text-zinc-600 hover:text-zinc-900 select-none">
                 <div class="tab-icon text-zinc-700">
                     <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
@@ -218,7 +207,7 @@
             </a>
 
             <!-- 5. Commandes -->
-            <a href="#orders" data-view="orders" class="admin-dock-tab relative flex-1 flex flex-col items-center justify-center pt-2 pb-1.5 px-1 rounded-2xl group cursor-pointer text-zinc-600 hover:text-zinc-900 select-none">
+            <a href="#orders" data-view="orders" class="admin-dock-tab relative flex-1 flex flex-col items-center justify-center py-1 px-1 rounded-2xl group cursor-pointer text-zinc-600 hover:text-zinc-900 select-none">
                 <div class="tab-icon relative text-zinc-700">
                     <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
@@ -231,7 +220,7 @@
             </a>
 
             <!-- 6. Messages -->
-            <a href="#messages" data-view="messages" class="admin-dock-tab relative flex-1 flex flex-col items-center justify-center pt-2 pb-1.5 px-1 rounded-2xl group cursor-pointer text-zinc-600 hover:text-zinc-900 select-none">
+            <a href="#messages" data-view="messages" class="admin-dock-tab relative flex-1 flex flex-col items-center justify-center py-1 px-1 rounded-2xl group cursor-pointer text-zinc-600 hover:text-zinc-900 select-none">
                 <div class="tab-icon relative text-zinc-700">
                     <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>

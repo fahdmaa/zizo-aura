@@ -389,7 +389,6 @@
 
             // Router hash listener
             window.addEventListener('hashchange', () => this.handleHashChange());
-            window.addEventListener('resize', () => this.updateNotchPositions());
             this.handleHashChange();
 
             // Initial preload of categories for dropdowns
@@ -411,19 +410,6 @@
             this.navigate(view || 'dashboard', param);
         },
 
-        updateNotchPositions() {
-            const dock = document.getElementById('admin-bottom-dock');
-            const notch = document.getElementById('admin-bottom-notch');
-            if (dock && notch) {
-                const activeTab = dock.querySelector('.admin-dock-tab.active') || dock.querySelector('.admin-dock-tab');
-                if (activeTab) {
-                    const targetX = activeTab.offsetLeft + (activeTab.offsetWidth / 2) - (notch.offsetWidth / 2);
-                    notch.style.transform = `translate3d(${targetX}px, 0, 0)`;
-                    notch.style.opacity = '1';
-                }
-            }
-        },
-
         updateSidebarActive(view) {
             // Update bottom dock tabs
             document.querySelectorAll('.admin-dock-tab').forEach(el => {
@@ -434,10 +420,6 @@
                     el.classList.remove('active');
                 }
             });
-
-            // Reposition the floating bottom notch
-            requestAnimationFrame(() => this.updateNotchPositions());
-            setTimeout(() => this.updateNotchPositions(), 50);
         },
 
         async navigate(view, param = null) {
