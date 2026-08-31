@@ -412,108 +412,32 @@
         },
 
         updateNotchPositions() {
-            // Desktop notch
-            const desktopNav = document.getElementById('admin-pill-nav');
-            const desktopNotch = document.getElementById('navbar-notch-wrapper');
-            if (desktopNav && desktopNotch) {
-                const activeTab = desktopNav.querySelector('.admin-pill-tab.active') || desktopNav.querySelector('.admin-pill-tab');
+            const dock = document.getElementById('admin-bottom-dock');
+            const notch = document.getElementById('admin-bottom-notch');
+            if (dock && notch) {
+                const activeTab = dock.querySelector('.admin-dock-tab.active') || dock.querySelector('.admin-dock-tab');
                 if (activeTab) {
-                    const navRect = desktopNav.getBoundingClientRect();
-                    const tabRect = activeTab.getBoundingClientRect();
-                    const targetX = (tabRect.left - navRect.left) + (tabRect.width / 2) - (desktopNotch.offsetWidth / 2);
-                    desktopNotch.style.transform = `translateX(${targetX}px)`;
-                }
-            }
-
-            // Mobile notch
-            const mobileNav = document.getElementById('mobile-pill-nav');
-            const mobileNotch = document.getElementById('mobile-notch-wrapper');
-            if (mobileNav && mobileNotch) {
-                const activeTab = mobileNav.querySelector('.mobile-pill-tab.active') || mobileNav.querySelector('.mobile-pill-tab');
-                if (activeTab) {
-                    const navRect = mobileNav.getBoundingClientRect();
-                    const tabRect = activeTab.getBoundingClientRect();
-                    const targetX = (tabRect.left - navRect.left) + (tabRect.width / 2) - (mobileNotch.offsetWidth / 2);
-                    mobileNotch.style.transform = `translateX(${targetX}px)`;
+                    const targetX = activeTab.offsetLeft + (activeTab.offsetWidth / 2) - (notch.offsetWidth / 2);
+                    notch.style.transform = `translate3d(${targetX}px, 0, 0)`;
+                    notch.style.opacity = '1';
                 }
             }
         },
 
         updateSidebarActive(view) {
-            // Update desktop pill nav
-            document.querySelectorAll('.admin-pill-tab').forEach(el => {
+            // Update bottom dock tabs
+            document.querySelectorAll('.admin-dock-tab').forEach(el => {
                 const target = el.dataset.view;
-                const icon = el.querySelector('.tab-icon-wrap');
-                const label = el.querySelector('.tab-label');
                 if (target === view) {
-                    el.classList.add('active', 'text-pink-600');
-                    el.classList.remove('text-zinc-600');
-                    if (icon) {
-                        icon.classList.add('text-pink-600');
-                        icon.classList.remove('text-zinc-700');
-                    }
-                    if (label) {
-                        label.classList.add('text-pink-600', 'font-bold');
-                        label.classList.remove('font-medium');
-                    }
+                    el.classList.add('active');
                 } else {
-                    el.classList.remove('active', 'text-pink-600');
-                    el.classList.add('text-zinc-600');
-                    if (icon) {
-                        icon.classList.remove('text-pink-600');
-                        icon.classList.add('text-zinc-700');
-                    }
-                    if (label) {
-                        label.classList.remove('text-pink-600', 'font-bold');
-                        label.classList.add('font-medium');
-                    }
+                    el.classList.remove('active');
                 }
             });
 
-            // Update mobile pill nav
-            document.querySelectorAll('.mobile-pill-tab').forEach(el => {
-                const target = el.dataset.view;
-                const icon = el.querySelector('.tab-icon-wrap');
-                const label = el.querySelector('.tab-label');
-                if (target === view) {
-                    el.classList.add('active', 'text-pink-600');
-                    el.classList.remove('text-zinc-600');
-                    if (icon) {
-                        icon.classList.add('text-pink-600');
-                        icon.classList.remove('text-zinc-700');
-                    }
-                    if (label) {
-                        label.classList.add('text-pink-600', 'font-bold');
-                        label.classList.remove('font-medium');
-                    }
-                } else {
-                    el.classList.remove('active', 'text-pink-600');
-                    el.classList.add('text-zinc-600');
-                    if (icon) {
-                        icon.classList.remove('text-pink-600');
-                        icon.classList.add('text-zinc-700');
-                    }
-                    if (label) {
-                        label.classList.remove('text-pink-600', 'font-bold');
-                        label.classList.add('font-medium');
-                    }
-                }
-            });
-
-            // Legacy admin-nav-item support if present
-            document.querySelectorAll('.admin-nav-item').forEach(el => {
-                const target = el.dataset.view;
-                if (target === view) {
-                    el.classList.add('bg-pink-50/80', 'text-pink-600', 'font-extrabold', 'shadow-xs');
-                    el.classList.remove('text-zinc-600', 'font-medium');
-                } else {
-                    el.classList.remove('bg-pink-50/80', 'text-pink-600', 'font-extrabold', 'shadow-xs');
-                    el.classList.add('text-zinc-600', 'font-medium');
-                }
-            });
-
-            // Reposition the floating notches
-            setTimeout(() => this.updateNotchPositions(), 30);
+            // Reposition the floating bottom notch
+            requestAnimationFrame(() => this.updateNotchPositions());
+            setTimeout(() => this.updateNotchPositions(), 50);
         },
 
         async navigate(view, param = null) {
@@ -793,35 +717,25 @@
         },
 
         updateSidebarBadges(pendingOrders, unreadMessages) {
-            const pendingBadges = [
-                document.getElementById('sidebar-pending-badge'),
-                document.getElementById('pill-pending-badge')
-            ];
-            pendingBadges.forEach(badge => {
-                if (badge) {
-                    if (pendingOrders > 0) {
-                        badge.textContent = pendingOrders;
-                        badge.classList.remove('hidden');
-                    } else {
-                        badge.classList.add('hidden');
-                    }
+            const pendingBadge = document.getElementById('dock-pending-badge');
+            if (pendingBadge) {
+                if (pendingOrders > 0) {
+                    pendingBadge.textContent = pendingOrders;
+                    pendingBadge.classList.remove('hidden');
+                } else {
+                    pendingBadge.classList.add('hidden');
                 }
-            });
+            }
 
-            const unreadBadges = [
-                document.getElementById('sidebar-unread-badge'),
-                document.getElementById('pill-unread-badge')
-            ];
-            unreadBadges.forEach(badge => {
-                if (badge) {
-                    if (unreadMessages > 0) {
-                        badge.textContent = unreadMessages;
-                        badge.classList.remove('hidden');
-                    } else {
-                        badge.classList.add('hidden');
-                    }
+            const unreadBadge = document.getElementById('dock-unread-badge');
+            if (unreadBadge) {
+                if (unreadMessages > 0) {
+                    unreadBadge.textContent = unreadMessages;
+                    unreadBadge.classList.remove('hidden');
+                } else {
+                    unreadBadge.classList.add('hidden');
                 }
-            });
+            }
         },
 
         // ═════════════════════════════════════════════════════════════════════
