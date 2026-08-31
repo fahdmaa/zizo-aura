@@ -27,7 +27,7 @@
                 <div class="relative group" id="custom-sort-dropdown">
                     <button type="button"
                             id="sort-dropdown-btn"
-                            class="px-4 py-2 bg-white hover:bg-pink-50/50 border border-zinc-200 hover:border-pink-300 rounded-full text-xs font-bold text-zinc-800 uppercase tracking-wider focus:outline-none transition-all flex items-center gap-2 cursor-pointer shadow-xs">
+                            class="btn-pill-secondary btn-pill-sm uppercase tracking-wider">
                         <span class="text-zinc-900 font-extrabold">
                             @if($sortBy === 'rating') Mieux notés
                             @elseif($sortBy === 'price-asc') Prix croissant
@@ -94,7 +94,7 @@
                 </div>
 
                 <a href="{{ route('shop.index', ['category' => $selectedCategory !== 'all' ? $selectedCategory : null]) }}"
-                   class="px-3.5 py-1.5 rounded-xl bg-white hover:bg-black hover:text-white border border-zinc-200 text-xs font-bold text-zinc-700 transition-all flex items-center gap-1.5 shadow-2xs cursor-pointer">
+                   class="btn-pill-secondary btn-pill-sm">
                     <i class="ti ti-x text-xs"></i>
                     <span>Effacer la recherche</span>
                 </a>

@@ -123,7 +123,8 @@ input[type="email"],
 input[type="number"],
 input[type="password"],
 input[type="search"],
-input[type="tel"] {
+input[type="tel"],
+input[type="date"] {
   background-color: #ffffff;
   color: #111827;
   border: 1.5px solid #e5e7eb;
@@ -141,7 +142,8 @@ input[type="email"]:hover,
 input[type="number"]:hover,
 input[type="password"]:hover,
 input[type="search"]:hover,
-input[type="tel"]:hover {
+input[type="tel"]:hover,
+input[type="date"]:hover {
   border-color: #f472b6;
 }
 
@@ -151,7 +153,8 @@ input[type="email"]:focus,
 input[type="number"]:focus,
 input[type="password"]:focus,
 input[type="search"]:focus,
-input[type="tel"]:focus {
+input[type="tel"]:focus,
+input[type="date"]:focus {
   background-color: #ffffff;
   border-color: #ff1b7a;
   outline: none;

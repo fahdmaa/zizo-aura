@@ -17,23 +17,23 @@
         <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Nom *</label>
             <input type="text" name="name" value="{{ old('name', $category->name ?? '') }}" required
-                class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-pink-400">
+                class="input-luxury w-full">
         </div>
         <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Slug</label>
             <input type="text" name="slug" value="{{ old('slug', $category->slug ?? '') }}"
                 placeholder="généré automatiquement"
-                class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-pink-400">
+                class="input-luxury w-full">
         </div>
         <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Image (URL)</label>
             <input type="text" name="image" value="{{ old('image', $category->image ?? '') }}"
-                class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-pink-400">
+                class="input-luxury w-full">
         </div>
         <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
             <textarea name="description" rows="3"
-                class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-pink-400">{{ old('description', $category->description ?? '') }}</textarea>
+                class="textarea-luxury w-full">{{ old('description', $category->description ?? '') }}</textarea>
         </div>
         <div>
             <label class="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
@@ -47,10 +47,10 @@
     </div>
 
     <div class="flex gap-3">
-        <button type="submit" class="px-6 py-2.5 rounded-xl text-sm font-semibold text-white" style="background:#ff1b7a">
+        <button type="submit" class="btn-pill-primary">
             {{ $editing ? 'Enregistrer' : 'Créer' }}
         </button>
-        <a href="{{ route('admin.categories.index') }}" class="px-6 py-2.5 rounded-xl text-sm font-medium text-gray-600 bg-gray-100 hover:bg-gray-200">
+        <a href="{{ route('admin.categories.index') }}" class="btn-pill-secondary">
             Annuler
         </a>
     </div>

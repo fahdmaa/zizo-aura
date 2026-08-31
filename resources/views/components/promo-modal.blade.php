@@ -7,7 +7,7 @@
         <button id="close-promo-modal"
                 type="button"
                 aria-label="Fermer la promotion"
-                class="absolute top-3.5 right-3.5 z-30 w-9 h-9 rounded-full bg-white/90 hover:bg-black hover:text-white text-zinc-700 flex items-center justify-center shadow-md transition-all duration-200 hover:scale-110 cursor-pointer">
+                class="btn-circle-action absolute top-3.5 right-3.5 z-30 w-9 h-9 bg-white/90 hover:bg-black hover:text-white text-zinc-700 flex items-center justify-center shadow-md">
             <i class="ti ti-x text-lg"></i>
         </button>
 
@@ -47,7 +47,7 @@
                     </div>
 
                     <button id="copy-promo-code"
-                            class="px-3.5 py-1.5 rounded-xl bg-white hover:bg-black hover:text-white border border-zinc-200 text-zinc-800 text-xs font-bold transition-all duration-200 flex items-center gap-1.5 cursor-pointer shadow-xs">
+                            class="btn-pill-secondary btn-pill-sm">
                         <i class="ti ti-copy text-xs"></i>
                         <span id="copy-text">Copier</span>
                     </button>

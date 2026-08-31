@@ -136,7 +136,7 @@
                             <button type="button"
                                     id="qty-minus-btn"
                                     aria-label="Diminuer la quantité"
-                                    class="w-7 h-7 rounded-full bg-white hover:bg-zinc-200 text-zinc-800 flex items-center justify-center transition-all disabled:opacity-25 disabled:cursor-not-allowed cursor-pointer shadow-2xs">
+                                    class="btn-circle-action w-7 h-7 bg-white hover:bg-zinc-200 text-zinc-800 flex items-center justify-center disabled:opacity-25 disabled:cursor-not-allowed cursor-pointer shadow-2xs">
                                 <i class="ti ti-minus text-xs font-bold"></i>
                             </button>
 
@@ -148,7 +148,7 @@
                             <button type="button"
                                     id="qty-plus-btn"
                                     aria-label="Augmenter la quantité"
-                                    class="w-7 h-7 rounded-full bg-white hover:bg-zinc-200 text-zinc-800 flex items-center justify-center transition-all cursor-pointer shadow-2xs">
+                                    class="btn-circle-action w-7 h-7 bg-white hover:bg-zinc-200 text-zinc-800 flex items-center justify-center cursor-pointer shadow-2xs">
                                 <i class="ti ti-plus text-xs font-bold"></i>
                             </button>
                         </div>

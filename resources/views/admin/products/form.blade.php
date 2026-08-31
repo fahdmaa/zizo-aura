@@ -23,13 +23,13 @@
             <div class="col-span-2">
                 <label class="block text-sm font-medium text-gray-700 mb-1">Nom du produit *</label>
                 <input type="text" name="name" value="{{ old('name', $product->name ?? '') }}" required
-                    class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-pink-400">
+                    class="input-luxury w-full">
             </div>
 
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Catégorie *</label>
                 <select name="category_id" required
-                    class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-pink-400">
+                    class="select-luxury w-full">
                     <option value="">-- Choisir --</option>
                     @foreach($categories as $cat)
                         <option value="{{ $cat->id }}"
@@ -44,13 +44,13 @@
                 <label class="block text-sm font-medium text-gray-700 mb-1">Slug (URL)</label>
                 <input type="text" name="slug" value="{{ old('slug', $product->slug ?? '') }}"
                     placeholder="généré automatiquement"
-                    class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-pink-400">
+                    class="input-luxury w-full">
             </div>
 
             <div class="col-span-2">
                 <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
                 <textarea name="description" rows="3"
-                    class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-pink-400">{{ old('description', $product->description ?? '') }}</textarea>
+                    class="textarea-luxury w-full">{{ old('description', $product->description ?? '') }}</textarea>
             </div>
         </div>
     </div>
@@ -62,12 +62,12 @@
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Prix original *</label>
                 <input type="number" step="0.01" name="price" value="{{ old('price', $product->price ?? '') }}" required
-                    class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-pink-400">
+                    class="input-luxury w-full">
             </div>
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Prix soldé <span class="text-gray-400">(laisser vide si aucune promo)</span></label>
                 <input type="number" step="0.01" name="discounted_price" value="{{ old('discounted_price', $product->discounted_price ?? '') }}"
-                    class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-pink-400">
+                    class="input-luxury w-full">
             </div>
         </div>
     </div>
@@ -78,7 +78,7 @@
         <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">URL image principale *</label>
             <input type="text" name="image" value="{{ old('image', $product->image ?? '') }}" required
-                class="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-pink-400"
+                class="input-luxury w-full"
                 placeholder="https://... ou /images/produits/...">
         </div>
     </div>
@@ -113,28 +113,25 @@
             @foreach(old('sizes', $product->sizes->toArray() ?? []) as $i => $size)
             <div class="flex gap-2 items-center">
                 <input type="text" name="sizes[{{ $i }}][label]" value="{{ $size['label'] }}"
-                    placeholder="ex: 100ml" class="border border-gray-300 rounded-lg px-3 py-2 text-sm flex-1 focus:ring-1 focus:ring-pink-400 focus:outline-none">
+                    placeholder="ex: 100ml" class="input-luxury flex-1">
                 <input type="number" step="0.01" name="sizes[{{ $i }}][price]" value="{{ $size['price'] ?? '' }}"
-                    placeholder="Prix DH" class="border border-gray-300 rounded-lg px-3 py-2 text-sm w-28 focus:ring-1 focus:ring-pink-400 focus:outline-none">
+                    placeholder="Prix DH" class="input-luxury w-28">
                 <label class="flex items-center gap-1 text-xs text-gray-500">
                     <input type="checkbox" name="sizes[{{ $i }}][in_stock]" {{ $size['in_stock'] ? 'checked' : '' }}> Stock
                 </label>
-                <button type="button" onclick="this.closest('.flex').remove()" class="text-red-400 hover:text-red-600 text-lg leading-none">×</button>
+                <button type="button" onclick="this.closest('.flex').remove()" class="btn-circle-action text-red-400 hover:text-red-600 text-lg leading-none">×</button>
             </div>
             @endforeach
         </div>
-        <button type="button" onclick="addSize()" class="text-sm text-pink-500 hover:underline">+ Ajouter une taille</button>
+        <button type="button" onclick="addSize()" class="btn-pill-secondary btn-pill-sm">+ Ajouter une taille</button>
     </div>
 
     {{-- Save --}}
     <div class="flex gap-3">
-        <button type="submit"
-            class="px-6 py-2.5 rounded-xl text-sm font-semibold text-white"
-            style="background:#ff1b7a">
+        <button type="submit" class="btn-pill-primary">
             {{ $editing ? 'Enregistrer les modifications' : 'Créer le produit' }}
         </button>
-        <a href="{{ route('admin.products.index') }}"
-            class="px-6 py-2.5 rounded-xl text-sm font-medium text-gray-600 bg-gray-100 hover:bg-gray-200">
+        <a href="{{ route('admin.products.index') }}" class="btn-pill-secondary">
             Annuler
         </a>
     </div>
@@ -145,12 +142,12 @@ let sizeIdx = {{ count(old('sizes', $product->sizes->toArray() ?? [])) }};
 function addSize() {
     document.getElementById('sizes-list').insertAdjacentHTML('beforeend', `
         <div class="flex gap-2 items-center">
-            <input type="text" name="sizes[${sizeIdx}][label]" placeholder="ex: 100ml" class="border border-gray-300 rounded-lg px-3 py-2 text-sm flex-1 focus:ring-1 focus:ring-pink-400 focus:outline-none">
-            <input type="number" step="0.01" name="sizes[${sizeIdx}][price]" placeholder="Prix DH" class="border border-gray-300 rounded-lg px-3 py-2 text-sm w-28 focus:ring-1 focus:ring-pink-400 focus:outline-none">
+            <input type="text" name="sizes[${sizeIdx}][label]" placeholder="ex: 100ml" class="input-luxury flex-1">
+            <input type="number" step="0.01" name="sizes[${sizeIdx}][price]" placeholder="Prix DH" class="input-luxury w-28">
             <label class="flex items-center gap-1 text-xs text-gray-500">
                 <input type="checkbox" name="sizes[${sizeIdx}][in_stock]" checked> Stock
             </label>
-            <button type="button" onclick="this.closest('.flex').remove()" class="text-red-400 hover:text-red-600 text-lg leading-none">×</button>
+            <button type="button" onclick="this.closest('.flex').remove()" class="btn-circle-action text-red-400 hover:text-red-600 text-lg leading-none">×</button>
         </div>
     `);
     sizeIdx++;

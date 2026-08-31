@@ -14,7 +14,7 @@
             <button type="button"
                     id="cart-drawer-close-btn"
                     aria-label="Fermer le panier"
-                    class="w-9 h-9 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-700 flex items-center justify-center transition-colors cursor-pointer">
+                    class="btn-circle-action w-9 h-9 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 flex items-center justify-center cursor-pointer">
                 <i class="ti ti-x text-lg"></i>
             </button>
         </div>
