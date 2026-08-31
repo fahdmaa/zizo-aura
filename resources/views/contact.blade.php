@@ -56,7 +56,7 @@
                                name="name"
                                required
                                placeholder="Ex: Sarah Martin"
-                               class="w-full px-4 py-3.5 bg-white border border-zinc-200 rounded-xl text-sm text-zinc-900 focus:outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-500/20 transition-all">
+                               class="input-luxury w-full py-3.5">
                     </div>
 
                     <!-- Email Field -->
@@ -69,7 +69,7 @@
                                name="email"
                                required
                                placeholder="votre-email@exemple.com"
-                               class="w-full px-4 py-3.5 bg-white border border-zinc-200 rounded-xl text-sm text-zinc-900 focus:outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-500/20 transition-all">
+                               class="input-luxury w-full py-3.5">
                     </div>
 
                     <!-- Custom Themed Subject Dropdown -->
@@ -83,7 +83,7 @@
                         <!-- Custom Trigger Button -->
                         <button type="button"
                                 id="contact-subject-btn"
-                                class="w-full px-4 py-3.5 bg-white border border-zinc-200 hover:border-pink-300 rounded-xl text-sm font-semibold text-zinc-900 flex items-center justify-between cursor-pointer focus:outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-500/20 transition-all shadow-2xs">
+                                class="w-full px-4 py-3.5 bg-white border-1.5 border-zinc-200 hover:border-pink-300 rounded-2xl text-sm font-semibold text-zinc-900 flex items-center justify-between cursor-pointer focus:outline-none focus:border-pink-500 focus:ring-4 focus:ring-pink-500/12 transition-all shadow-2xs">
                             <span id="contact-subject-label" class="text-zinc-900 font-bold">Conseil produit &amp; Routine de soin</span>
                             <i id="contact-subject-chevron" class="ti ti-chevron-down text-zinc-400 transition-transform duration-200"></i>
                         </button>
@@ -136,7 +136,7 @@
                                   rows="5"
                                   required
                                   placeholder="Dites-nous comment nous pouvons vous aider..."
-                                  class="w-full px-4 py-3.5 bg-white border border-zinc-200 rounded-xl text-sm text-zinc-900 focus:outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-500/20 transition-all resize-none"></textarea>
+                                  class="textarea-luxury w-full py-3.5"></textarea>
                     </div>
 
                     <!-- Submit Button -->

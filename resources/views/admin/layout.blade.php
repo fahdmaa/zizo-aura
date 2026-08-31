@@ -107,21 +107,21 @@
                     <span class="text-xs font-semibold text-zinc-600">En direct</span>
                 </div>
 
-                <button type="button" onclick="if(window.adminApp) window.adminApp.handleHashChange();" class="p-2 rounded-xl bg-white border border-zinc-200/80 text-zinc-600 hover:text-zinc-900 hover:bg-zinc-50 text-xs font-semibold flex items-center gap-1.5 transition shadow-2xs cursor-pointer" title="Rafraîchir les données">
+                <button type="button" onclick="if(window.adminApp) window.adminApp.handleHashChange();" class="btn-pill-secondary btn-pill-sm cursor-pointer" title="Rafraîchir les données">
                     <i class="ti ti-refresh text-sm"></i>
                     <span class="hidden md:inline">Actualiser</span>
                 </button>
 
-                <a href="{{ url('/boutique') }}" target="_blank" class="px-3.5 py-2 rounded-xl bg-white border border-zinc-200/80 hover:border-pink-300 text-zinc-800 hover:text-pink-600 text-xs font-bold transition flex items-center gap-1.5 shadow-2xs">
+                <a href="{{ url('/boutique') }}" target="_blank" class="btn-pill-secondary btn-pill-sm">
                     <span>Boutique</span>
                     <i class="ti ti-external-link text-xs text-zinc-400"></i>
                 </a>
 
                 <!-- Admin Profile Dropdown / Logout -->
                 <div class="relative group">
-                    <button type="button" class="flex items-center gap-2 p-1.5 pl-3 pr-2 rounded-2xl bg-white border border-zinc-200/80 hover:border-zinc-300 transition shadow-2xs cursor-pointer">
-                        <span class="text-xs font-bold text-zinc-800 hidden sm:inline">Admin</span>
-                        <div class="w-7 h-7 rounded-xl bg-zinc-900 text-white flex items-center justify-center text-xs font-bold">
+                    <button type="button" class="btn-pill-secondary btn-pill-sm p-1.5 pl-3 pr-1.5 cursor-pointer">
+                        <span class="text-xs font-bold hidden sm:inline mr-1">Admin</span>
+                        <div class="w-6 h-6 rounded-full bg-zinc-900 text-white flex items-center justify-center text-[10px] font-bold">
                             A
                         </div>
                     </button>
@@ -133,7 +133,7 @@
                         </div>
                         <form method="POST" action="{{ route('admin.logout') }}">
                             @csrf
-                            <button type="submit" class="w-full py-2 px-3 rounded-xl hover:bg-red-50 text-zinc-600 hover:text-red-600 text-xs font-bold transition flex items-center gap-2 cursor-pointer text-left">
+                            <button type="submit" class="btn-pill-danger btn-pill-sm w-full justify-start text-left cursor-pointer">
                                 <i class="ti ti-logout text-sm"></i>
                                 <span>Déconnexion</span>
                             </button>

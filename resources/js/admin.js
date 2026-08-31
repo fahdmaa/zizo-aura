@@ -503,11 +503,11 @@
                                     </p>
                                 </div>
                                 <div class="flex flex-wrap items-center gap-3">
-                                    <button type="button" id="dash-quick-prod" class="btn-primary-pink px-4 py-2.5 rounded-2xl text-xs font-bold flex items-center gap-2 cursor-pointer shadow-lg shadow-pink-600/20">
+                                    <button type="button" id="dash-quick-prod" class="btn-pill-primary btn-pill-sm">
                                         <i class="ti ti-plus text-sm"></i>
                                         <span>Nouveau produit</span>
                                     </button>
-                                    <button type="button" id="dash-quick-coupon" class="bg-zinc-800 hover:bg-zinc-700 text-white px-4 py-2.5 rounded-2xl text-xs font-bold flex items-center gap-2 transition cursor-pointer border border-zinc-700">
+                                    <button type="button" id="dash-quick-coupon" class="btn-pill-secondary btn-pill-sm">
                                         <i class="ti ti-ticket text-sm"></i>
                                         <span>Nouveau code promo</span>
                                     </button>
@@ -740,27 +740,27 @@
                             <h1 class="text-2xl font-black text-zinc-900 tracking-tight">Catalogue Produits</h1>
                             <p class="text-xs text-zinc-400 font-medium">Gérez vos formules, variantes olfactives, stocks et tarifs</p>
                         </div>
-                        <button type="button" id="btn-create-product" class="btn-primary-pink px-4 py-2.5 rounded-2xl text-xs font-bold flex items-center gap-2 cursor-pointer shadow-lg shadow-pink-600/20 shrink-0">
+                        <button type="button" id="btn-create-product" class="btn-pill-primary btn-pill-sm shrink-0">
                             <i class="ti ti-plus text-sm"></i>
                             <span>Nouveau produit</span>
                         </button>
                     </div>
 
                     <!-- Search & Filter Controls -->
-                    <div class="bg-white rounded-2xl p-4 border border-zinc-100 shadow-sm flex flex-col md:flex-row items-center gap-3">
+                    <div class="bg-white rounded-3xl p-4 border border-zinc-100 shadow-sm flex flex-col md:flex-row items-center gap-3">
                         <div class="relative flex-1 w-full">
-                            <i class="ti ti-search absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400 text-base"></i>
-                            <input type="text" id="prod-search-input" value="${filter.search || ''}" placeholder="Rechercher par nom..." class="w-full bg-zinc-50 border border-zinc-200 rounded-xl pl-10 pr-4 py-2 text-xs font-medium text-zinc-800 placeholder-zinc-400 focus:outline-none focus:border-pink-500 focus:bg-white transition" />
+                            <i class="ti ti-search absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 text-base"></i>
+                            <input type="text" id="prod-search-input" value="${filter.search || ''}" placeholder="Rechercher par nom..." class="input-luxury w-full pl-11 pr-4 py-2.5 text-xs" />
                         </div>
-                        <div class="flex items-center gap-2 w-full md:w-auto">
-                            <select id="prod-cat-select" class="bg-zinc-50 border border-zinc-200 rounded-xl px-3 py-2 text-xs font-medium text-zinc-800 focus:outline-none focus:border-pink-500 focus:bg-white transition flex-1 md:w-44">
+                        <div class="flex items-center gap-2.5 w-full md:w-auto">
+                            <select id="prod-cat-select" class="select-luxury py-2.5 text-xs flex-1 md:w-48">
                                 <option value="">Toutes les catégories</option>
                                 ${appState.categoriesCache.map(cat => `
                                     <option value="${cat.id}" ${filter.category_id == cat.id ? 'selected' : ''}>${cat.name}</option>
                                 `).join('')}
                             </select>
 
-                            <select id="prod-status-select" class="bg-zinc-50 border border-zinc-200 rounded-xl px-3 py-2 text-xs font-medium text-zinc-800 focus:outline-none focus:border-pink-500 focus:bg-white transition flex-1 md:w-36">
+                            <select id="prod-status-select" class="select-luxury py-2.5 text-xs flex-1 md:w-40">
                                 <option value="" ${filter.status === '' ? 'selected' : ''}>Tous les statuts</option>
                                 <option value="active" ${filter.status === 'active' ? 'selected' : ''}>Actifs</option>
                                 <option value="inactive" ${filter.status === 'inactive' ? 'selected' : ''}>Inactifs</option>
@@ -768,7 +768,7 @@
                             </select>
 
                             ${(filter.search || filter.category_id || filter.status) ? `
-                                <button type="button" id="prod-reset-filters" class="p-2 rounded-xl bg-zinc-100 hover:bg-zinc-200 text-zinc-600 text-xs transition cursor-pointer" title="Réinitialiser les filtres">
+                                <button type="button" id="prod-reset-filters" class="btn-circle-action w-9 h-9 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-600 text-xs transition cursor-pointer shrink-0" title="Réinitialiser les filtres">
                                     <i class="ti ti-x text-sm"></i>
                                 </button>
                             ` : ''}
@@ -1088,12 +1088,12 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div class="col-span-2">
                                     <label class="block font-bold text-zinc-700 mb-1">Nom du produit <span class="text-pink-600">*</span></label>
-                                    <input type="text" name="name" id="pe-name" value="${product.name || ''}" required placeholder="ex: Brume Parfumée Cheirosa 68" class="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-3.5 py-2.5 font-medium text-zinc-800 focus:outline-none focus:border-pink-500 focus:bg-white transition" />
+                                    <input type="text" name="name" id="pe-name" value="${product.name || ''}" required placeholder="ex: Brume Parfumée Cheirosa 68" class="input-luxury w-full" />
                                 </div>
 
                                 <div>
                                     <label class="block font-bold text-zinc-700 mb-1">Catégorie <span class="text-pink-600">*</span></label>
-                                    <select name="category_id" required class="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-3.5 py-2.5 font-medium text-zinc-800 focus:outline-none focus:border-pink-500 focus:bg-white transition">
+                                    <select name="category_id" required class="select-luxury w-full">
                                         <option value="">-- Choisir une catégorie --</option>
                                         ${appState.categoriesCache.map(cat => `
                                             <option value="${cat.id}" ${product.category_id == cat.id ? 'selected' : ''}>${cat.name}</option>
@@ -1103,32 +1103,32 @@
 
                                 <div>
                                     <label class="block font-bold text-zinc-700 mb-1">Slug URL <span class="text-zinc-400 font-normal">(auto si vide)</span></label>
-                                    <input type="text" name="slug" value="${product.slug || ''}" placeholder="ex: brume-cheirosa-68" class="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-3.5 py-2.5 font-mono text-[11px] text-zinc-800 focus:outline-none focus:border-pink-500 focus:bg-white transition" />
+                                    <input type="text" name="slug" value="${product.slug || ''}" placeholder="ex: brume-cheirosa-68" class="input-luxury w-full font-mono text-[11px]" />
                                 </div>
 
                                 <div class="col-span-2">
                                     <label class="block font-bold text-zinc-700 mb-1">Sous-titre / Accroche</label>
-                                    <input type="text" name="subtitle" value="${product.subtitle || ''}" placeholder="ex: Brume florale & gourmande pour le corps" class="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-3.5 py-2.5 font-medium text-zinc-800 focus:outline-none focus:border-pink-500 focus:bg-white transition" />
+                                    <input type="text" name="subtitle" value="${product.subtitle || ''}" placeholder="ex: Brume florale & gourmande pour le corps" class="input-luxury w-full" />
                                 </div>
 
                                 <div class="col-span-2">
                                     <label class="block font-bold text-zinc-700 mb-1">Description détaillée</label>
-                                    <textarea name="description" rows="3" placeholder="Présentation du produit..." class="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-3.5 py-2.5 font-medium text-zinc-800 focus:outline-none focus:border-pink-500 focus:bg-white transition">${product.description || ''}</textarea>
+                                    <textarea name="description" rows="3" placeholder="Présentation du produit..." class="textarea-luxury w-full">${product.description || ''}</textarea>
                                 </div>
 
                                 <div>
                                     <label class="block font-bold text-zinc-700 mb-1">Notes Olfactives</label>
-                                    <textarea name="olfactory" rows="2" placeholder="ex: Pitahaya rose, Jasmin du Brésil, Vanille pure" class="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-3.5 py-2.5 font-medium text-zinc-800 focus:outline-none focus:border-pink-500 focus:bg-white transition">${product.olfactory || ''}</textarea>
+                                    <textarea name="olfactory" rows="2" placeholder="ex: Pitahaya rose, Jasmin du Brésil, Vanille pure" class="textarea-luxury w-full">${product.olfactory || ''}</textarea>
                                 </div>
 
                                 <div>
                                     <label class="block font-bold text-zinc-700 mb-1">Conseils d'utilisation</label>
-                                    <textarea name="usage" rows="2" placeholder="ex: Vaporisez sur l'ensemble du corps et des cheveux" class="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-3.5 py-2.5 font-medium text-zinc-800 focus:outline-none focus:border-pink-500 focus:bg-white transition">${product.usage || ''}</textarea>
+                                    <textarea name="usage" rows="2" placeholder="ex: Vaporisez sur l'ensemble du corps et des cheveux" class="textarea-luxury w-full">${product.usage || ''}</textarea>
                                 </div>
 
                                 <div class="col-span-2">
                                     <label class="block font-bold text-zinc-700 mb-1">Ingrédients clés</label>
-                                    <textarea name="ingredients" rows="2" placeholder="ex: Aqua, Alcohol Denat., Parfum, Benzyl Salicylate..." class="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-3.5 py-2.5 font-medium text-zinc-800 focus:outline-none focus:border-pink-500 focus:bg-white transition">${product.ingredients || ''}</textarea>
+                                    <textarea name="ingredients" rows="2" placeholder="ex: Aqua, Alcohol Denat., Parfum, Benzyl Salicylate..." class="textarea-luxury w-full">${product.ingredients || ''}</textarea>
                                 </div>
                             </div>
                         </div>
@@ -1139,14 +1139,14 @@
                             <div class="grid grid-cols-2 gap-4">
                                 <div>
                                     <label class="block font-bold text-zinc-700 mb-1">Prix original (DH) <span class="text-pink-600">*</span></label>
-                                    <input type="number" step="0.01" min="0.01" name="price" id="pe-price" value="${product.price || ''}" required placeholder="350" class="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-3.5 py-2.5 font-bold text-zinc-900 focus:outline-none focus:border-pink-500 focus:bg-white transition" />
+                                    <input type="number" step="0.01" min="0.01" name="price" id="pe-price" value="${product.price || ''}" required placeholder="350" class="input-luxury w-full font-bold text-zinc-900" />
                                 </div>
                                 <div>
                                     <label class="block font-bold text-zinc-700 mb-1">Prix soldé (DH) <span class="text-zinc-400 font-normal">(optionnel)</span></label>
-                                    <input type="number" step="0.01" min="0" name="discounted_price" id="pe-discount" value="${product.discounted_price || ''}" placeholder="280" class="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-3.5 py-2.5 font-bold text-pink-600 focus:outline-none focus:border-pink-500 focus:bg-white transition" />
+                                    <input type="number" step="0.01" min="0" name="discounted_price" id="pe-discount" value="${product.discounted_price || ''}" placeholder="280" class="input-luxury w-full font-bold text-pink-600" />
                                 </div>
                             </div>
-                            <div id="pe-discount-badge-preview" class="hidden text-[11px] font-bold text-pink-600 bg-pink-50 p-2.5 rounded-xl flex items-center gap-2">
+                            <div id="pe-discount-badge-preview" class="hidden text-[11px] font-bold text-pink-600 bg-pink-50 p-2.5 rounded-2xl flex items-center gap-2">
                                 <i class="ti ti-percentage text-sm"></i>
                                 <span id="pe-discount-calc">Réduction : -0%</span>
                             </div>
@@ -1158,8 +1158,8 @@
                             <div>
                                 <label class="block font-bold text-zinc-700 mb-1">URL Image principale <span class="text-pink-600">*</span></label>
                                 <div class="flex gap-3">
-                                    <input type="text" name="image" id="pe-image" value="${product.image || ''}" required placeholder="https://... ou /images/..." class="flex-1 bg-zinc-50 border border-zinc-200 rounded-xl px-3.5 py-2.5 font-medium text-zinc-800 focus:outline-none focus:border-pink-500 focus:bg-white transition" />
-                                    <div class="w-11 h-11 rounded-xl bg-zinc-100 border border-zinc-200 overflow-hidden shrink-0 flex items-center justify-center">
+                                    <input type="text" name="image" id="pe-image" value="${product.image || ''}" required placeholder="https://... ou /images/..." class="input-luxury flex-1" />
+                                    <div class="w-11 h-11 rounded-2xl bg-zinc-100 border border-zinc-200 overflow-hidden shrink-0 flex items-center justify-center">
                                         <img id="pe-image-preview" src="${product.image || '/images/sdj_bum_bum_set.jpg'}" alt="Preview" class="w-full h-full object-contain" onerror="this.src='/images/sdj_bum_bum_set.jpg'" />
                                     </div>
                                 </div>
@@ -1168,15 +1168,15 @@
                             <div>
                                 <div class="flex items-center justify-between mb-1.5">
                                     <label class="font-bold text-zinc-700">Galerie d'images additionnelles</label>
-                                    <button type="button" id="pe-add-gallery-btn" class="text-pink-600 hover:text-pink-700 font-bold flex items-center gap-1 cursor-pointer">
+                                    <button type="button" id="pe-add-gallery-btn" class="btn-pill-secondary btn-pill-sm cursor-pointer">
                                         <i class="ti ti-plus"></i> Ajouter une image
                                     </button>
                                 </div>
                                 <div id="pe-gallery-list" class="space-y-2">
                                     ${(product.gallery || []).map((url, i) => `
                                         <div class="flex items-center gap-2 gallery-row">
-                                            <input type="text" name="gallery[]" value="${url}" placeholder="URL image galerie" class="flex-1 bg-zinc-50 border border-zinc-200 rounded-xl px-3 py-2 text-xs font-medium text-zinc-800 focus:outline-none focus:border-pink-500 focus:bg-white transition" />
-                                            <button type="button" class="p-2 text-zinc-400 hover:text-red-600 rounded-lg cursor-pointer remove-gallery-btn">
+                                            <input type="text" name="gallery[]" value="${url}" placeholder="URL image galerie" class="input-luxury flex-1 text-xs" />
+                                            <button type="button" class="btn-circle-action w-8 h-8 rounded-full border border-zinc-200 hover:border-red-300 hover:text-red-600 text-zinc-400 cursor-pointer remove-gallery-btn">
                                                 <i class="ti ti-trash"></i>
                                             </button>
                                         </div>
@@ -1190,32 +1190,32 @@
                             <h4 class="text-xs font-black uppercase tracking-wider text-zinc-400 border-b border-zinc-100 pb-2">Disponibilité, Avis & Badges</h4>
                             
                             <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
-                                <label class="flex items-center gap-2 p-3 bg-zinc-50 rounded-xl border border-zinc-200 cursor-pointer hover:bg-zinc-100/70 transition">
+                                <label class="flex items-center gap-2 p-3 bg-zinc-50 rounded-2xl border border-zinc-200 cursor-pointer hover:bg-zinc-100/70 transition">
                                     <input type="checkbox" name="in_stock" ${product.in_stock ? 'checked' : ''} class="w-4 h-4 rounded accent-pink-600" />
                                     <span class="font-bold text-zinc-800">En stock</span>
                                 </label>
 
-                                <label class="flex items-center gap-2 p-3 bg-zinc-50 rounded-xl border border-zinc-200 cursor-pointer hover:bg-zinc-100/70 transition">
+                                <label class="flex items-center gap-2 p-3 bg-zinc-50 rounded-2xl border border-zinc-200 cursor-pointer hover:bg-zinc-100/70 transition">
                                     <input type="checkbox" name="is_active" ${product.is_active ? 'checked' : ''} class="w-4 h-4 rounded accent-pink-600" />
                                     <span class="font-bold text-zinc-800">Actif (Visible)</span>
                                 </label>
 
-                                <label class="flex items-center gap-2 p-3 bg-zinc-50 rounded-xl border border-zinc-200 cursor-pointer hover:bg-zinc-100/70 transition">
+                                <label class="flex items-center gap-2 p-3 bg-zinc-50 rounded-2xl border border-zinc-200 cursor-pointer hover:bg-zinc-100/70 transition">
                                     <input type="checkbox" name="is_bestseller" ${product.is_bestseller ? 'checked' : ''} class="w-4 h-4 rounded accent-pink-600" />
                                     <span class="font-bold text-zinc-800">Best-seller</span>
                                 </label>
 
-                                <label class="flex items-center gap-2 p-3 bg-zinc-50 rounded-xl border border-zinc-200 cursor-pointer hover:bg-zinc-100/70 transition">
+                                <label class="flex items-center gap-2 p-3 bg-zinc-50 rounded-2xl border border-zinc-200 cursor-pointer hover:bg-zinc-100/70 transition">
                                     <input type="checkbox" name="is_new" ${product.is_new ? 'checked' : ''} class="w-4 h-4 rounded accent-pink-600" />
                                     <span class="font-bold text-zinc-800">Nouveau</span>
                                 </label>
 
-                                <label class="flex items-center gap-2 p-3 bg-zinc-50 rounded-xl border border-zinc-200 cursor-pointer hover:bg-zinc-100/70 transition">
+                                <label class="flex items-center gap-2 p-3 bg-zinc-50 rounded-2xl border border-zinc-200 cursor-pointer hover:bg-zinc-100/70 transition">
                                     <input type="checkbox" name="has_sizes" id="pe-has-sizes" ${product.has_sizes ? 'checked' : ''} class="w-4 h-4 rounded accent-pink-600" />
                                     <span class="font-bold text-zinc-800">Variantes Tailles</span>
                                 </label>
 
-                                <label class="flex items-center gap-2 p-3 bg-zinc-50 rounded-xl border border-zinc-200 cursor-pointer hover:bg-zinc-100/70 transition">
+                                <label class="flex items-center gap-2 p-3 bg-zinc-50 rounded-2xl border border-zinc-200 cursor-pointer hover:bg-zinc-100/70 transition">
                                     <input type="checkbox" name="has_flavors" id="pe-has-flavors" ${product.has_flavors ? 'checked' : ''} class="w-4 h-4 rounded accent-pink-600" />
                                     <span class="font-bold text-zinc-800">Variantes Parfums</span>
                                 </label>
@@ -1224,19 +1224,19 @@
                             <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
                                 <div>
                                     <label class="block font-bold text-zinc-700 mb-1">Quantité en stock</label>
-                                    <input type="number" min="0" name="stock_quantity" value="${product.stock_quantity ?? ''}" placeholder="ex: 50" class="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-3 py-2 font-medium text-zinc-800 focus:outline-none focus:border-pink-500 focus:bg-white" />
+                                    <input type="number" min="0" name="stock_quantity" value="${product.stock_quantity ?? ''}" placeholder="ex: 50" class="input-luxury w-full" />
                                 </div>
                                 <div>
                                     <label class="block font-bold text-zinc-700 mb-1">Position / Tri</label>
-                                    <input type="number" name="sort_order" value="${product.sort_order || 0}" placeholder="0" class="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-3 py-2 font-medium text-zinc-800 focus:outline-none focus:border-pink-500 focus:bg-white" />
+                                    <input type="number" name="sort_order" value="${product.sort_order || 0}" placeholder="0" class="input-luxury w-full" />
                                 </div>
                                 <div>
                                     <label class="block font-bold text-zinc-700 mb-1">Note (0-5)</label>
-                                    <input type="number" step="0.1" min="0" max="5" name="rating" value="${product.rating || 5.0}" placeholder="4.8" class="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-3 py-2 font-medium text-zinc-800 focus:outline-none focus:border-pink-500 focus:bg-white" />
+                                    <input type="number" step="0.1" min="0" max="5" name="rating" value="${product.rating || 5.0}" placeholder="4.8" class="input-luxury w-full" />
                                 </div>
                                 <div>
                                     <label class="block font-bold text-zinc-700 mb-1">Nb d'avis</label>
-                                    <input type="number" min="0" name="review_count" value="${product.review_count || 1}" placeholder="12" class="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-3 py-2 font-medium text-zinc-800 focus:outline-none focus:border-pink-500 focus:bg-white" />
+                                    <input type="number" min="0" name="review_count" value="${product.review_count || 1}" placeholder="12" class="input-luxury w-full" />
                                 </div>
                             </div>
                         </div>
@@ -1245,20 +1245,20 @@
                         <div id="pe-sizes-wrapper" class="space-y-3 ${product.has_sizes || product.sizes?.length ? '' : 'hidden'}">
                             <div class="flex items-center justify-between border-b border-zinc-100 pb-2">
                                 <h4 class="text-xs font-black uppercase tracking-wider text-zinc-400">Variantes de Format / Contenance</h4>
-                                <button type="button" id="pe-add-size-btn" class="text-pink-600 hover:text-pink-700 font-bold flex items-center gap-1 cursor-pointer">
-                                    <i class="ti ti-plus"></i> Ajouter une contenance
+                                <button type="button" id="pe-add-size-btn" class="btn-pill-secondary btn-pill-sm cursor-pointer">
+                                    <i class="ti ti-plus"></i> Ajouter un format
                                 </button>
                             </div>
                             <div id="pe-sizes-list" class="space-y-2.5">
                                 ${(product.sizes || []).map((s, i) => `
-                                    <div class="flex items-center gap-2 bg-zinc-50 p-2.5 rounded-xl border border-zinc-200 size-row">
-                                        <input type="text" name="size_label[]" value="${s.label || ''}" placeholder="ex: 90ml" required class="flex-1 bg-white border border-zinc-200 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-zinc-800" />
-                                        <input type="number" step="0.01" name="size_price[]" value="${s.price || ''}" placeholder="Prix spécifique (DH)" class="w-32 bg-white border border-zinc-200 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-zinc-800" />
+                                    <div class="flex items-center gap-2 bg-zinc-50 p-2.5 rounded-2xl border border-zinc-200 size-row">
+                                        <input type="text" name="size_label[]" value="${s.label || ''}" placeholder="ex: 90ml" required class="input-luxury flex-1 text-xs font-semibold" />
+                                        <input type="number" step="0.01" name="size_price[]" value="${s.price || ''}" placeholder="Prix spécifique (DH)" class="input-luxury w-32 text-xs font-semibold" />
                                         <label class="flex items-center gap-1 text-[11px] font-bold text-zinc-600 cursor-pointer">
                                             <input type="checkbox" name="size_instock[]" ${s.in_stock ? 'checked' : ''} class="w-3.5 h-3.5 accent-pink-600 rounded" />
                                             <span>En stock</span>
                                         </label>
-                                        <button type="button" class="p-1 text-zinc-400 hover:text-red-600 rounded remove-size-btn cursor-pointer">
+                                        <button type="button" class="btn-circle-action w-7 h-7 rounded-full border border-zinc-200 hover:border-red-300 hover:text-red-600 text-zinc-400 remove-size-btn cursor-pointer">
                                             <i class="ti ti-trash"></i>
                                         </button>
                                     </div>
@@ -1270,23 +1270,23 @@
                         <div id="pe-flavors-wrapper" class="space-y-3 ${product.has_flavors || product.flavors?.length ? '' : 'hidden'}">
                             <div class="flex items-center justify-between border-b border-zinc-100 pb-2">
                                 <h4 class="text-xs font-black uppercase tracking-wider text-zinc-400">Variantes de Parfum / Teinte</h4>
-                                <button type="button" id="pe-add-flavor-btn" class="text-pink-600 hover:text-pink-700 font-bold flex items-center gap-1 cursor-pointer">
+                                <button type="button" id="pe-add-flavor-btn" class="btn-pill-secondary btn-pill-sm cursor-pointer">
                                     <i class="ti ti-plus"></i> Ajouter un parfum
                                 </button>
                             </div>
                             <div id="pe-flavors-list" class="space-y-2.5">
                                 ${(product.flavors || []).map((f, i) => `
-                                    <div class="flex items-center gap-2 bg-zinc-50 p-2.5 rounded-xl border border-zinc-200 flavor-row">
-                                        <input type="text" name="flavor_label[]" value="${f.label || ''}" placeholder="ex: Cheirosa 68" required class="flex-1 bg-white border border-zinc-200 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-zinc-800" />
+                                    <div class="flex items-center gap-2 bg-zinc-50 p-2.5 rounded-2xl border border-zinc-200 flavor-row">
+                                        <input type="text" name="flavor_label[]" value="${f.label || ''}" placeholder="ex: Cheirosa 68" required class="input-luxury flex-1 text-xs font-semibold" />
                                         <div class="flex items-center gap-1.5 shrink-0">
-                                            <input type="color" value="${f.color_hex || '#ff1b7a'}" class="w-8 h-8 rounded-lg cursor-pointer border border-zinc-200 flavor-color-picker" />
-                                            <input type="text" name="flavor_color[]" value="${f.color_hex || '#ff1b7a'}" placeholder="#ff1b7a" class="w-24 bg-white border border-zinc-200 rounded-lg px-2 py-1.5 font-mono text-[11px] text-zinc-800 flavor-color-hex" />
+                                            <input type="color" value="${f.color_hex || '#ff1b7a'}" class="w-8 h-8 rounded-xl cursor-pointer border border-zinc-200 flavor-color-picker" />
+                                            <input type="text" name="flavor_color[]" value="${f.color_hex || '#ff1b7a'}" placeholder="#ff1b7a" class="input-luxury w-24 text-[11px] font-mono flavor-color-hex" />
                                         </div>
                                         <label class="flex items-center gap-1 text-[11px] font-bold text-zinc-600 cursor-pointer">
                                             <input type="checkbox" name="flavor_instock[]" ${f.in_stock ? 'checked' : ''} class="w-3.5 h-3.5 accent-pink-600 rounded" />
                                             <span>En stock</span>
                                         </label>
-                                        <button type="button" class="p-1 text-zinc-400 hover:text-red-600 rounded remove-flavor-btn cursor-pointer">
+                                        <button type="button" class="btn-circle-action w-7 h-7 rounded-full border border-zinc-200 hover:border-red-300 hover:text-red-600 text-zinc-400 remove-flavor-btn cursor-pointer">
                                             <i class="ti ti-trash"></i>
                                         </button>
                                     </div>
@@ -1297,10 +1297,10 @@
 
                     <!-- Drawer Sticky Footer -->
                     <div class="px-6 py-4 border-t border-zinc-100 bg-zinc-50/70 flex items-center justify-end gap-3 shrink-0">
-                        <button type="button" data-close-drawer class="px-4 py-2.5 rounded-2xl border border-zinc-200 text-xs font-bold text-zinc-700 hover:bg-zinc-100 transition cursor-pointer">
+                        <button type="button" data-close-drawer class="btn-pill-secondary btn-pill-sm cursor-pointer">
                             Annuler
                         </button>
-                        <button type="submit" form="product-editor-form" id="pe-submit-btn" class="btn-primary-pink px-6 py-2.5 rounded-2xl text-xs font-bold flex items-center gap-2 cursor-pointer shadow-lg shadow-pink-600/20">
+                        <button type="submit" form="product-editor-form" id="pe-submit-btn" class="btn-pill-primary btn-pill-sm">
                             <i class="ti ti-check text-sm"></i>
                             <span>${isEditing ? 'Enregistrer les modifications' : 'Créer le produit'}</span>
                         </button>
@@ -1541,7 +1541,7 @@
                             <h1 class="text-2xl font-black text-zinc-900 tracking-tight">Catégories & Collections</h1>
                             <p class="text-xs text-zinc-400 font-medium">Organisez votre catalogue par univers et rituels de beauté</p>
                         </div>
-                        <button type="button" id="btn-create-category" class="btn-primary-pink px-4 py-2.5 rounded-2xl text-xs font-bold flex items-center gap-2 cursor-pointer shadow-lg shadow-pink-600/20 shrink-0">
+                        <button type="button" id="btn-create-category" class="btn-pill-primary btn-pill-sm shrink-0">
                             <i class="ti ti-plus text-sm"></i>
                             <span>Nouvelle catégorie</span>
                         </button>
@@ -1721,31 +1721,31 @@
                     <form id="category-modal-form" class="space-y-4 text-xs">
                         <div>
                             <label class="block font-bold text-zinc-700 mb-1">Nom de la catégorie <span class="text-pink-600">*</span></label>
-                            <input type="text" name="name" value="${data.name || ''}" required placeholder="ex: Soins Corps & Solaires" class="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-3.5 py-2.5 font-medium text-zinc-800 focus:outline-none focus:border-pink-500 focus:bg-white" />
+                            <input type="text" name="name" value="${data.name || ''}" required placeholder="ex: Soins Corps & Solaires" class="input-luxury w-full" />
                         </div>
 
                         <div>
                             <label class="block font-bold text-zinc-700 mb-1">Slug URL <span class="text-zinc-400 font-normal">(auto si vide)</span></label>
-                            <input type="text" name="slug" value="${data.slug || ''}" placeholder="ex: soins-corps" class="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-3.5 py-2.5 font-mono text-[11px] text-zinc-800 focus:outline-none focus:border-pink-500 focus:bg-white" />
+                            <input type="text" name="slug" value="${data.slug || ''}" placeholder="ex: soins-corps" class="input-luxury w-full font-mono text-[11px]" />
                         </div>
 
                         <div>
                             <label class="block font-bold text-zinc-700 mb-1">URL Image d'illustration</label>
-                            <input type="text" name="image" value="${data.image || ''}" placeholder="https://... ou /images/..." class="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-3.5 py-2.5 font-medium text-zinc-800 focus:outline-none focus:border-pink-500 focus:bg-white" />
+                            <input type="text" name="image" value="${data.image || ''}" placeholder="https://... ou /images/..." class="input-luxury w-full" />
                         </div>
 
                         <div>
                             <label class="block font-bold text-zinc-700 mb-1">Description</label>
-                            <textarea name="description" rows="2" placeholder="Brève description de la collection..." class="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-3.5 py-2.5 font-medium text-zinc-800 focus:outline-none focus:border-pink-500 focus:bg-white">${data.description || ''}</textarea>
+                            <textarea name="description" rows="2" placeholder="Brève description de la collection..." class="textarea-luxury w-full">${data.description || ''}</textarea>
                         </div>
 
                         <div class="grid grid-cols-2 gap-4 pt-1">
                             <div>
                                 <label class="block font-bold text-zinc-700 mb-1">Position / Ordre</label>
-                                <input type="number" name="sort_order" value="${data.sort_order || 0}" class="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-3 py-2 font-medium text-zinc-800 focus:outline-none focus:border-pink-500 focus:bg-white" />
+                                <input type="number" name="sort_order" value="${data.sort_order || 0}" class="input-luxury w-full" />
                             </div>
                             <div class="flex items-center">
-                                <label class="flex items-center gap-2 p-2.5 bg-zinc-50 rounded-xl border border-zinc-200 cursor-pointer w-full mt-4">
+                                <label class="flex items-center gap-2 p-2.5 bg-zinc-50 rounded-2xl border border-zinc-200 cursor-pointer w-full mt-4">
                                     <input type="checkbox" name="is_active" ${data.is_active ? 'checked' : ''} class="w-4 h-4 rounded accent-pink-600" />
                                     <span class="font-bold text-zinc-800">Catégorie active</span>
                                 </label>
@@ -1753,10 +1753,10 @@
                         </div>
 
                         <div class="flex items-center justify-end gap-3 pt-4 border-t border-zinc-100 mt-5">
-                            <button type="button" data-close-modal class="px-4 py-2.5 rounded-xl border border-zinc-200 font-bold text-zinc-700 hover:bg-zinc-50 cursor-pointer">
+                            <button type="button" data-close-modal class="btn-pill-secondary btn-pill-sm cursor-pointer">
                                 Annuler
                             </button>
-                            <button type="submit" id="cat-submit-btn" class="btn-primary-pink px-5 py-2.5 rounded-xl font-bold flex items-center gap-1.5 cursor-pointer shadow-md">
+                            <button type="submit" id="cat-submit-btn" class="btn-pill-primary btn-pill-sm">
                                 <i class="ti ti-check"></i>
                                 <span>${isEditing ? 'Enregistrer' : 'Créer'}</span>
                             </button>
@@ -1815,7 +1815,7 @@
                             <h1 class="text-2xl font-black text-zinc-900 tracking-tight">Remises & Codes Promo</h1>
                             <p class="text-xs text-zinc-400 font-medium">Pilotez vos campagnes promotionnelles, codes de réduction et soldes produits</p>
                         </div>
-                        <button type="button" id="btn-create-coupon" class="btn-primary-pink px-4 py-2.5 rounded-2xl text-xs font-bold flex items-center gap-2 cursor-pointer shadow-lg shadow-pink-600/20 shrink-0">
+                        <button type="button" id="btn-create-coupon" class="btn-pill-primary btn-pill-sm shrink-0">
                             <i class="ti ti-plus text-sm"></i>
                             <span>Nouveau code promo</span>
                         </button>
@@ -2072,51 +2072,51 @@
                     <form id="coupon-modal-form" class="space-y-4 text-xs">
                         <div>
                             <label class="block font-bold text-zinc-700 mb-1">Code Promo <span class="text-pink-600">*</span></label>
-                            <input type="text" name="code" value="${data.code || ''}" required placeholder="ex: SUMMER20" class="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-3.5 py-2.5 font-mono uppercase text-sm font-black text-pink-600 tracking-wider focus:outline-none focus:border-pink-500 focus:bg-white" />
+                            <input type="text" name="code" value="${data.code || ''}" required placeholder="ex: SUMMER20" class="input-luxury w-full font-mono uppercase text-sm font-black text-pink-600 tracking-wider" />
                         </div>
 
                         <div class="grid grid-cols-2 gap-4">
                             <div>
                                 <label class="block font-bold text-zinc-700 mb-1">Type de remise <span class="text-pink-600">*</span></label>
-                                <select name="type" required class="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-3.5 py-2.5 font-semibold text-zinc-800 focus:outline-none focus:border-pink-500 focus:bg-white">
+                                <select name="type" required class="select-luxury w-full font-semibold">
                                     <option value="percent" ${data.type === 'percent' ? 'selected' : ''}>% Pourcentage</option>
                                     <option value="fixed" ${data.type === 'fixed' ? 'selected' : ''}>DH Montant fixe</option>
                                 </select>
                             </div>
                             <div>
                                 <label class="block font-bold text-zinc-700 mb-1">Valeur de la réduction <span class="text-pink-600">*</span></label>
-                                <input type="number" step="0.01" min="0.01" name="value" value="${data.value || ''}" required placeholder="ex: 20 ou 50" class="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-3.5 py-2.5 font-black text-zinc-900 focus:outline-none focus:border-pink-500 focus:bg-white" />
+                                <input type="number" step="0.01" min="0.01" name="value" value="${data.value || ''}" required placeholder="ex: 20 ou 50" class="input-luxury w-full font-black text-zinc-900" />
                             </div>
                         </div>
 
                         <div class="grid grid-cols-2 gap-4">
                             <div>
                                 <label class="block font-bold text-zinc-700 mb-1">Panier minimum (DH)</label>
-                                <input type="number" step="0.01" min="0" name="min_order_amount" value="${data.min_order_amount ?? 0}" placeholder="0" class="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-3.5 py-2.5 font-medium text-zinc-800 focus:outline-none focus:border-pink-500 focus:bg-white" />
+                                <input type="number" step="0.01" min="0" name="min_order_amount" value="${data.min_order_amount ?? 0}" placeholder="0" class="input-luxury w-full" />
                             </div>
                             <div>
                                 <label class="block font-bold text-zinc-700 mb-1">Max utilisations <span class="text-zinc-400 font-normal">(vide = illimité)</span></label>
-                                <input type="number" min="1" name="max_uses" value="${data.max_uses || ''}" placeholder="Illimité" class="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-3.5 py-2.5 font-medium text-zinc-800 focus:outline-none focus:border-pink-500 focus:bg-white" />
+                                <input type="number" min="1" name="max_uses" value="${data.max_uses || ''}" placeholder="Illimité" class="input-luxury w-full" />
                             </div>
                         </div>
 
                         <div>
                             <label class="block font-bold text-zinc-700 mb-1">Date d'expiration <span class="text-zinc-400 font-normal">(optionnel)</span></label>
-                            <input type="date" name="expires_at" value="${expiryFormatted}" class="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-3.5 py-2.5 font-medium text-zinc-800 focus:outline-none focus:border-pink-500 focus:bg-white" />
+                            <input type="date" name="expires_at" value="${expiryFormatted}" class="input-luxury w-full" />
                         </div>
 
                         <div>
-                            <label class="flex items-center gap-2 p-3 bg-zinc-50 rounded-xl border border-zinc-200 cursor-pointer">
+                            <label class="flex items-center gap-2 p-3 bg-zinc-50 rounded-2xl border border-zinc-200 cursor-pointer">
                                 <input type="checkbox" name="is_active" ${data.is_active ? 'checked' : ''} class="w-4 h-4 rounded accent-pink-600" />
                                 <span class="font-bold text-zinc-800">Code promo actif immédiatement</span>
                             </label>
                         </div>
 
                         <div class="flex items-center justify-end gap-3 pt-4 border-t border-zinc-100 mt-5">
-                            <button type="button" data-close-modal class="px-4 py-2.5 rounded-xl border border-zinc-200 font-bold text-zinc-700 hover:bg-zinc-50 cursor-pointer">
+                            <button type="button" data-close-modal class="btn-pill-secondary btn-pill-sm cursor-pointer">
                                 Annuler
                             </button>
-                            <button type="submit" id="coupon-submit-btn" class="btn-primary-pink px-5 py-2.5 rounded-xl font-bold flex items-center gap-1.5 cursor-pointer shadow-md">
+                            <button type="submit" id="coupon-submit-btn" class="btn-pill-primary btn-pill-sm">
                                 <i class="ti ti-check"></i>
                                 <span>${isEditing ? 'Enregistrer' : 'Créer le code'}</span>
                             </button>
@@ -2297,13 +2297,13 @@
                     </div>
 
                     <!-- Search & Status Filter -->
-                    <div class="bg-white rounded-2xl p-4 border border-zinc-100 shadow-sm flex flex-col md:flex-row items-center gap-3">
+                    <div class="bg-white rounded-3xl p-4 border border-zinc-100 shadow-sm flex flex-col md:flex-row items-center gap-3">
                         <div class="relative flex-1 w-full">
-                            <i class="ti ti-search absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400 text-base"></i>
-                            <input type="text" id="order-search-input" value="${filter.search || ''}" placeholder="Rechercher par nom de client, téléphone, N° de commande..." class="w-full bg-zinc-50 border border-zinc-200 rounded-xl pl-10 pr-4 py-2 text-xs font-medium text-zinc-800 placeholder-zinc-400 focus:outline-none focus:border-pink-500 focus:bg-white transition" />
+                            <i class="ti ti-search absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 text-base"></i>
+                            <input type="text" id="order-search-input" value="${filter.search || ''}" placeholder="Rechercher par nom de client, téléphone, N° de commande..." class="input-luxury w-full pl-11 pr-4 py-2.5 text-xs" />
                         </div>
-                        <div class="flex items-center gap-2 w-full md:w-auto">
-                            <select id="order-status-select" class="bg-zinc-50 border border-zinc-200 rounded-xl px-3 py-2 text-xs font-medium text-zinc-800 focus:outline-none focus:border-pink-500 focus:bg-white transition flex-1 md:w-48">
+                        <div class="flex items-center gap-2.5 w-full md:w-auto">
+                            <select id="order-status-select" class="select-luxury py-2.5 text-xs flex-1 md:w-52">
                                 <option value="" ${filter.status === '' ? 'selected' : ''}>Tous les statuts</option>
                                 <option value="pending" ${filter.status === 'pending' ? 'selected' : ''}>En attente</option>
                                 <option value="confirmed" ${filter.status === 'confirmed' ? 'selected' : ''}>Confirmée</option>
@@ -2314,7 +2314,7 @@
                             </select>
 
                             ${(filter.search || filter.status) ? `
-                                <button type="button" id="order-reset-filters" class="p-2 rounded-xl bg-zinc-100 hover:bg-zinc-200 text-zinc-600 text-xs transition cursor-pointer" title="Réinitialiser les filtres">
+                                <button type="button" id="order-reset-filters" class="btn-circle-action w-9 h-9 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-600 text-xs transition cursor-pointer shrink-0" title="Réinitialiser les filtres">
                                     <i class="ti ti-x text-sm"></i>
                                 </button>
                             ` : ''}
@@ -2740,11 +2740,11 @@
                                         <td class="px-6 py-4 text-zinc-400 font-medium">${formatDate(m.created_at)}</td>
                                         <td class="px-6 py-4 text-right">
                                             <div class="flex items-center justify-end gap-2">
-                                                <button type="button" data-read-msg="${m.id}" class="px-3 py-1.5 rounded-xl bg-zinc-100 hover:bg-zinc-900 hover:text-white text-zinc-800 font-bold text-xs transition cursor-pointer">
+                                                <button type="button" data-read-msg="${m.id}" class="btn-pill-secondary btn-pill-sm">
                                                     Lire
                                                 </button>
                                                 ${!m.is_read ? `
-                                                    <button type="button" data-mark-read="${m.id}" class="p-1.5 text-zinc-400 hover:text-pink-600 transition cursor-pointer" title="Marquer comme lu">
+                                                    <button type="button" data-mark-read="${m.id}" class="btn-circle-action w-8 h-8 rounded-full border border-zinc-200 text-zinc-400 hover:text-pink-600 hover:border-pink-300 transition cursor-pointer" title="Marquer comme lu">
                                                         <i class="ti ti-check text-base"></i>
                                                     </button>
                                                 ` : ''}
@@ -2761,10 +2761,10 @@
                         <div class="px-6 py-4 border-t border-zinc-100 flex items-center justify-between text-xs">
                             <span class="text-zinc-400 font-medium">Page ${data.current_page} sur ${data.last_page}</span>
                             <div class="flex items-center gap-1.5">
-                                <button type="button" ${data.current_page === 1 ? 'disabled class="opacity-40 cursor-not-allowed"' : ''} id="msg-prev-page" class="px-3 py-1.5 rounded-xl border border-zinc-200 font-bold text-zinc-700 hover:bg-zinc-50 transition cursor-pointer">
+                                <button type="button" ${data.current_page === 1 ? 'disabled class="opacity-40 cursor-not-allowed"' : ''} id="msg-prev-page" class="btn-pill-secondary btn-pill-sm">
                                     Précédent
                                 </button>
-                                <button type="button" ${data.current_page === data.last_page ? 'disabled class="opacity-40 cursor-not-allowed"' : ''} id="msg-next-page" class="px-3 py-1.5 rounded-xl border border-zinc-200 font-bold text-zinc-700 hover:bg-zinc-50 transition cursor-pointer">
+                                <button type="button" ${data.current_page === data.last_page ? 'disabled class="opacity-40 cursor-not-allowed"' : ''} id="msg-next-page" class="btn-pill-secondary btn-pill-sm">
                                     Suivant
                                 </button>
                             </div>
@@ -2844,7 +2844,7 @@
                                 <span class="font-bold text-zinc-900 text-sm block">${msg.name}</span>
                                 <a href="mailto:${msg.email}" class="text-pink-600 hover:underline font-semibold text-xs">${msg.email}</a>
                             </div>
-                            <a href="mailto:${msg.email}?subject=${encodeURIComponent('Re: ' + (msg.subject || ''))}" class="px-3.5 py-1.5 rounded-xl bg-zinc-900 text-white font-bold text-xs hover:bg-pink-600 transition flex items-center gap-1.5">
+                            <a href="mailto:${msg.email}?subject=${encodeURIComponent('Re: ' + (msg.subject || ''))}" class="btn-pill-primary btn-pill-sm">
                                 <i class="ti ti-send text-xs"></i>
                                 <span>Répondre</span>
                             </a>
@@ -2863,12 +2863,12 @@
                             </span>
                             <div class="flex items-center gap-2">
                                 ${!msg.is_read ? `
-                                    <button type="button" id="msg-mark-read-btn" class="btn-primary-pink px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-md">
+                                    <button type="button" id="msg-mark-read-btn" class="btn-pill-primary btn-pill-sm">
                                         <i class="ti ti-check"></i>
                                         <span>Marquer comme lu</span>
                                     </button>
                                 ` : ''}
-                                <button type="button" data-close-modal class="px-4 py-2 rounded-xl border border-zinc-200 font-bold text-zinc-700 hover:bg-zinc-50 cursor-pointer">
+                                <button type="button" data-close-modal class="btn-pill-secondary btn-pill-sm cursor-pointer">
                                     Fermer
                                 </button>
                             </div>

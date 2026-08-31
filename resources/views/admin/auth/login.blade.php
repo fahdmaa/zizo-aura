@@ -43,9 +43,9 @@
                 <label class="block text-xs font-bold text-zinc-700 mb-2">Mot de passe administrateur</label>
                 <div class="relative">
                     <input type="password" name="password" id="admin-password-input" autofocus required
-                        class="w-full bg-zinc-50 border border-zinc-200 rounded-2xl px-4 py-3 text-sm font-medium text-zinc-800 focus:outline-none focus:border-pink-500 focus:bg-white transition @error('password') border-red-400 bg-red-50/50 @enderror"
+                        class="input-luxury w-full px-4 py-3.5 text-sm font-medium pr-12 @error('password') border-red-400 bg-red-50/50 @enderror"
                         placeholder="••••••••••••">
-                    <button type="button" onclick="const i = document.getElementById('admin-password-input'); i.type = i.type === 'password' ? 'text' : 'password';" class="absolute right-3.5 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-700 p-1 cursor-pointer">
+                    <button type="button" onclick="const i = document.getElementById('admin-password-input'); i.type = i.type === 'password' ? 'text' : 'password';" class="btn-circle-action absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-pink-600 w-8 h-8 cursor-pointer">
                         <i class="ti ti-eye text-base"></i>
                     </button>
                 </div>
@@ -58,8 +58,7 @@
             </div>
 
             <button type="submit"
-                class="w-full py-3.5 px-4 rounded-2xl text-xs font-black text-white transition shadow-lg shadow-pink-600/25 flex items-center justify-center gap-2 cursor-pointer"
-                style="background: #ff1b7a;">
+                class="btn-pill-primary w-full py-4 text-xs font-extrabold uppercase tracking-wider">
                 <span>Accéder au Tableau de Bord</span>
                 <i class="ti ti-arrow-right text-sm"></i>
             </button>

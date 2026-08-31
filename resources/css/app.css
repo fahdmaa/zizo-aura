@@ -113,12 +113,123 @@ input[type="number"] {
 }
 
 /* ========================================================
+   UNIFIED LUXURY FORM CONTROLS (Inputs, Textareas, Selects)
+   ======================================================== */
+
+/* Luxury Input Text Boxes */
+.input-luxury,
+input[type="text"],
+input[type="email"],
+input[type="number"],
+input[type="password"],
+input[type="search"],
+input[type="tel"] {
+  background-color: #ffffff;
+  color: #111827;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 1rem;
+  padding: 0.7rem 1.1rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+}
+
+.input-luxury:hover,
+input[type="text"]:hover,
+input[type="email"]:hover,
+input[type="number"]:hover,
+input[type="password"]:hover,
+input[type="search"]:hover,
+input[type="tel"]:hover {
+  border-color: #f472b6;
+}
+
+.input-luxury:focus,
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="number"]:focus,
+input[type="password"]:focus,
+input[type="search"]:focus,
+input[type="tel"]:focus {
+  background-color: #ffffff;
+  border-color: #ff1b7a;
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(255, 27, 122, 0.12), 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+/* Luxury Textarea */
+.textarea-luxury,
+textarea {
+  background-color: #ffffff;
+  color: #111827;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 1rem;
+  padding: 0.75rem 1.1rem;
+  font-size: 0.875rem;
+  line-height: 1.35rem;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+}
+
+.textarea-luxury:hover,
+textarea:hover {
+  border-color: #f472b6;
+}
+
+.textarea-luxury:focus,
+textarea:focus {
+  background-color: #ffffff;
+  border-color: #ff1b7a;
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(255, 27, 122, 0.12), 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+/* Luxury Dropdown Select Menus with Custom Chevron */
+.select-luxury,
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: #ffffff;
+  color: #111827;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 1rem;
+  padding: 0.7rem 2.75rem 0.7rem 1.1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.25rem;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23ff1b7a' stroke-width='2.4'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1.15rem;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+}
+
+.select-luxury:hover,
+select:hover {
+  border-color: #f472b6;
+  box-shadow: 0 2px 8px rgba(255, 27, 122, 0.08);
+}
+
+.select-luxury:focus,
+select:focus {
+  background-color: #ffffff;
+  border-color: #ff1b7a;
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(255, 27, 122, 0.12), 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+/* ========================================================
    UNIFIED BUTTON SYSTEM & HOVER ANIMATIONS
    All buttons share identical elevation, scaling and pink glow
    ======================================================== */
 
-/* 1. Primary Card Pill Button (Add to cart) */
-.btn-card-pill {
+/* 1. Primary Pill Button */
+.btn-card-pill,
+.btn-hero-pill,
+.btn-pill-primary {
   background: #000000;
   color: #ffffff;
   border-radius: 9999px;
@@ -126,15 +237,18 @@ input[type="number"] {
   font-weight: 700;
   font-size: 0.875rem;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
   cursor: pointer;
-  border: 2px solid transparent;
+  border: 1.5px solid transparent;
+  user-select: none;
 }
 
-.btn-card-pill:hover {
+.btn-card-pill:hover,
+.btn-hero-pill:hover,
+.btn-pill-primary:hover {
   background: #ff1b7a;
   color: #ffffff;
   border-color: #ff1b7a;
@@ -142,56 +256,33 @@ input[type="number"] {
   box-shadow: 0 8px 22px rgba(255, 27, 122, 0.32);
 }
 
-.btn-card-pill:active {
+.btn-card-pill:active,
+.btn-hero-pill:active,
+.btn-pill-primary:active {
   transform: scale(0.97);
 }
 
-/* 2. Hero Primary Pill Button */
-.btn-hero-pill {
-  background: #000000;
-  color: #ffffff;
-  border-radius: 9999px;
-  padding: 0.95rem 2.25rem;
-  font-weight: 800;
-  font-size: 0.9375rem;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  border: 2px solid transparent;
-}
-
-.btn-hero-pill:hover {
-  background: #ff1b7a;
-  color: #ffffff;
-  border-color: #ff1b7a;
-  transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 8px 22px rgba(255, 27, 122, 0.32);
-}
-
-.btn-hero-pill:active {
-  transform: scale(0.97);
-}
-
-/* 3. Hero / Secondary Pill Button */
-.btn-secondary-pill {
+/* 2. Secondary Pill Button */
+.btn-secondary-pill,
+.btn-pill-secondary {
   background: #ffffff;
   color: #111827;
-  border: 2px solid #e5e7eb;
+  border: 1.5px solid #e5e7eb;
   border-radius: 9999px;
-  padding: 0.95rem 2.25rem;
-  font-weight: 800;
-  font-size: 0.9375rem;
+  padding: 0.75rem 1.5rem;
+  font-weight: 700;
+  font-size: 0.875rem;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
   cursor: pointer;
+  user-select: none;
 }
 
-.btn-secondary-pill:hover {
+.btn-secondary-pill:hover,
+.btn-pill-secondary:hover {
   background: #ff1b7a;
   color: #ffffff;
   border-color: #ff1b7a;
@@ -199,14 +290,62 @@ input[type="number"] {
   box-shadow: 0 8px 22px rgba(255, 27, 122, 0.32);
 }
 
-.btn-secondary-pill:active {
+.btn-secondary-pill:active,
+.btn-pill-secondary:active {
   transform: scale(0.97);
+}
+
+/* 3. Danger Pill Button */
+.btn-pill-danger {
+  background: #ffffff;
+  color: #e11d48;
+  border: 1.5px solid #fecdd3;
+  border-radius: 9999px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 700;
+  font-size: 0.875rem;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.btn-pill-danger:hover {
+  background: #e11d48;
+  color: #ffffff;
+  border-color: #e11d48;
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 22px rgba(225, 29, 72, 0.32);
+}
+
+.btn-pill-danger:active {
+  transform: scale(0.97);
+}
+
+/* Button Size Modifiers */
+.btn-pill-sm {
+  padding: 0.45rem 1.1rem !important;
+  font-size: 0.75rem !important;
+  font-weight: 700 !important;
+}
+
+.btn-pill-lg {
+  padding: 0.95rem 2.25rem !important;
+  font-size: 0.9375rem !important;
+  font-weight: 800 !important;
 }
 
 /* 4. Carousel / Circle Action Buttons */
 .btn-circle-action {
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   cursor: pointer;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .btn-circle-action:hover {
