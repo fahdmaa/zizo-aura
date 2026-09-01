@@ -85,32 +85,32 @@
             if (!this.container) {
                 this.container = document.createElement('div');
                 this.container.id = 'admin-toast-container';
-                this.container.className = 'fixed bottom-6 right-6 z-50 flex flex-col gap-2.5 max-w-sm pointer-events-none';
                 document.body.appendChild(this.container);
             }
+            this.container.className = 'fixed bottom-6 right-6 z-50 flex flex-col items-end gap-2.5 max-w-sm pointer-events-none';
         },
         show(message, type = 'success') {
             this.init();
             const el = document.createElement('div');
-            el.className = `pointer-events-auto transform translate-y-3 opacity-0 transition-all duration-300 ease-out flex items-center gap-3 px-4 py-3 rounded-2xl shadow-xl border text-sm font-medium ${
+            el.className = `pointer-events-auto transform translate-y-3 opacity-0 transition-all duration-300 ease-out flex items-center gap-2.5 px-4 py-2.5 rounded-2xl shadow-xl border text-xs font-semibold w-auto max-w-sm ${
                 type === 'error'
-                    ? 'bg-red-950 text-red-100 border-red-800/80 shadow-red-950/20'
+                    ? 'bg-zinc-950 text-red-200 border-red-800/80 shadow-red-950/20'
                     : type === 'info'
-                    ? 'bg-zinc-900 text-white border-zinc-800 shadow-zinc-950/20'
-                    : 'bg-zinc-900 text-white border-pink-500/30 shadow-pink-950/20'
+                    ? 'bg-zinc-950 text-sky-200 border-sky-800/80 shadow-sky-950/20'
+                    : 'bg-zinc-950 text-white border-pink-500/40 shadow-pink-950/20'
             }`;
 
             const iconSvg = type === 'error'
-                ? '<i class="ti ti-alert-circle text-rose-400 text-lg"></i>'
+                ? '<i class="ti ti-alert-circle text-rose-400 text-base"></i>'
                 : type === 'info'
-                ? '<i class="ti ti-info-circle text-sky-400 text-lg"></i>'
-                : '<i class="ti ti-check text-pink-400 text-lg"></i>';
+                ? '<i class="ti ti-info-circle text-sky-400 text-base"></i>'
+                : '<i class="ti ti-check text-pink-400 text-base"></i>';
 
             el.innerHTML = `
                 <div class="shrink-0 flex items-center justify-center">${iconSvg}</div>
-                <div class="flex-1 text-xs leading-snug">${message}</div>
-                <button type="button" class="text-zinc-400 hover:text-white transition-colors cursor-pointer shrink-0 ml-1">
-                    <i class="ti ti-x text-sm"></i>
+                <div class="leading-snug">${message}</div>
+                <button type="button" class="text-zinc-400 hover:text-white transition-colors cursor-pointer shrink-0 ml-1.5" title="Fermer">
+                    <i class="ti ti-x text-xs"></i>
                 </button>
             `;
 
@@ -131,7 +131,7 @@
                     el.classList.add('opacity-0', 'translate-y-2');
                     setTimeout(() => el.remove(), 300);
                 }
-            }, 3600);
+            }, 3000);
         }
     };
 

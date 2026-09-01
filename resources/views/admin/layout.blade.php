@@ -231,7 +231,7 @@
 <!-- Modal & Drawer Mount Roots -->
 <div id="admin-modal-root"></div>
 <div id="admin-drawer-root"></div>
-<div id="admin-toast-container"></div>
+<div id="admin-toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-2.5 max-w-sm pointer-events-none"></div>
 
 </body>
 </html>
