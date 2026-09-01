@@ -748,11 +748,14 @@
 
                     <!-- Search & Filter Controls -->
                     <div class="bg-white rounded-3xl p-4 border border-zinc-100 shadow-sm flex flex-col md:flex-row items-center gap-3">
-                        <div class="relative flex-1 w-full">
-                            <i class="ti ti-search absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 text-base"></i>
-                            <input type="text" id="prod-search-input" value="${filter.search || ''}" placeholder="Rechercher par nom..." class="input-luxury w-full pl-11 pr-4 py-2.5 text-xs" />
+                        <div class="admin-search-container ${filter.search ? 'is-expanded' : ''} flex-1 w-full">
+                            <i class="ti ti-search admin-search-icon"></i>
+                            <input type="text" id="prod-search-input" value="${filter.search || ''}" placeholder="Rechercher par nom de formule, fragrance..." class="admin-search-input" autocomplete="off" />
+                            <button type="button" id="prod-search-clear" class="admin-search-clear-btn ${filter.search ? '' : 'hidden'}" title="Effacer la recherche">
+                                <i class="ti ti-x text-xs"></i>
+                            </button>
                         </div>
-                        <div class="flex items-center gap-2.5 w-full md:w-auto">
+                        <div class="flex items-center gap-2.5 w-full md:w-auto shrink-0">
                             <select id="prod-cat-select" class="select-luxury py-2.5 text-xs flex-1 md:w-48">
                                 <option value="">Toutes les catégories</option>
                                 ${appState.categoriesCache.map(cat => `
@@ -786,14 +789,61 @@
 
             // Bind filter events
             const searchInput = document.getElementById('prod-search-input');
+            const searchContainer = searchInput?.closest('.admin-search-container');
+            const searchClearBtn = document.getElementById('prod-search-clear');
             let timer = null;
+
+            searchInput?.addEventListener('focus', () => {
+                searchContainer?.classList.add('is-expanded');
+            });
+
+            searchInput?.addEventListener('blur', () => {
+                if (!searchInput.value.trim()) {
+                    searchContainer?.classList.remove('is-expanded');
+                }
+            });
+
             searchInput?.addEventListener('input', (e) => {
+                const val = e.target.value;
+                if (searchClearBtn) {
+                    if (val.trim().length > 0) {
+                        searchClearBtn.classList.remove('hidden');
+                        searchContainer?.classList.add('is-expanded');
+                    } else {
+                        searchClearBtn.classList.add('hidden');
+                    }
+                }
                 clearTimeout(timer);
                 timer = setTimeout(() => {
-                    appState.productsFilter.search = e.target.value;
+                    appState.productsFilter.search = val;
                     appState.productsFilter.page = 1;
                     this.loadProductsList();
                 }, 300);
+            });
+
+            searchInput?.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    if (searchInput.value) {
+                        searchInput.value = '';
+                        searchClearBtn?.classList.add('hidden');
+                        appState.productsFilter.search = '';
+                        appState.productsFilter.page = 1;
+                        this.loadProductsList();
+                    }
+                    searchInput.blur();
+                    searchContainer?.classList.remove('is-expanded');
+                }
+            });
+
+            searchClearBtn?.addEventListener('click', () => {
+                if (searchInput) {
+                    searchInput.value = '';
+                    searchClearBtn.classList.add('hidden');
+                    searchInput.focus();
+                    appState.productsFilter.search = '';
+                    appState.productsFilter.page = 1;
+                    this.loadProductsList();
+                }
             });
 
             document.getElementById('prod-cat-select')?.addEventListener('change', (e) => {
@@ -2298,11 +2348,14 @@
 
                     <!-- Search & Status Filter -->
                     <div class="bg-white rounded-3xl p-4 border border-zinc-100 shadow-sm flex flex-col md:flex-row items-center gap-3">
-                        <div class="relative flex-1 w-full">
-                            <i class="ti ti-search absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 text-base"></i>
-                            <input type="text" id="order-search-input" value="${filter.search || ''}" placeholder="Rechercher par nom de client, téléphone, N° de commande..." class="input-luxury w-full pl-11 pr-4 py-2.5 text-xs" />
+                        <div class="admin-search-container ${filter.search ? 'is-expanded' : ''} flex-1 w-full">
+                            <i class="ti ti-search admin-search-icon"></i>
+                            <input type="text" id="order-search-input" value="${filter.search || ''}" placeholder="Rechercher par nom de client, téléphone, N° de commande..." class="admin-search-input" autocomplete="off" />
+                            <button type="button" id="order-search-clear" class="admin-search-clear-btn ${filter.search ? '' : 'hidden'}" title="Effacer la recherche">
+                                <i class="ti ti-x text-xs"></i>
+                            </button>
                         </div>
-                        <div class="flex items-center gap-2.5 w-full md:w-auto">
+                        <div class="flex items-center gap-2.5 w-full md:w-auto shrink-0">
                             <select id="order-status-select" class="select-luxury py-2.5 text-xs flex-1 md:w-52">
                                 <option value="" ${filter.status === '' ? 'selected' : ''}>Tous les statuts</option>
                                 <option value="pending" ${filter.status === 'pending' ? 'selected' : ''}>En attente</option>
@@ -2332,14 +2385,61 @@
 
             // Filter wiring
             const searchInput = document.getElementById('order-search-input');
+            const searchContainer = searchInput?.closest('.admin-search-container');
+            const searchClearBtn = document.getElementById('order-search-clear');
             let timer = null;
+
+            searchInput?.addEventListener('focus', () => {
+                searchContainer?.classList.add('is-expanded');
+            });
+
+            searchInput?.addEventListener('blur', () => {
+                if (!searchInput.value.trim()) {
+                    searchContainer?.classList.remove('is-expanded');
+                }
+            });
+
             searchInput?.addEventListener('input', (e) => {
+                const val = e.target.value;
+                if (searchClearBtn) {
+                    if (val.trim().length > 0) {
+                        searchClearBtn.classList.remove('hidden');
+                        searchContainer?.classList.add('is-expanded');
+                    } else {
+                        searchClearBtn.classList.add('hidden');
+                    }
+                }
                 clearTimeout(timer);
                 timer = setTimeout(() => {
-                    appState.ordersFilter.search = e.target.value;
+                    appState.ordersFilter.search = val;
                     appState.ordersFilter.page = 1;
                     this.loadOrdersList();
                 }, 300);
+            });
+
+            searchInput?.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    if (searchInput.value) {
+                        searchInput.value = '';
+                        searchClearBtn?.classList.add('hidden');
+                        appState.ordersFilter.search = '';
+                        appState.ordersFilter.page = 1;
+                        this.loadOrdersList();
+                    }
+                    searchInput.blur();
+                    searchContainer?.classList.remove('is-expanded');
+                }
+            });
+
+            searchClearBtn?.addEventListener('click', () => {
+                if (searchInput) {
+                    searchInput.value = '';
+                    searchClearBtn.classList.add('hidden');
+                    searchInput.focus();
+                    appState.ordersFilter.search = '';
+                    appState.ordersFilter.page = 1;
+                    this.loadOrdersList();
+                }
             });
 
             document.getElementById('order-status-select')?.addEventListener('change', (e) => {
