@@ -354,7 +354,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (res.ok && data.valid) {
                 setAppliedCoupon(data);
                 couponInput.value = '';
-                showCouponFeedback(`Code ${data.code} appliqué (${data.label})`, 'success');
+                showCouponFeedback('', 'clear');
                 showToast(`✨ Code promo ${data.code} appliqué !`);
                 renderCartUI();
             } else {
