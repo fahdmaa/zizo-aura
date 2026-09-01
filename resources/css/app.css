@@ -465,6 +465,45 @@ select.select-luxury-pill:focus {
   scrollbar-width: none;
 }
 
+.custom-scrollbar::-webkit-scrollbar,
+#admin-modal-box form::-webkit-scrollbar,
+#admin-modal-box div::-webkit-scrollbar,
+.custom-dropdown-panel::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track,
+#admin-modal-box form::-webkit-scrollbar-track,
+#admin-modal-box div::-webkit-scrollbar-track,
+.custom-dropdown-panel::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb,
+#admin-modal-box form::-webkit-scrollbar-thumb,
+#admin-modal-box div::-webkit-scrollbar-thumb,
+.custom-dropdown-panel::-webkit-scrollbar-thumb {
+  background: rgba(244, 114, 182, 0.35);
+  border-radius: 9999px;
+  transition: background-color 0.2s ease;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover,
+#admin-modal-box form::-webkit-scrollbar-thumb:hover,
+#admin-modal-box div::-webkit-scrollbar-thumb:hover,
+.custom-dropdown-panel::-webkit-scrollbar-thumb:hover {
+  background: #ff1b7a;
+}
+
+.custom-scrollbar,
+#admin-modal-box form,
+#admin-modal-box div,
+.custom-dropdown-panel {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(244, 114, 182, 0.35) transparent;
+}
+
 /* ========================================================
    NAVBAR EXPANDABLE SEARCH BAR (Animated Grow & Shrink)
    ======================================================== */

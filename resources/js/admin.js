@@ -296,6 +296,42 @@
         }
     };
 
+    // ─── Image Processing Helpers ─────────────────────────────────────────────
+    function readFileAsCompressedDataUrl(file, maxWidth = 1200, quality = 0.85) {
+        return new Promise((resolve, reject) => {
+            if (!file || !file.type.startsWith('image/')) {
+                return reject(new Error('Le fichier sélectionné n\'est pas une image valide.'));
+            }
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > maxWidth) {
+                        height = Math.round((height * maxWidth) / width);
+                        width = maxWidth;
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    const mimeType = file.type === 'image/png' ? 'image/png' : 'image/jpeg';
+                    const dataUrl = canvas.toDataURL(mimeType, quality);
+                    resolve(dataUrl);
+                };
+                img.onerror = () => reject(new Error('Impossible de charger l\'image.'));
+                img.src = e.target.result;
+            };
+            reader.onerror = () => reject(new Error('Erreur lors de la lecture du fichier.'));
+            reader.readAsDataURL(file);
+        });
+    }
+
     // ─── Number / Currency Helpers ───────────────────────────────────────────
     const formatDH = (num) => {
         const val = parseFloat(num) || 0;
@@ -1305,35 +1341,90 @@
                             </div>
                         </div>
 
-                        <!-- Section 3: Media & Images -->
+                        <!-- Section 3: Media & Images (Upload & Live Visualizer) -->
                         <div class="space-y-4">
-                            <h4 class="text-xs font-black uppercase tracking-wider text-zinc-400 border-b border-zinc-100 pb-2">Visuels & Galerie</h4>
+                            <h4 class="text-xs font-black uppercase tracking-wider text-zinc-400 border-b border-zinc-100 pb-2">Visuels & Photos du Produit</h4>
+                            
+                            <!-- Main Image Upload & Visualization -->
                             <div>
-                                <label class="block font-bold text-zinc-700 mb-1">URL Image principale <span class="text-pink-600">*</span></label>
-                                <div class="flex gap-3">
-                                    <input type="text" name="image" id="pe-image" value="${product.image || ''}" required placeholder="https://... ou /images/..." class="input-luxury flex-1" />
-                                    <div class="w-11 h-11 rounded-2xl bg-zinc-100 border border-zinc-200 overflow-hidden shrink-0 flex items-center justify-center">
-                                        <img id="pe-image-preview" src="${product.image || '/images/sdj_bum_bum_set.jpg'}" alt="Preview" class="w-full h-full object-contain" onerror="this.src='/images/sdj_bum_bum_set.jpg'" />
+                                <label class="block font-bold text-zinc-700 mb-1.5">
+                                    Image principale <span class="text-pink-600">*</span>
+                                </label>
+                                <input type="hidden" name="image" id="pe-image" value="${product.image || ''}" required />
+                                <input type="file" id="pe-main-file-input" accept="image/*" class="hidden" />
+
+                                <!-- Dropzone / Upload Button (when no image) -->
+                                <div id="pe-main-upload-zone" class="${product.image ? 'hidden' : ''} border-2 border-dashed border-zinc-200 hover:border-pink-500 rounded-3xl p-6 text-center cursor-pointer transition-all duration-200 bg-zinc-50/50 hover:bg-pink-50/30 group">
+                                    <div class="w-12 h-12 rounded-2xl bg-white shadow-xs border border-zinc-100 text-pink-600 flex items-center justify-center mx-auto mb-2.5 group-hover:scale-110 transition-transform">
+                                        <i class="ti ti-photo-up text-xl"></i>
+                                    </div>
+                                    <p class="font-bold text-zinc-800 text-xs">Importer l'image principale</p>
+                                    <p class="text-[11px] text-zinc-400 mt-0.5">Glissez-déposez ou cliquez pour parcourir vos fichiers (PNG, JPG, WEBP)</p>
+                                    <button type="button" class="mt-3 btn-pill-secondary btn-pill-sm pointer-events-none inline-flex items-center gap-1.5">
+                                        <i class="ti ti-upload text-sm"></i>
+                                        <span>Choisir un fichier</span>
+                                    </button>
+                                </div>
+
+                                <!-- Visual Preview Box (when image exists/uploaded) -->
+                                <div id="pe-main-preview-card" class="${product.image ? '' : 'hidden'} bg-zinc-50/70 border border-zinc-200/80 rounded-3xl p-4 flex flex-col sm:flex-row items-center gap-4 transition-all">
+                                    <div class="relative w-24 h-24 rounded-2xl bg-white border border-zinc-200 shadow-2xs overflow-hidden shrink-0 flex items-center justify-center p-1.5 group">
+                                        <img id="pe-main-preview-img" src="${product.image || '/images/sdj_bum_bum_set.jpg'}" alt="Preview" class="w-full h-full object-contain transition-transform group-hover:scale-105" />
+                                    </div>
+                                    <div class="flex-1 text-center sm:text-left space-y-1 min-w-0">
+                                        <div class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-bold">
+                                            <i class="ti ti-check text-xs"></i> Image prête pour publication
+                                        </div>
+                                        <p id="pe-main-filename" class="text-xs font-bold text-zinc-900 truncate">Image principale sélectionnée</p>
+                                        <p class="text-[11px] text-zinc-400">Prévisualisation directe avant validation.</p>
+                                        <div class="flex items-center justify-center sm:justify-start gap-2 pt-1">
+                                            <button type="button" id="pe-change-main-btn" class="btn-pill-secondary btn-pill-sm cursor-pointer">
+                                                <i class="ti ti-refresh text-xs"></i>
+                                                <span>Changer l'image</span>
+                                            </button>
+                                            <button type="button" id="pe-remove-main-btn" class="btn-pill-secondary btn-pill-sm text-red-600 hover:border-red-300 hover:bg-red-50 cursor-pointer">
+                                                <i class="ti ti-trash text-xs"></i>
+                                                <span>Supprimer</span>
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <div>
-                                <div class="flex items-center justify-between mb-1.5">
-                                    <label class="font-bold text-zinc-700">Galerie photos additionnelles</label>
-                                    <button type="button" id="pe-add-gallery-btn" class="btn-pill-secondary btn-pill-sm cursor-pointer">
-                                        <i class="ti ti-plus"></i> Ajouter une photo
+                            <!-- Additional Gallery Photos Upload & Grid Visualization -->
+                            <div class="space-y-3 pt-2 border-t border-zinc-100">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <label class="font-bold text-zinc-700">Galerie photos additionnelles</label>
+                                        <p class="text-[11px] text-zinc-400">Ajoutez des visuels sous d'autres angles ou teintes</p>
+                                    </div>
+                                    <button type="button" id="pe-add-gallery-file-btn" class="btn-pill-secondary btn-pill-sm cursor-pointer">
+                                        <i class="ti ti-photo-plus text-sm"></i>
+                                        <span>Importer des photos</span>
                                     </button>
                                 </div>
-                                <div id="pe-gallery-list" class="space-y-2">
+
+                                <input type="file" id="pe-gallery-file-input" accept="image/*" multiple class="hidden" />
+
+                                <!-- Gallery Grid of Visual Previews -->
+                                <div id="pe-gallery-grid" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
                                     ${(product.gallery || []).map((imgUrl, idx) => `
-                                        <div class="flex items-center gap-2 gallery-row">
-                                            <input type="text" name="gallery[]" value="${imgUrl}" placeholder="URL image galerie" class="input-luxury flex-1" />
-                                            <button type="button" class="btn-circle-action w-8 h-8 rounded-full border border-zinc-200 hover:border-red-300 hover:text-red-600 text-zinc-400 remove-gallery-btn cursor-pointer">
-                                                <i class="ti ti-trash"></i>
+                                        <div class="gallery-photo-card relative aspect-square rounded-2xl bg-white border border-zinc-200 shadow-2xs overflow-hidden group">
+                                            <input type="hidden" name="gallery[]" value="${imgUrl}" />
+                                            <img src="${imgUrl}" alt="" class="w-full h-full object-cover transition-transform group-hover:scale-105" />
+                                            <button type="button" class="remove-gallery-photo-btn absolute top-1.5 right-1.5 w-6 h-6 rounded-full bg-black/60 hover:bg-red-600 text-white flex items-center justify-center opacity-90 group-hover:opacity-100 transition-all cursor-pointer shadow-sm" title="Supprimer">
+                                                <i class="ti ti-x text-xs"></i>
                                             </button>
                                         </div>
                                     `).join('')}
+                                    
+                                    <!-- Add Tile Trigger -->
+                                    <button type="button" id="pe-gallery-add-tile" class="aspect-square rounded-2xl border-2 border-dashed border-zinc-200 hover:border-pink-500 hover:bg-pink-50/20 flex flex-col items-center justify-center gap-1.5 text-zinc-400 hover:text-pink-600 transition-all cursor-pointer group">
+                                        <div class="w-8 h-8 rounded-xl bg-zinc-100 group-hover:bg-pink-50 flex items-center justify-center text-zinc-500 group-hover:text-pink-600 transition-colors">
+                                            <i class="ti ti-plus text-base"></i>
+                                        </div>
+                                        <span class="text-[10px] font-bold">Ajouter</span>
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -1493,51 +1584,99 @@
                         });
                     });
 
-                    // Image preview live update
-                    const imgInput = panel.querySelector('#pe-image');
-                    const imgPreview = panel.querySelector('#pe-image-preview');
-                    imgInput?.addEventListener('input', () => {
-                        if (imgPreview) imgPreview.src = imgInput.value || '/images/sdj_bum_bum_set.jpg';
-                    });
+                    // Main Image Upload & Visualization wiring
+                    const mainFileInput = panel.querySelector('#pe-main-file-input');
+                    const mainUploadZone = panel.querySelector('#pe-main-upload-zone');
+                    const mainPreviewCard = panel.querySelector('#pe-main-preview-card');
+                    const mainPreviewImg = panel.querySelector('#pe-main-preview-img');
+                    const mainFilename = panel.querySelector('#pe-main-filename');
+                    const mainHiddenInput = panel.querySelector('#pe-image');
+                    const changeMainBtn = panel.querySelector('#pe-change-main-btn');
+                    const removeMainBtn = panel.querySelector('#pe-remove-main-btn');
 
-                    // Discount preview calculation
-                    const priceInput = panel.querySelector('#pe-price');
-                    const discountInput = panel.querySelector('#pe-discount');
-                    const discountBadge = panel.querySelector('#pe-discount-badge-preview');
-                    const discountCalc = panel.querySelector('#pe-discount-calc');
-
-                    const updateDiscountPreview = () => {
-                        const p = parseFloat(priceInput.value) || 0;
-                        const d = parseFloat(discountInput.value) || 0;
-                        if (d > 0 && p > d) {
-                            const pct = Math.round((1 - d / p) * 100);
-                            discountCalc.textContent = `Remise active : -${pct}% (${formatDH(p - d)} d'économie)`;
-                            discountBadge.classList.remove('hidden');
-                        } else {
-                            discountBadge.classList.add('hidden');
+                    const handleMainImageFile = async (file) => {
+                        if (!file) return;
+                        try {
+                            const dataUrl = await readFileAsCompressedDataUrl(file);
+                            mainHiddenInput.value = dataUrl;
+                            mainPreviewImg.src = dataUrl;
+                            mainFilename.textContent = file.name || 'Image sélectionnée';
+                            mainUploadZone.classList.add('hidden');
+                            mainPreviewCard.classList.remove('hidden');
+                        } catch (err) {
+                            toast.show(err.message || 'Erreur lors du traitement de l\'image', 'error');
                         }
                     };
-                    priceInput?.addEventListener('input', updateDiscountPreview);
-                    discountInput?.addEventListener('input', updateDiscountPreview);
-                    updateDiscountPreview();
 
-                    // Gallery dynamic rows
-                    const galleryList = panel.querySelector('#pe-gallery-list');
-                    panel.querySelector('#pe-add-gallery-btn')?.addEventListener('click', () => {
-                        const row = document.createElement('div');
-                        row.className = 'flex items-center gap-2 gallery-row';
-                        row.innerHTML = `
-                            <input type="text" name="gallery[]" value="" placeholder="URL image galerie" class="flex-1 bg-zinc-50 border border-zinc-200 rounded-xl px-3 py-2 text-xs font-medium text-zinc-800 focus:outline-none focus:border-pink-500 focus:bg-white transition" />
-                            <button type="button" class="p-2 text-zinc-400 hover:text-red-600 rounded-lg cursor-pointer remove-gallery-btn">
-                                <i class="ti ti-trash"></i>
-                            </button>
-                        `;
-                        row.querySelector('.remove-gallery-btn').addEventListener('click', () => row.remove());
-                        galleryList.appendChild(row);
+                    mainUploadZone?.addEventListener('click', () => mainFileInput?.click());
+                    changeMainBtn?.addEventListener('click', () => mainFileInput?.click());
+                    mainFileInput?.addEventListener('change', (e) => {
+                        if (e.target.files?.[0]) handleMainImageFile(e.target.files[0]);
                     });
 
-                    panel.querySelectorAll('.remove-gallery-btn').forEach(btn => {
-                        btn.addEventListener('click', () => btn.closest('.gallery-row')?.remove());
+                    // Main image Drag & Drop
+                    mainUploadZone?.addEventListener('dragover', (e) => {
+                        e.preventDefault();
+                        mainUploadZone.classList.add('border-pink-500', 'bg-pink-50/40');
+                    });
+                    mainUploadZone?.addEventListener('dragleave', () => {
+                        mainUploadZone.classList.remove('border-pink-500', 'bg-pink-50/40');
+                    });
+                    mainUploadZone?.addEventListener('drop', (e) => {
+                        e.preventDefault();
+                        mainUploadZone.classList.remove('border-pink-500', 'bg-pink-50/40');
+                        if (e.dataTransfer?.files?.[0]) handleMainImageFile(e.dataTransfer.files[0]);
+                    });
+
+                    removeMainBtn?.addEventListener('click', () => {
+                        mainHiddenInput.value = '';
+                        mainFileInput.value = '';
+                        mainPreviewImg.src = '';
+                        mainPreviewCard.classList.add('hidden');
+                        mainUploadZone.classList.remove('hidden');
+                    });
+
+                    // Additional Photos (Gallery) Upload & Visualization wiring
+                    const galleryFileInput = panel.querySelector('#pe-gallery-file-input');
+                    const addGalleryBtn = panel.querySelector('#pe-add-gallery-file-btn');
+                    const addGalleryTile = panel.querySelector('#pe-gallery-add-tile');
+                    const galleryGrid = panel.querySelector('#pe-gallery-grid');
+
+                    const addGalleryPhotoCard = (dataUrl) => {
+                        const card = document.createElement('div');
+                        card.className = 'gallery-photo-card relative aspect-square rounded-2xl bg-white border border-zinc-200 shadow-2xs overflow-hidden group animate-fadeIn';
+                        card.innerHTML = `
+                            <input type="hidden" name="gallery[]" value="${dataUrl}" />
+                            <img src="${dataUrl}" alt="" class="w-full h-full object-cover transition-transform group-hover:scale-105" />
+                            <button type="button" class="remove-gallery-photo-btn absolute top-1.5 right-1.5 w-6 h-6 rounded-full bg-black/60 hover:bg-red-600 text-white flex items-center justify-center opacity-90 group-hover:opacity-100 transition-all cursor-pointer shadow-sm" title="Supprimer">
+                                <i class="ti ti-x text-xs"></i>
+                            </button>
+                        `;
+                        card.querySelector('.remove-gallery-photo-btn').addEventListener('click', () => card.remove());
+                        galleryGrid.insertBefore(card, addGalleryTile);
+                    };
+
+                    const handleGalleryFiles = async (files) => {
+                        if (!files || files.length === 0) return;
+                        for (const file of Array.from(files)) {
+                            try {
+                                const dataUrl = await readFileAsCompressedDataUrl(file);
+                                addGalleryPhotoCard(dataUrl);
+                            } catch (err) {
+                                console.warn('Could not load gallery photo:', err);
+                            }
+                        }
+                    };
+
+                    addGalleryBtn?.addEventListener('click', () => galleryFileInput?.click());
+                    addGalleryTile?.addEventListener('click', () => galleryFileInput?.click());
+                    galleryFileInput?.addEventListener('change', (e) => {
+                        handleGalleryFiles(e.target.files);
+                        galleryFileInput.value = '';
+                    });
+
+                    panel.querySelectorAll('.remove-gallery-photo-btn').forEach(btn => {
+                        btn.addEventListener('click', () => btn.closest('.gallery-photo-card')?.remove());
                     });
 
                     // Toggle Size and Flavor sections
@@ -1897,8 +2036,29 @@
                         </div>
 
                         <div>
-                            <label class="block font-bold text-zinc-700 mb-1">URL Image d'illustration</label>
-                            <input type="text" name="image" value="${data.image || ''}" placeholder="https://... ou /images/..." class="input-luxury w-full" />
+                            <label class="block font-bold text-zinc-700 mb-1">Image d'illustration</label>
+                            <input type="hidden" name="image" id="cat-image" value="${data.image || ''}" />
+                            <input type="file" id="cat-file-input" accept="image/*" class="hidden" />
+
+                            <div id="cat-upload-zone" class="${data.image ? 'hidden' : ''} border-2 border-dashed border-zinc-200 hover:border-pink-500 rounded-2xl p-4 text-center cursor-pointer transition-all bg-zinc-50/50 hover:bg-pink-50/30 group">
+                                <i class="ti ti-photo-up text-xl text-pink-600 mb-1 block group-hover:scale-110 transition-transform"></i>
+                                <span class="text-xs font-bold text-zinc-800">Importer une image</span>
+                                <p class="text-[10px] text-zinc-400 mt-0.5">PNG, JPG, WEBP</p>
+                            </div>
+
+                            <div id="cat-preview-card" class="${data.image ? '' : 'hidden'} bg-zinc-50/70 border border-zinc-200 rounded-2xl p-3 flex items-center gap-3">
+                                <div class="w-14 h-14 rounded-xl bg-white border border-zinc-200 overflow-hidden shrink-0 flex items-center justify-center p-0.5">
+                                    <img id="cat-preview-img" src="${data.image || ''}" alt="Preview" class="w-full h-full object-cover" />
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-xs font-bold text-zinc-900 truncate" id="cat-filename">Image sélectionnée</p>
+                                    <div class="flex items-center gap-2 mt-1">
+                                        <button type="button" id="cat-change-btn" class="text-[11px] font-bold text-pink-600 hover:underline cursor-pointer">Changer</button>
+                                        <span class="text-zinc-300">•</span>
+                                        <button type="button" id="cat-remove-btn" class="text-[11px] font-bold text-red-600 hover:underline cursor-pointer">Supprimer</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <div>
@@ -1935,6 +2095,44 @@
             modalSystem.openModal(html, {
                 maxWidth: 'max-w-md',
                 onMount: (box) => {
+                    // Category Image Upload wiring
+                    const catFileInput = box.querySelector('#cat-file-input');
+                    const catUploadZone = box.querySelector('#cat-upload-zone');
+                    const catPreviewCard = box.querySelector('#cat-preview-card');
+                    const catPreviewImg = box.querySelector('#cat-preview-img');
+                    const catHiddenInput = box.querySelector('#cat-image');
+                    const catChangeBtn = box.querySelector('#cat-change-btn');
+                    const catRemoveBtn = box.querySelector('#cat-remove-btn');
+                    const catFilename = box.querySelector('#cat-filename');
+
+                    const handleCatImage = async (file) => {
+                        if (!file) return;
+                        try {
+                            const dataUrl = await readFileAsCompressedDataUrl(file);
+                            catHiddenInput.value = dataUrl;
+                            catPreviewImg.src = dataUrl;
+                            catFilename.textContent = file.name || 'Image sélectionnée';
+                            catUploadZone.classList.add('hidden');
+                            catPreviewCard.classList.remove('hidden');
+                        } catch (err) {
+                            toast.show(err.message || 'Erreur image', 'error');
+                        }
+                    };
+
+                    catUploadZone?.addEventListener('click', () => catFileInput?.click());
+                    catChangeBtn?.addEventListener('click', () => catFileInput?.click());
+                    catFileInput?.addEventListener('change', (e) => {
+                        if (e.target.files?.[0]) handleCatImage(e.target.files[0]);
+                    });
+
+                    catRemoveBtn?.addEventListener('click', () => {
+                        catHiddenInput.value = '';
+                        catFileInput.value = '';
+                        catPreviewImg.src = '';
+                        catPreviewCard.classList.add('hidden');
+                        catUploadZone.classList.remove('hidden');
+                    });
+
                     const form = box.querySelector('#category-modal-form');
                     form?.addEventListener('submit', async (e) => {
                         e.preventDefault();

@@ -117,7 +117,7 @@ class AdminApiController extends Controller
         return $request->validate([
             'category_id' => 'required|exists:categories,id', 'name' => 'required|string|max:255', 'subtitle' => 'nullable|string|max:500',
             'slug' => ['nullable', 'string', 'max:255', "unique:products,slug,{$id}"], 'description' => 'nullable|string', 'ingredients' => 'nullable|string', 'olfactory' => 'nullable|string', 'usage' => 'nullable|string',
-            'price' => 'required|numeric|min:0.01', 'discounted_price' => 'nullable|numeric|min:0|lt:price', 'image' => 'required|string|max:500', 'gallery' => 'nullable|array', 'gallery.*' => 'string|max:500',
+            'price' => 'required|numeric|min:0.01', 'discounted_price' => 'nullable|numeric|min:0|lt:price', 'image' => 'required|string', 'gallery' => 'nullable|array', 'gallery.*' => 'string',
             'badge' => 'nullable|string|max:100', 'badge_color' => 'nullable|string|max:100', 'rating' => 'nullable|numeric|min:0|max:5', 'review_count' => 'nullable|integer|min:0',
             'is_new' => 'boolean', 'is_bestseller' => 'boolean', 'in_stock' => 'boolean', 'is_active' => 'boolean', 'stock_quantity' => 'nullable|integer|min:0', 'has_sizes' => 'boolean', 'has_flavors' => 'boolean', 'sort_order' => 'integer',
             'sizes' => 'nullable|array', 'sizes.*.label' => 'required_with:sizes|string|max:100', 'sizes.*.price' => 'nullable|numeric|min:0', 'sizes.*.in_stock' => 'boolean',
@@ -129,6 +129,6 @@ class AdminApiController extends Controller
         if (array_key_exists('sizes', $data)) { $product->sizes()->delete(); foreach ($data['sizes'] ?? [] as $i => $size) $product->sizes()->create(['label' => $size['label'], 'price' => $size['price'] ?? null, 'in_stock' => $size['in_stock'] ?? true, 'sort_order' => $i]); }
         if (array_key_exists('flavors', $data)) { $product->flavors()->delete(); foreach ($data['flavors'] ?? [] as $i => $flavor) $product->flavors()->create(['label' => $flavor['label'], 'color_hex' => $flavor['color_hex'] ?? null, 'in_stock' => $flavor['in_stock'] ?? true, 'sort_order' => $i]); }
     }
-    private function categoryData(Request $request, ?int $id = null): array { return $request->validate(['name' => 'required|string|max:255', 'slug' => ["nullable", 'string', 'max:255', "unique:categories,slug,{$id}"], 'image' => 'nullable|string|max:500', 'description' => 'nullable|string', 'is_active' => 'boolean', 'sort_order' => 'integer']); }
+    private function categoryData(Request $request, ?int $id = null): array { return $request->validate(['name' => 'required|string|max:255', 'slug' => ["nullable", 'string', 'max:255', "unique:categories,slug,{$id}"], 'image' => 'nullable|string', 'description' => 'nullable|string', 'is_active' => 'boolean', 'sort_order' => 'integer']); }
     private function couponData(Request $request, ?int $id = null): array { return $request->validate(['code' => ["required", 'string', 'max:50', "unique:coupons,code,{$id}"], 'type' => 'required|in:percent,fixed', 'value' => 'required|numeric|min:0.01', 'min_order_amount' => 'nullable|numeric|min:0', 'max_uses' => 'nullable|integer|min:1', 'is_active' => 'boolean', 'expires_at' => 'nullable|date']); }
 }
