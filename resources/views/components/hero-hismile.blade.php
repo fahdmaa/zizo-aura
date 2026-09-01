@@ -20,7 +20,6 @@
 
                 <a href="{{ route('contact') }}" class="btn-secondary-pill group">
                     <span>Un besoin spécifique ?</span>
-                    <i class="ti ti-message-circle-question text-base group-hover:rotate-12 transition-transform"></i>
                 </a>
             </div>
         </div>
