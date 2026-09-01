@@ -95,4 +95,5 @@ Route::prefix('api/admin')->middleware('admin.auth')->group(function () {
     Route::patch('/orders/{order}/status', [AdminApiController::class, 'updateOrderStatus']);
     Route::get('/messages', [AdminApiController::class, 'messages']);
     Route::patch('/messages/{contactMessage}/read', [AdminApiController::class, 'markMessageRead']);
+    Route::delete('/messages/{contactMessage}', [AdminApiController::class, 'deleteMessage']);
 });

@@ -389,6 +389,8 @@
         ordersFilter: { search: '', status: '', page: 1 },
         messagesData: null,
         messagesFilter: { page: 1, filter: 'all' },
+        unreadMessagesCount: 0,
+        pendingOrdersCount: 0,
     };
 
     // ─── View Controller ─────────────────────────────────────────────────────
@@ -437,6 +439,9 @@
             // Preload categories before initial route render
             await this.ensureCategoriesLoaded();
             this.handleHashChange();
+
+            // Load global notification badges (messages & orders)
+            this.refreshGlobalBadges();
         },
 
         async preloadCategories() {
@@ -745,24 +750,58 @@
         },
 
         updateSidebarBadges(pendingOrders, unreadMessages) {
-            const pendingBadge = document.getElementById('dock-pending-badge');
-            if (pendingBadge) {
-                if (pendingOrders > 0) {
-                    pendingBadge.textContent = pendingOrders;
-                    pendingBadge.classList.remove('hidden');
+            if (pendingOrders !== undefined && pendingOrders !== null) {
+                appState.pendingOrdersCount = parseInt(pendingOrders, 10) || 0;
+            }
+            if (unreadMessages !== undefined && unreadMessages !== null) {
+                appState.unreadMessagesCount = parseInt(unreadMessages, 10) || 0;
+            }
+
+            const unreadCount = appState.unreadMessagesCount ?? 0;
+            const pendingCount = appState.pendingOrdersCount ?? 0;
+
+            // Dock Messages Badge (small red circle on top right of messages icon)
+            const dockUnread = document.getElementById('dock-unread-badge');
+            if (dockUnread) {
+                if (unreadCount > 0) {
+                    dockUnread.textContent = unreadCount > 99 ? '99+' : unreadCount;
+                    dockUnread.classList.remove('hidden');
                 } else {
-                    pendingBadge.classList.add('hidden');
+                    dockUnread.classList.add('hidden');
                 }
             }
 
-            const unreadBadge = document.getElementById('dock-unread-badge');
-            if (unreadBadge) {
-                if (unreadMessages > 0) {
-                    unreadBadge.textContent = unreadMessages;
-                    unreadBadge.classList.remove('hidden');
+            // Header Messages Badge
+            const headerUnread = document.getElementById('header-unread-badge');
+            if (headerUnread) {
+                if (unreadCount > 0) {
+                    headerUnread.textContent = unreadCount > 99 ? '99+' : unreadCount;
+                    headerUnread.classList.remove('hidden');
                 } else {
-                    unreadBadge.classList.add('hidden');
+                    headerUnread.classList.add('hidden');
                 }
+            }
+
+            // Dock Orders Badge
+            const dockPending = document.getElementById('dock-pending-badge');
+            if (dockPending) {
+                if (pendingCount > 0) {
+                    dockPending.textContent = pendingCount > 99 ? '99+' : pendingCount;
+                    dockPending.classList.remove('hidden');
+                } else {
+                    dockPending.classList.add('hidden');
+                }
+            }
+        },
+
+        async refreshGlobalBadges() {
+            try {
+                const data = await api.get('/api/admin/dashboard');
+                if (data?.stats) {
+                    this.updateSidebarBadges(data.stats.pending_orders, data.stats.unread_messages);
+                }
+            } catch (err) {
+                console.warn('Could not refresh global notification badges', err);
             }
         },
 
@@ -3207,6 +3246,10 @@
                 appState.messagesData = data;
                 const messages = data.data || [];
 
+                if (data.unread_messages !== undefined) {
+                    this.updateSidebarBadges(undefined, data.unread_messages);
+                }
+
                 if (messages.length === 0) {
                     box.innerHTML = `
                         <div class="py-16 text-center">
@@ -3237,9 +3280,9 @@
                                     <tr class="hover:bg-pink-50/30 transition-colors ${!m.is_read ? 'bg-pink-50/20 font-bold' : ''}">
                                         <td class="px-6 py-4">
                                             <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold ${
-                                                !m.is_read ? 'bg-rose-50 text-rose-700 border border-rose-200 animate-pulse' : 'bg-zinc-100 text-zinc-500'
+                                                !m.is_read ? 'bg-red-50 text-red-700 border border-red-200' : 'bg-zinc-100 text-zinc-500'
                                             }">
-                                                <span class="w-1.5 h-1.5 rounded-full ${!m.is_read ? 'bg-rose-500' : 'bg-zinc-400'}"></span>
+                                                <span class="w-1.5 h-1.5 rounded-full ${!m.is_read ? 'bg-red-500 animate-pulse' : 'bg-zinc-400'}"></span>
                                                 <span>${!m.is_read ? 'Non lu' : 'Lu'}</span>
                                             </span>
                                         </td>
@@ -3254,14 +3297,17 @@
                                         <td class="px-6 py-4 text-zinc-400 font-medium">${formatDate(m.created_at)}</td>
                                         <td class="px-6 py-4 text-right">
                                             <div class="flex items-center justify-end gap-2">
-                                                <button type="button" data-read-msg="${m.id}" class="btn-pill-secondary btn-pill-sm">
+                                                <button type="button" data-read-msg="${m.id}" class="btn-pill-secondary btn-pill-sm cursor-pointer">
                                                     Lire
                                                 </button>
                                                 ${!m.is_read ? `
-                                                    <button type="button" data-mark-read="${m.id}" class="btn-circle-action w-8 h-8 rounded-full border border-zinc-200 text-zinc-400 hover:text-pink-600 hover:border-pink-300 transition cursor-pointer" title="Marquer comme lu">
+                                                    <button type="button" data-mark-read="${m.id}" class="btn-circle-action w-8 h-8 rounded-full border border-zinc-200 text-zinc-400 hover:text-emerald-600 hover:border-emerald-300 transition cursor-pointer" title="Marquer comme lu">
                                                         <i class="ti ti-check text-base"></i>
                                                     </button>
                                                 ` : ''}
+                                                <button type="button" data-delete-msg="${m.id}" data-name="${m.name}" class="btn-circle-action w-8 h-8 rounded-full border border-zinc-200 text-zinc-400 hover:text-red-600 hover:border-red-300 transition cursor-pointer" title="Supprimer ce message">
+                                                    <i class="ti ti-trash text-sm"></i>
+                                                </button>
                                             </div>
                                         </td>
                                     </tr>
@@ -3300,12 +3346,41 @@
                     btn.addEventListener('click', async () => {
                         const id = btn.dataset.markRead;
                         try {
-                            await api.patch(`/api/admin/messages/${id}/read`);
+                            const res = await api.patch(`/api/admin/messages/${id}/read`);
                             toast.show('Message marqué comme lu.');
+                            if (res?.unread_messages !== undefined) {
+                                this.updateSidebarBadges(undefined, res.unread_messages);
+                            }
                             this.loadMessagesList();
                         } catch (err) {
                             toast.show(err.message || 'Erreur', 'error');
                         }
+                    });
+                });
+
+                // Wire delete message
+                box.querySelectorAll('[data-delete-msg]').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const id = btn.dataset.deleteMsg;
+                        const name = btn.dataset.name;
+                        modalSystem.confirm({
+                            title: 'Supprimer le message',
+                            message: `Voulez-vous supprimer le message reçu de "${name}" ?`,
+                            confirmText: 'Supprimer',
+                            type: 'danger',
+                            onConfirm: async () => {
+                                try {
+                                    const res = await api.delete(`/api/admin/messages/${id}`);
+                                    toast.show('Message supprimé.');
+                                    if (res?.unread_messages !== undefined) {
+                                        this.updateSidebarBadges(undefined, res.unread_messages);
+                                    }
+                                    this.loadMessagesList();
+                                } catch (err) {
+                                    toast.show(err.message || 'Erreur', 'error');
+                                }
+                            }
+                        });
                     });
                 });
 
@@ -3373,7 +3448,7 @@
 
                         <div class="flex items-center justify-between pt-4 border-t border-zinc-100 mt-5">
                             <span class="text-[11px] text-zinc-400">
-                                Statut : <span class="font-bold ${msg.is_read ? 'text-zinc-600' : 'text-rose-600'}">${msg.is_read ? 'Déjà lu' : 'Non lu'}</span>
+                                Statut : <span class="font-bold ${msg.is_read ? 'text-zinc-600' : 'text-red-600'}">${msg.is_read ? 'Déjà lu' : 'Non lu'}</span>
                             </span>
                             <div class="flex items-center gap-2">
                                 ${!msg.is_read ? `
@@ -3396,8 +3471,11 @@
                 onMount: (box) => {
                     box.querySelector('#msg-mark-read-btn')?.addEventListener('click', async () => {
                         try {
-                            await api.patch(`/api/admin/messages/${msg.id}/read`);
+                            const res = await api.patch(`/api/admin/messages/${msg.id}/read`);
                             toast.show('Message marqué comme lu.');
+                            if (res?.unread_messages !== undefined) {
+                                this.updateSidebarBadges(undefined, res.unread_messages);
+                            }
                             modalSystem.closeModal();
                             this.loadMessagesList();
                         } catch (err) {

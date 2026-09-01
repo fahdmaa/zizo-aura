@@ -109,8 +109,28 @@ class AdminApiController extends Controller
         return response()->json($order->fresh());
     }
 
-    public function messages(Request $request): JsonResponse { return response()->json(ContactMessage::latest()->paginate($request->integer('per_page', 20))); }
-    public function markMessageRead(ContactMessage $contactMessage): JsonResponse { $contactMessage->markRead(); return response()->json($contactMessage->fresh()); }
+    public function messages(Request $request): JsonResponse
+    {
+        $paginator = ContactMessage::latest()->paginate($request->integer('per_page', 20));
+        $data = $paginator->toArray();
+        $data['unread_messages'] = ContactMessage::where('is_read', false)->count();
+        return response()->json($data);
+    }
+    public function markMessageRead(ContactMessage $contactMessage): JsonResponse
+    {
+        $contactMessage->markRead();
+        $fresh = $contactMessage->fresh();
+        $fresh->unread_messages = ContactMessage::where('is_read', false)->count();
+        return response()->json($fresh);
+    }
+    public function deleteMessage(ContactMessage $contactMessage): JsonResponse
+    {
+        $contactMessage->delete();
+        return response()->json([
+            'success' => true,
+            'unread_messages' => ContactMessage::where('is_read', false)->count(),
+        ]);
+    }
 
     private function productData(Request $request, ?int $id = null): array
     {

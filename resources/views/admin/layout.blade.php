@@ -101,6 +101,15 @@
                     <span class="text-xs font-bold text-zinc-700">En direct</span>
                 </div>
 
+                <!-- Messages Shortcut with Red Notification Badge -->
+                <a href="#messages" class="relative btn-pill-secondary btn-pill-sm cursor-pointer" title="Messages reçus">
+                    <div class="relative flex items-center justify-center">
+                        <i class="ti ti-mail text-sm"></i>
+                        <span id="header-unread-badge" class="hidden absolute -top-2 -right-2.5 min-w-[17px] h-[17px] px-1 rounded-full bg-red-600 text-white font-black text-[9px] leading-none flex items-center justify-center shadow-xs ring-2 ring-white">0</span>
+                    </div>
+                    <span class="hidden md:inline">Messages</span>
+                </a>
+
                 <button type="button" onclick="if(window.adminApp) window.adminApp.handleHashChange();" class="btn-pill-secondary btn-pill-sm cursor-pointer" title="Rafraîchir les données">
                     <i class="ti ti-refresh text-sm"></i>
                     <span class="hidden md:inline">Actualiser</span>
@@ -215,12 +224,11 @@
 
             <!-- 6. Messages -->
             <a href="#messages" data-view="messages" class="admin-dock-tab relative flex-1 flex flex-col items-center justify-center py-1 px-1 rounded-2xl group cursor-pointer text-zinc-600 hover:text-zinc-900 select-none">
-                <div class="tab-icon relative text-zinc-700">
+                <div class="tab-icon relative text-zinc-700 flex items-center justify-center">
                     <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-                        <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
                     </svg>
-                    <span id="dock-unread-badge" class="hidden absolute -top-1 -right-2 px-1.5 py-0.2 rounded-full bg-pink-600 text-white font-black text-[9px] shadow-xs">0</span>
+                    <span id="dock-unread-badge" class="hidden absolute -top-1.5 -right-2.5 min-w-[17px] h-[17px] px-1 rounded-full bg-red-600 text-white font-black text-[9px] leading-none flex items-center justify-center shadow-xs ring-2 ring-white">0</span>
                 </div>
                 <span class="tab-label text-[10px] sm:text-[11px] font-medium tracking-tight mt-1 transition-colors duration-200">Messages</span>
             </a>

@@ -228,4 +228,19 @@ class AdminApiFullTest extends TestCase
         $res->assertOk()->assertJsonPath('is_read', true);
         $this->assertDatabaseHas('contact_messages', ['id' => $msg->id, 'is_read' => true]);
     }
+
+    public function test_contact_message_delete(): void
+    {
+        $msg = ContactMessage::create([
+            'name' => 'Sara',
+            'email' => 'sara@example.com',
+            'subject' => 'Question',
+            'message' => 'Disponibilité ?',
+            'is_read' => false,
+        ]);
+
+        $res = $this->actingAsAdmin()->deleteJson("/api/admin/messages/{$msg->id}");
+        $res->assertOk()->assertJsonPath('success', true);
+        $this->assertDatabaseMissing('contact_messages', ['id' => $msg->id]);
+    }
 }
