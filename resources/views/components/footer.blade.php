@@ -10,7 +10,7 @@
             Votre destination beauté &amp; rituels solaires : Victoria's Secret, Rituals, Sol de Janeiro.
         </p>
 
-        <!-- The 3 Social Media Icons: Instagram, Facebook, TikTok -->
+        <!-- Social Media Icons: Instagram & TikTok -->
         <div class="flex items-center justify-center gap-5 mb-8">
             <!-- Instagram -->
             <a href="https://www.instagram.com/zizo_aura_/"
@@ -19,15 +19,6 @@
                aria-label="Instagram @zizo_aura_"
                class="btn-circle-action w-12 h-12 rounded-full bg-[#f8f9fa] hover:bg-[#ff1b7a] text-zinc-800 hover:text-white border-2 border-zinc-200 hover:border-[#ff1b7a] flex items-center justify-center text-xl shadow-xs">
                 <i class="ti ti-brand-instagram"></i>
-            </a>
-
-            <!-- Facebook -->
-            <a href="https://facebook.com/zizoaura"
-               target="_blank"
-               rel="noopener noreferrer"
-               aria-label="Facebook @zizoaura"
-               class="btn-circle-action w-12 h-12 rounded-full bg-[#f8f9fa] hover:bg-[#ff1b7a] text-zinc-800 hover:text-white border-2 border-zinc-200 hover:border-[#ff1b7a] flex items-center justify-center text-xl shadow-xs">
-                <i class="ti ti-brand-facebook"></i>
             </a>
 
             <!-- TikTok -->

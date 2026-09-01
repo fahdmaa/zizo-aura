@@ -228,9 +228,6 @@
                     <a href="https://www.instagram.com/zizo_aura_/" target="_blank" rel="noopener noreferrer" aria-label="Instagram @zizo_aura_" class="btn-circle-action w-9 h-9 bg-white border border-zinc-200 hover:border-pink-500 hover:text-pink-600 flex items-center justify-center text-base shadow-2xs">
                         <i class="ti ti-brand-instagram"></i>
                     </a>
-                    <a href="https://facebook.com/zizoaura" target="_blank" rel="noopener noreferrer" aria-label="Facebook @zizoaura" class="btn-circle-action w-9 h-9 bg-white border border-zinc-200 hover:border-pink-500 hover:text-pink-600 flex items-center justify-center text-base shadow-2xs">
-                        <i class="ti ti-brand-facebook"></i>
-                    </a>
                     <a href="https://www.tiktok.com/@zizo_aura_" target="_blank" rel="noopener noreferrer" aria-label="TikTok @zizo_aura_" class="btn-circle-action w-9 h-9 bg-white border border-zinc-200 hover:border-pink-500 hover:text-pink-600 flex items-center justify-center text-base shadow-2xs">
                         <i class="ti ti-brand-tiktok"></i>
                     </a>
