@@ -609,7 +609,7 @@
                                 <div class="flex items-center justify-between">
                                     <span class="text-[11px] font-bold text-zinc-400 uppercase tracking-wider">Chiffre d'Affaires</span>
                                     <div class="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-base group-hover:scale-110 transition-transform">
-                                        <i class="ti ti-currency-dirham"></i>
+                                        <i class="ti ti-wallet"></i>
                                     </div>
                                 </div>
                                 <div class="mt-4">
@@ -651,7 +651,7 @@
                                 <div class="flex items-center justify-between">
                                     <span class="text-[11px] font-bold text-zinc-400 uppercase tracking-wider">Produits</span>
                                     <div class="w-8 h-8 rounded-xl bg-pink-50 text-pink-600 flex items-center justify-center text-base group-hover:scale-110 transition-transform">
-                                        <i class="ti ti-sparkles"></i>
+                                        <i class="ti ti-package"></i>
                                     </div>
                                 </div>
                                 <div class="mt-4">
