@@ -2,8 +2,8 @@
     <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-center text-center">
         
         <!-- Logo -->
-        <a href="{{ route('home') }}" class="text-2xl font-extrabold tracking-tight text-black hover:opacity-80 transition-opacity lowercase mb-3">
-            <span>zizo aura</span>
+        <a href="{{ route('home') }}" class="inline-flex items-center justify-center hover:opacity-85 transition-opacity mb-4 select-none" aria-label="zizo aura - Accueil">
+            <img src="/images/logo.png" alt="zizo aura - Beauty & Care" class="h-10 sm:h-12 w-auto object-contain mx-auto" />
         </a>
 
         <p class="text-xs text-zinc-400 font-medium max-w-sm mb-6">

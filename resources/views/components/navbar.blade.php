@@ -33,8 +33,8 @@
                 <i class="ti ti-menu-2 text-2xl"></i>
             </button>
 
-            <a href="{{ route('home') }}" class="text-2xl sm:text-[28px] font-extrabold tracking-tight text-black hover:opacity-80 transition-opacity lowercase">
-                <span>zizo aura</span>
+            <a href="{{ route('home') }}" class="flex items-center hover:opacity-85 transition-opacity select-none shrink-0" aria-label="zizo aura - Accueil">
+                <img src="/images/logo.png" alt="zizo aura - Beauty & Care" class="h-8 sm:h-10 w-auto object-contain" />
             </a>
         </div>
 
@@ -154,8 +154,8 @@
             <!-- Mobile Menu Header -->
             <div>
                 <div class="p-5 border-b border-zinc-100 flex items-center justify-between">
-                    <a href="{{ route('home') }}" class="text-2xl font-extrabold tracking-tight text-black lowercase">
-                        <span>zizo aura</span>
+                    <a href="{{ route('home') }}" class="flex items-center hover:opacity-85 transition-opacity select-none shrink-0" aria-label="zizo aura - Accueil">
+                        <img src="/images/logo.png" alt="zizo aura - Beauty & Care" class="h-7 sm:h-8 w-auto object-contain" />
                     </a>
                     
                     <button type="button"

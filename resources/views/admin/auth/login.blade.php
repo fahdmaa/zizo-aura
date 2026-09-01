@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Connexion Administration · Zizo Aura</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -28,11 +31,10 @@
 <div class="w-full max-w-md relative z-10">
     <!-- Brand Header -->
     <div class="text-center mb-8">
-        <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-pink-50 text-pink-600 text-2xl font-black mb-4 shadow-sm">
-            ZA
-        </div>
-        <h1 class="text-2xl md:text-3xl font-black text-zinc-900 tracking-tight">zizo aura</h1>
-        <p class="text-xs font-bold text-pink-600 uppercase tracking-widest mt-1">Espace d'Administration</p>
+        <a href="{{ route('home') }}" class="inline-block hover:opacity-85 transition-opacity mb-2 select-none" aria-label="zizo aura">
+            <img src="/images/logo.png" alt="zizo aura - Beauty & Care" class="h-12 sm:h-14 w-auto object-contain mx-auto" />
+        </a>
+        <p class="text-[11px] font-bold text-pink-600 uppercase tracking-widest">Espace d'Administration</p>
     </div>
 
     <!-- Login Card -->
