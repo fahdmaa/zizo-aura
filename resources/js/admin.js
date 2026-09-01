@@ -755,15 +755,15 @@
                                 <i class="ti ti-x text-xs"></i>
                             </button>
                         </div>
-                        <div class="flex items-center gap-2.5 w-full md:w-auto shrink-0">
-                            <select id="prod-cat-select" class="select-luxury py-2.5 text-xs flex-1 md:w-48">
+                        <div class="flex items-center gap-2.5 w-full md:w-auto shrink-0 flex-wrap sm:flex-nowrap">
+                            <select id="prod-cat-select" class="select-luxury-pill w-full sm:w-auto min-w-[200px]">
                                 <option value="">Toutes les catégories</option>
                                 ${appState.categoriesCache.map(cat => `
                                     <option value="${cat.id}" ${filter.category_id == cat.id ? 'selected' : ''}>${cat.name}</option>
                                 `).join('')}
                             </select>
 
-                            <select id="prod-status-select" class="select-luxury py-2.5 text-xs flex-1 md:w-40">
+                            <select id="prod-status-select" class="select-luxury-pill w-full sm:w-auto min-w-[160px]">
                                 <option value="" ${filter.status === '' ? 'selected' : ''}>Tous les statuts</option>
                                 <option value="active" ${filter.status === 'active' ? 'selected' : ''}>Actifs</option>
                                 <option value="inactive" ${filter.status === 'inactive' ? 'selected' : ''}>Inactifs</option>
@@ -2355,8 +2355,8 @@
                                 <i class="ti ti-x text-xs"></i>
                             </button>
                         </div>
-                        <div class="flex items-center gap-2.5 w-full md:w-auto shrink-0">
-                            <select id="order-status-select" class="select-luxury py-2.5 text-xs flex-1 md:w-52">
+                        <div class="flex items-center gap-2.5 w-full md:w-auto shrink-0 flex-wrap sm:flex-nowrap">
+                            <select id="order-status-select" class="select-luxury-pill w-full sm:w-auto min-w-[175px]">
                                 <option value="" ${filter.status === '' ? 'selected' : ''}>Tous les statuts</option>
                                 <option value="pending" ${filter.status === 'pending' ? 'selected' : ''}>En attente</option>
                                 <option value="confirmed" ${filter.status === 'confirmed' ? 'selected' : ''}>Confirmée</option>
