@@ -397,19 +397,26 @@
 
             // Router hash listener
             window.addEventListener('hashchange', () => this.handleHashChange());
-            this.handleHashChange();
 
-            // Initial preload of categories for dropdowns
-            this.preloadCategories();
+            // Preload categories before initial route render
+            await this.ensureCategoriesLoaded();
+            this.handleHashChange();
         },
 
         async preloadCategories() {
             try {
                 const cats = await api.get('/api/admin/categories');
-                appState.categoriesCache = cats || [];
+                appState.categoriesCache = Array.isArray(cats) ? cats : (cats?.data || []);
             } catch (err) {
                 console.warn('Could not preload categories', err);
             }
+        },
+
+        async ensureCategoriesLoaded(force = false) {
+            if (force || !appState.categoriesCache || appState.categoriesCache.length === 0) {
+                await this.preloadCategories();
+            }
+            return appState.categoriesCache;
         },
 
         handleHashChange() {
@@ -727,6 +734,7 @@
         // VIEW 2: PRODUCTS
         // ═════════════════════════════════════════════════════════════════════
         async renderProducts(page = 1) {
+            await this.ensureCategoriesLoaded();
             appState.productsFilter.page = page;
             const filter = appState.productsFilter;
             const activeCat = appState.categoriesCache.find(c => String(c.id) === String(filter.category_id));
@@ -1149,9 +1157,10 @@
         },
 
         // ═════════════════════════════════════════════════════════════════════
-        // VIEW 3: PRODUCT EDITOR (DRAWER / FORM)
+        // VIEW 3: PRODUCT EDITOR (MODAL / FORM)
         // ═════════════════════════════════════════════════════════════════════
         async openProductEditor(productId = null) {
+            await this.ensureCategoriesLoaded();
             const isEditing = !!productId;
             let product = {
                 category_id: appState.categoriesCache[0]?.id || '',
@@ -1193,25 +1202,25 @@
             }
 
             const html = `
-                <div class="h-full flex flex-col bg-white">
-                    <!-- Drawer Header -->
-                    <div class="px-6 py-4 border-b border-zinc-100 flex items-center justify-between bg-zinc-50/50 shrink-0">
+                <div class="p-6 md:p-7 flex flex-col h-full overflow-hidden max-h-[88vh]">
+                    <!-- Modal Header -->
+                    <div class="flex items-center justify-between pb-4 mb-4 border-b border-zinc-100 shrink-0">
                         <div class="flex items-center gap-3">
                             <div class="w-9 h-9 rounded-xl bg-pink-50 text-pink-600 flex items-center justify-center text-lg">
                                 <i class="ti ${isEditing ? 'ti-edit' : 'ti-plus'}"></i>
                             </div>
                             <div>
                                 <h3 class="text-sm font-bold text-zinc-900">${isEditing ? 'Modifier le produit' : 'Nouveau produit'}</h3>
-                                <p class="text-[11px] text-zinc-400 font-medium">${isEditing ? product.name : 'Ajoutez une référence à votre boutique'}</p>
+                                <p class="text-[11px] text-zinc-400 font-medium">${isEditing ? product.name : 'Ajoutez une référence cosmétique à votre boutique'}</p>
                             </div>
                         </div>
-                        <button type="button" data-close-drawer class="p-2 rounded-xl text-zinc-400 hover:text-zinc-800 hover:bg-zinc-100 transition cursor-pointer">
+                        <button type="button" data-close-modal class="text-zinc-400 hover:text-zinc-700 cursor-pointer">
                             <i class="ti ti-x text-base"></i>
                         </button>
                     </div>
 
-                    <!-- Drawer Scrollable Form Body -->
-                    <form id="product-editor-form" class="flex-1 overflow-y-auto p-6 space-y-6 text-xs">
+                    <!-- Scrollable Form Body -->
+                    <form id="product-editor-form" class="flex-1 overflow-y-auto pr-1 space-y-6 text-xs custom-scrollbar">
                         <!-- Section 1: Basic Info -->
                         <div class="space-y-4">
                             <h4 class="text-xs font-black uppercase tracking-wider text-zinc-400 border-b border-zinc-100 pb-2">Informations Générales</h4>
@@ -1298,16 +1307,16 @@
 
                             <div>
                                 <div class="flex items-center justify-between mb-1.5">
-                                    <label class="font-bold text-zinc-700">Galerie d'images additionnelles</label>
+                                    <label class="font-bold text-zinc-700">Galerie photos additionnelles</label>
                                     <button type="button" id="pe-add-gallery-btn" class="btn-pill-secondary btn-pill-sm cursor-pointer">
-                                        <i class="ti ti-plus"></i> Ajouter une image
+                                        <i class="ti ti-plus"></i> Ajouter une photo
                                     </button>
                                 </div>
                                 <div id="pe-gallery-list" class="space-y-2">
-                                    ${(product.gallery || []).map((url, i) => `
+                                    ${(product.gallery || []).map((imgUrl, idx) => `
                                         <div class="flex items-center gap-2 gallery-row">
-                                            <input type="text" name="gallery[]" value="${url}" placeholder="URL image galerie" class="input-luxury flex-1 text-xs" />
-                                            <button type="button" class="btn-circle-action w-8 h-8 rounded-full border border-zinc-200 hover:border-red-300 hover:text-red-600 text-zinc-400 cursor-pointer remove-gallery-btn">
+                                            <input type="text" name="gallery[]" value="${imgUrl}" placeholder="URL image galerie" class="input-luxury flex-1" />
+                                            <button type="button" class="btn-circle-action w-8 h-8 rounded-full border border-zinc-200 hover:border-red-300 hover:text-red-600 text-zinc-400 remove-gallery-btn cursor-pointer">
                                                 <i class="ti ti-trash"></i>
                                             </button>
                                         </div>
@@ -1316,37 +1325,31 @@
                             </div>
                         </div>
 
-                        <!-- Section 4: Badges & Availability -->
+                        <!-- Section 4: Inventory & Badges -->
                         <div class="space-y-4">
-                            <h4 class="text-xs font-black uppercase tracking-wider text-zinc-400 border-b border-zinc-100 pb-2">Disponibilité, Avis & Badges</h4>
-                            
+                            <h4 class="text-xs font-black uppercase tracking-wider text-zinc-400 border-b border-zinc-100 pb-2">Inventaire, Statuts & Badges</h4>
                             <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
-                                <label class="flex items-center gap-2 p-3 bg-zinc-50 rounded-2xl border border-zinc-200 cursor-pointer hover:bg-zinc-100/70 transition">
+                                <label class="flex items-center gap-2 p-2.5 bg-zinc-50 rounded-2xl border border-zinc-200 cursor-pointer hover:border-pink-300 transition-colors">
+                                    <input type="checkbox" name="is_active" ${product.is_active ? 'checked' : ''} class="w-4 h-4 rounded accent-pink-600" />
+                                    <span class="font-bold text-zinc-800">Produit Actif</span>
+                                </label>
+                                <label class="flex items-center gap-2 p-2.5 bg-zinc-50 rounded-2xl border border-zinc-200 cursor-pointer hover:border-pink-300 transition-colors">
                                     <input type="checkbox" name="in_stock" ${product.in_stock ? 'checked' : ''} class="w-4 h-4 rounded accent-pink-600" />
                                     <span class="font-bold text-zinc-800">En stock</span>
                                 </label>
-
-                                <label class="flex items-center gap-2 p-3 bg-zinc-50 rounded-2xl border border-zinc-200 cursor-pointer hover:bg-zinc-100/70 transition">
-                                    <input type="checkbox" name="is_active" ${product.is_active ? 'checked' : ''} class="w-4 h-4 rounded accent-pink-600" />
-                                    <span class="font-bold text-zinc-800">Actif (Visible)</span>
-                                </label>
-
-                                <label class="flex items-center gap-2 p-3 bg-zinc-50 rounded-2xl border border-zinc-200 cursor-pointer hover:bg-zinc-100/70 transition">
+                                <label class="flex items-center gap-2 p-2.5 bg-zinc-50 rounded-2xl border border-zinc-200 cursor-pointer hover:border-pink-300 transition-colors">
                                     <input type="checkbox" name="is_bestseller" ${product.is_bestseller ? 'checked' : ''} class="w-4 h-4 rounded accent-pink-600" />
                                     <span class="font-bold text-zinc-800">Best-seller</span>
                                 </label>
-
-                                <label class="flex items-center gap-2 p-3 bg-zinc-50 rounded-2xl border border-zinc-200 cursor-pointer hover:bg-zinc-100/70 transition">
+                                <label class="flex items-center gap-2 p-2.5 bg-zinc-50 rounded-2xl border border-zinc-200 cursor-pointer hover:border-pink-300 transition-colors">
                                     <input type="checkbox" name="is_new" ${product.is_new ? 'checked' : ''} class="w-4 h-4 rounded accent-pink-600" />
-                                    <span class="font-bold text-zinc-800">Nouveau</span>
+                                    <span class="font-bold text-zinc-800">Nouveauté</span>
                                 </label>
-
-                                <label class="flex items-center gap-2 p-3 bg-zinc-50 rounded-2xl border border-zinc-200 cursor-pointer hover:bg-zinc-100/70 transition">
+                                <label class="flex items-center gap-2 p-2.5 bg-zinc-50 rounded-2xl border border-zinc-200 cursor-pointer hover:border-pink-300 transition-colors">
                                     <input type="checkbox" name="has_sizes" id="pe-has-sizes" ${product.has_sizes ? 'checked' : ''} class="w-4 h-4 rounded accent-pink-600" />
-                                    <span class="font-bold text-zinc-800">Variantes Tailles</span>
+                                    <span class="font-bold text-zinc-800">Variantes Formats</span>
                                 </label>
-
-                                <label class="flex items-center gap-2 p-3 bg-zinc-50 rounded-2xl border border-zinc-200 cursor-pointer hover:bg-zinc-100/70 transition">
+                                <label class="flex items-center gap-2 p-2.5 bg-zinc-50 rounded-2xl border border-zinc-200 cursor-pointer hover:border-pink-300 transition-colors">
                                     <input type="checkbox" name="has_flavors" id="pe-has-flavors" ${product.has_flavors ? 'checked' : ''} class="w-4 h-4 rounded accent-pink-600" />
                                     <span class="font-bold text-zinc-800">Variantes Parfums</span>
                                 </label>
@@ -1426,9 +1429,9 @@
                         </div>
                     </form>
 
-                    <!-- Drawer Sticky Footer -->
-                    <div class="px-6 py-4 border-t border-zinc-100 bg-zinc-50/70 flex items-center justify-end gap-3 shrink-0">
-                        <button type="button" data-close-drawer class="btn-pill-secondary btn-pill-sm cursor-pointer">
+                    <!-- Modal Footer -->
+                    <div class="flex items-center justify-end gap-3 pt-4 border-t border-zinc-100 mt-5 shrink-0">
+                        <button type="button" data-close-modal class="btn-pill-secondary btn-pill-sm cursor-pointer">
                             Annuler
                         </button>
                         <button type="submit" form="product-editor-form" id="pe-submit-btn" class="btn-pill-primary btn-pill-sm">
@@ -1439,8 +1442,8 @@
                 </div>
             `;
 
-            modalSystem.openDrawer(html, {
-                maxWidth: 'max-w-2xl',
+            modalSystem.openModal(html, {
+                maxWidth: 'max-w-3xl',
                 onMount: (panel) => {
                     // Image preview live update
                     const imgInput = panel.querySelector('#pe-image');
@@ -1647,7 +1650,7 @@
                                 toast.show(`Produit "${payload.name}" créé avec succès.`);
                             }
 
-                            modalSystem.closeDrawer();
+                            modalSystem.closeModal();
                             if (appState.currentView === 'products') {
                                 this.loadProductsList();
                             }
@@ -1678,6 +1681,7 @@
                         </button>
                     </div>
 
+                    <!-- Categories Table Container -->
                     <div id="categories-table-box" class="bg-white rounded-3xl border border-zinc-100 shadow-sm overflow-hidden">
                         <div class="flex items-center justify-center py-20">
                             <div class="w-8 h-8 border-2 border-pink-500/20 border-t-pink-500 rounded-full animate-spin"></div>
@@ -1705,10 +1709,10 @@
                     box.innerHTML = `
                         <div class="py-16 text-center">
                             <div class="w-14 h-14 rounded-2xl bg-zinc-50 text-zinc-300 flex items-center justify-center mx-auto text-2xl mb-3">
-                                <i class="ti ti-tags"></i>
+                                <i class="ti ti-category"></i>
                             </div>
-                            <p class="text-sm font-bold text-zinc-700">Aucune catégorie</p>
-                            <p class="text-xs text-zinc-400 mt-1">Créez votre première collection pour classer vos produits.</p>
+                            <p class="text-sm font-bold text-zinc-700">Aucune catégorie enregistrée</p>
+                            <p class="text-xs text-zinc-400 mt-1">Créez votre première collection pour organiser vos produits.</p>
                         </div>
                     `;
                     return;
@@ -1722,7 +1726,7 @@
                                     <th class="px-6 py-3.5">Catégorie</th>
                                     <th class="px-6 py-3.5">Slug</th>
                                     <th class="px-6 py-3.5">Produits</th>
-                                    <th class="px-6 py-3.5">Ordre de tri</th>
+                                    <th class="px-6 py-3.5">Ordre</th>
                                     <th class="px-6 py-3.5">Statut</th>
                                     <th class="px-6 py-3.5 text-right">Actions</th>
                                 </tr>
@@ -1730,38 +1734,36 @@
                             <tbody class="divide-y divide-zinc-100">
                                 ${categories.map(c => `
                                     <tr class="hover:bg-pink-50/30 transition-colors">
-                                        <td class="px-6 py-4">
-                                            <div class="flex items-center gap-3">
-                                                <div class="w-10 h-10 rounded-xl bg-zinc-100 border border-zinc-200 overflow-hidden shrink-0 flex items-center justify-center p-1">
-                                                    <img src="${c.image || '/images/sdj_bum_bum_set.jpg'}" alt="${c.name}" class="w-full h-full object-contain" onerror="this.src='/images/sdj_bum_bum_set.jpg'" />
+                                        <td class="px-6 py-4 font-bold text-zinc-900 flex items-center gap-3">
+                                            ${c.image ? `
+                                                <img src="${c.image}" alt="" class="w-8 h-8 rounded-lg object-cover border border-zinc-200" />
+                                            ` : `
+                                                <div class="w-8 h-8 rounded-lg bg-pink-50 text-pink-600 flex items-center justify-center font-bold text-xs">
+                                                    ${c.name.charAt(0)}
                                                 </div>
-                                                <div>
-                                                    <div class="font-bold text-zinc-900 text-xs">${c.name}</div>
-                                                    <div class="text-[11px] text-zinc-400 truncate max-w-xs">${c.description || '—'}</div>
-                                                </div>
-                                            </div>
+                                            `}
+                                            <span>${c.name}</span>
                                         </td>
-                                        <td class="px-6 py-4 font-mono text-zinc-400 text-[11px]">${c.slug}</td>
+                                        <td class="px-6 py-4 font-mono text-zinc-500 text-[11px]">${c.slug}</td>
                                         <td class="px-6 py-4">
-                                            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-zinc-100 text-zinc-700 text-[11px] font-bold">
-                                                <i class="ti ti-package text-zinc-400"></i>
-                                                ${c.products_count ?? 0} produit(s)
+                                            <span class="inline-flex px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-700 text-[10px] font-bold">
+                                                ${c.products_count || 0} référence(s)
                                             </span>
                                         </td>
-                                        <td class="px-6 py-4 font-bold text-zinc-600">${c.sort_order || 0}</td>
+                                        <td class="px-6 py-4 text-zinc-500">${c.sort_order}</td>
                                         <td class="px-6 py-4">
-                                            <span class="inline-flex px-2.5 py-1 rounded-full text-[10px] font-bold ${
-                                                c.is_active ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-zinc-100 text-zinc-600'
-                                            }">
-                                                ${c.is_active ? 'Active' : 'Inactive'}
-                                            </span>
+                                            ${c.is_active ? `
+                                                <span class="inline-flex px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-bold">Actif</span>
+                                            ` : `
+                                                <span class="inline-flex px-2.5 py-1 rounded-full bg-zinc-100 text-zinc-600 text-[10px] font-bold">Inactif</span>
+                                            `}
                                         </td>
                                         <td class="px-6 py-4 text-right">
                                             <div class="flex items-center justify-end gap-2">
-                                                <button type="button" data-cat-edit="${c.id}" class="p-2 rounded-xl bg-zinc-100 hover:bg-zinc-900 hover:text-white text-zinc-700 transition cursor-pointer" title="Modifier">
+                                                <button type="button" data-action="edit-cat" data-id="${c.id}" class="p-2 rounded-xl bg-zinc-100 hover:bg-zinc-900 hover:text-white text-zinc-700 transition cursor-pointer" title="Modifier">
                                                     <i class="ti ti-edit text-sm"></i>
                                                 </button>
-                                                <button type="button" data-cat-delete="${c.id}" data-name="${c.name}" data-count="${c.products_count || 0}" class="p-2 rounded-xl bg-red-50 hover:bg-red-600 hover:text-white text-red-600 transition cursor-pointer" title="Supprimer">
+                                                <button type="button" data-action="delete-cat" data-id="${c.id}" data-name="${c.name}" class="p-2 rounded-xl bg-red-50 hover:bg-red-600 hover:text-white text-red-600 transition cursor-pointer" title="Supprimer">
                                                     <i class="ti ti-trash text-sm"></i>
                                                 </button>
                                             </div>
@@ -1773,33 +1775,18 @@
                     </div>
                 `;
 
-                // Wire edit / delete buttons
-                box.querySelectorAll('[data-cat-edit]').forEach(btn => {
+                box.querySelectorAll('button[data-action="edit-cat"]').forEach(btn => {
                     btn.addEventListener('click', () => {
-                        const id = btn.dataset.catEdit;
+                        const id = btn.dataset.id;
                         const cat = categories.find(c => String(c.id) === String(id));
                         this.openCategoryEditor(cat);
                     });
                 });
 
-                box.querySelectorAll('[data-cat-delete]').forEach(btn => {
+                box.querySelectorAll('button[data-action="delete-cat"]').forEach(btn => {
                     btn.addEventListener('click', () => {
-                        const id = btn.dataset.catDelete;
+                        const id = btn.dataset.id;
                         const name = btn.dataset.name;
-                        const count = parseInt(btn.dataset.count, 10);
-
-                        if (count > 0) {
-                            modalSystem.confirm({
-                                title: 'Suppression impossible',
-                                message: `La catégorie "${name}" contient encore ${count} produit(s). Vous devez d'abord réassigner ou supprimer ces produits avant de pouvoir la supprimer.`,
-                                confirmText: 'Compris',
-                                cancelText: 'Fermer',
-                                type: 'danger',
-                                onConfirm: async () => {}
-                            });
-                            return;
-                        }
-
                         modalSystem.confirm({
                             title: 'Supprimer la catégorie',
                             message: `Voulez-vous définitivement supprimer la catégorie "${name}" ?`,
@@ -1808,6 +1795,7 @@
                             onConfirm: async () => {
                                 await api.delete(`/api/admin/categories/${id}`);
                                 toast.show(`Catégorie "${name}" supprimée.`);
+                                await this.ensureCategoriesLoaded(true);
                                 this.loadCategoriesList();
                             }
                         });
@@ -1923,6 +1911,7 @@
                                 await api.post('/api/admin/categories', payload);
                                 toast.show(`Catégorie "${payload.name}" créée.`);
                             }
+                            await this.ensureCategoriesLoaded(true);
                             modalSystem.closeModal();
                             this.loadCategoriesList();
                         } catch (err) {
