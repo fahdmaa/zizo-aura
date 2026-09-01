@@ -91,7 +91,7 @@
                 <form id="navbar-search-form" method="GET" action="{{ route('shop.index') }}" class="relative flex items-center">
                     
                     <!-- Search Pill (Grows inside banner without overlapping menu) -->
-                    <div id="search-pill-container" class="flex items-center transition-all duration-300 ease-out w-10 h-10 bg-transparent rounded-full border border-transparent overflow-hidden">
+                    <div id="search-pill-container" class="search-pill is-collapsed">
                         
                         <!-- Search Icon Button -->
                         <button type="button"
@@ -99,8 +99,8 @@
                                 aria-label="Rechercher"
                                 aria-expanded="false"
                                 aria-controls="navbar-search-input"
-                                class="w-10 h-10 flex items-center justify-center text-zinc-800 hover:text-pink-600 shrink-0 transition-colors cursor-pointer">
-                            <i class="ti ti-search text-xl"></i>
+                                class="search-btn-icon">
+                            <i class="ti ti-search text-lg"></i>
                         </button>
 
                         <!-- Input Field (smooth width expansion) -->
@@ -110,14 +110,14 @@
                                aria-label="Rechercher un produit ou rituel"
                                value="{{ request('q', '') }}"
                                autocomplete="off"
-                               placeholder="Rechercher..."
-                               class="w-0 opacity-0 bg-transparent text-xs font-semibold text-zinc-900 placeholder:text-zinc-400 focus:outline-none transition-all duration-300 pr-2" />
+                               placeholder="Rechercher un produit..."
+                               class="search-input-field" />
 
                         <!-- Clear Icon -->
                         <button type="button"
                                 id="navbar-clear-btn"
-                                aria-label="Effacer"
-                                class="hidden p-1 text-zinc-400 hover:text-black rounded-full transition-colors shrink-0 mr-1.5 cursor-pointer">
+                                aria-label="Effacer la recherche"
+                                class="search-clear-btn hidden">
                             <i class="ti ti-x text-xs"></i>
                         </button>
                     </div>

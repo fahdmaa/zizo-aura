@@ -660,7 +660,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // =========================================================================
-    // 8. Search Bar & Live Autocomplete Suggestions
+    // 8. Search Bar & Live Autocomplete Suggestions (Grow & Shrink Animation)
     // =========================================================================
     const searchWrapper = document.getElementById('search-wrapper');
     const searchForm = document.getElementById('navbar-search-form');
@@ -675,20 +675,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const expandSearchBar = () => {
         if (!searchPill || !navbarInput) return;
-        searchPill.classList.remove('w-10', 'bg-transparent', 'border-transparent');
-        searchPill.classList.add('w-36', 'sm:w-56', 'md:w-60', 'bg-zinc-100', 'border-zinc-200', 'shadow-2xs');
-        navbarInput.classList.remove('w-0', 'opacity-0');
-        navbarInput.classList.add('w-full', 'opacity-100');
+        searchPill.classList.remove('is-collapsed');
+        searchPill.classList.add('is-expanded');
+        if (expandBtn) expandBtn.setAttribute('aria-expanded', 'true');
         navbarInput.focus();
     };
 
-    const collapseSearchBar = () => {
+    const collapseSearchBar = (force = false) => {
         if (!searchPill || !navbarInput) return;
-        if (navbarInput.value.trim().length === 0) {
-            searchPill.classList.remove('w-36', 'sm:w-56', 'md:w-60', 'bg-zinc-100', 'border-zinc-200', 'shadow-2xs');
-            searchPill.classList.add('w-10', 'bg-transparent', 'border-transparent');
-            navbarInput.classList.remove('w-full', 'opacity-100');
-            navbarInput.classList.add('w-0', 'opacity-0');
+        if (force || navbarInput.value.trim().length === 0) {
+            searchPill.classList.remove('is-expanded');
+            searchPill.classList.add('is-collapsed');
+            if (expandBtn) expandBtn.setAttribute('aria-expanded', 'false');
             if (clearBtn) clearBtn.classList.add('hidden');
         }
         if (suggestionsBox) suggestionsBox.classList.add('hidden');
@@ -696,7 +694,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (expandBtn) {
         expandBtn.addEventListener('click', (e) => {
-            const isCollapsed = searchPill.classList.contains('w-10');
+            const isCollapsed = searchPill && searchPill.classList.contains('is-collapsed');
             if (isCollapsed) {
                 e.preventDefault();
                 expandSearchBar();
@@ -708,9 +706,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    if (navbarInput && navbarInput.value.trim().length > 0) {
-        expandSearchBar();
-        if (clearBtn) clearBtn.classList.remove('hidden');
+    if (searchPill) {
+        searchPill.addEventListener('click', (e) => {
+            if (searchPill.classList.contains('is-collapsed')) {
+                expandSearchBar();
+            }
+        });
     }
 
     const fetchLiveSuggestions = (query) => {
@@ -778,23 +779,49 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     if (navbarInput) {
+        navbarInput.addEventListener('click', () => {
+            if (searchPill && searchPill.classList.contains('is-collapsed')) {
+                expandSearchBar();
+            }
+        });
+
+        navbarInput.addEventListener('focus', () => {
+            expandSearchBar();
+            if (navbarInput.value.trim().length > 0) {
+                fetchLiveSuggestions(navbarInput.value);
+            }
+        });
+
         navbarInput.addEventListener('input', (e) => {
             clearTimeout(searchTimer);
             const val = e.target.value;
+            if (clearBtn) {
+                if (val.trim().length > 0) {
+                    clearBtn.classList.remove('hidden');
+                } else {
+                    clearBtn.classList.add('hidden');
+                }
+            }
             searchTimer = setTimeout(() => {
                 fetchLiveSuggestions(val);
             }, 180);
         });
 
-        navbarInput.addEventListener('focus', () => {
-            if (navbarInput.value.trim().length > 0) {
-                fetchLiveSuggestions(navbarInput.value);
+        navbarInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                if (suggestionsBox && !suggestionsBox.classList.contains('hidden')) {
+                    suggestionsBox.classList.add('hidden');
+                } else {
+                    navbarInput.blur();
+                    collapseSearchBar(true);
+                }
             }
         });
     }
 
     if (clearBtn && navbarInput) {
-        clearBtn.addEventListener('click', () => {
+        clearBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
             navbarInput.value = '';
             clearBtn.classList.add('hidden');
             if (suggestionsBox) suggestionsBox.classList.add('hidden');
@@ -807,6 +834,11 @@ document.addEventListener('DOMContentLoaded', () => {
             collapseSearchBar();
         }
     });
+
+    if (navbarInput && navbarInput.value.trim().length > 0) {
+        expandSearchBar();
+        if (clearBtn) clearBtn.classList.remove('hidden');
+    }
 
     // =========================================================================
     // 9. Contact Page Subject Dropdown
