@@ -297,7 +297,7 @@
     };
 
     // ─── Image Processing Helpers ─────────────────────────────────────────────
-    function readFileAsCompressedDataUrl(file, maxWidth = 1200, quality = 0.85) {
+    function readFileAsCompressedDataUrl(file, maxWidth = 800, quality = 0.80) {
         return new Promise((resolve, reject) => {
             if (!file || !file.type.startsWith('image/')) {
                 return reject(new Error('Le fichier sélectionné n\'est pas une image valide.'));
@@ -310,18 +310,26 @@
                     let width = img.width;
                     let height = img.height;
 
-                    if (width > maxWidth) {
-                        height = Math.round((height * maxWidth) / width);
-                        width = maxWidth;
+                    if (width > maxWidth || height > maxWidth) {
+                        if (width > height) {
+                            height = Math.round((height * maxWidth) / width);
+                            width = maxWidth;
+                        } else {
+                            width = Math.round((width * maxWidth) / height);
+                            height = maxWidth;
+                        }
                     }
 
                     canvas.width = width;
                     canvas.height = height;
                     const ctx = canvas.getContext('2d');
+                    
+                    // Fill white background for clean JPEG export
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fillRect(0, 0, width, height);
                     ctx.drawImage(img, 0, 0, width, height);
 
-                    const mimeType = file.type === 'image/png' ? 'image/png' : 'image/jpeg';
-                    const dataUrl = canvas.toDataURL(mimeType, quality);
+                    const dataUrl = canvas.toDataURL('image/jpeg', quality);
                     resolve(dataUrl);
                 };
                 img.onerror = () => reject(new Error('Impossible de charger l\'image.'));

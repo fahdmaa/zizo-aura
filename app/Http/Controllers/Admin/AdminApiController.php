@@ -32,7 +32,12 @@ class AdminApiController extends Controller
 
     public function products(Request $request): JsonResponse
     {
-        $query = Product::with(['category', 'sizes', 'flavors'])->withTrashed();
+        $query = Product::select([
+            'id', 'category_id', 'name', 'subtitle', 'slug', 'price', 'discounted_price',
+            'image', 'badge', 'badge_color', 'in_stock', 'stock_quantity', 'is_active',
+            'is_bestseller', 'is_new', 'sort_order', 'deleted_at', 'created_at', 'updated_at'
+        ])->with(['category:id,name,slug'])->withTrashed();
+
         if ($request->filled('category_id')) $query->where('category_id', $request->integer('category_id'));
         if ($request->filled('search')) $query->where('name', 'ilike', '%'.$request->string('search').'%');
         if ($request->input('status') === 'deleted') $query->onlyTrashed();
@@ -49,6 +54,10 @@ class AdminApiController extends Controller
         $product = DB::transaction(function () use ($request) {
             $data = $this->productData($request);
             $data['slug'] = ($data['slug'] ?? null) ?: Str::slug($data['name']);
+            $data['image'] = \App\Services\ImageOptimizer::optimizeBase64($data['image']);
+            if (isset($data['gallery'])) {
+                $data['gallery'] = \App\Services\ImageOptimizer::optimizeGallery($data['gallery']);
+            }
             $product = Product::create($data);
             $this->syncVariants($product, $data);
             return $product;
@@ -61,6 +70,12 @@ class AdminApiController extends Controller
         DB::transaction(function () use ($request, $product) {
             $data = $this->productData($request, $product->id);
             $data['slug'] = ($data['slug'] ?? null) ?: Str::slug($data['name']);
+            if (isset($data['image'])) {
+                $data['image'] = \App\Services\ImageOptimizer::optimizeBase64($data['image']);
+            }
+            if (isset($data['gallery'])) {
+                $data['gallery'] = \App\Services\ImageOptimizer::optimizeGallery($data['gallery']);
+            }
             $product->update($data);
             $this->syncVariants($product, $data);
         });
