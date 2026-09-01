@@ -447,6 +447,22 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Clean up cart when order is processed through WhatsApp
+    if (cartWhatsappBtn) {
+        cartWhatsappBtn.addEventListener('click', () => {
+            const cart = getCart();
+            if (cart.length > 0) {
+                // Short timeout so the new tab captures the WhatsApp link before resetting
+                setTimeout(() => {
+                    saveCart([]);
+                    setAppliedCoupon(null);
+                    showCouponFeedback('', 'clear');
+                    showToast('✨ Commande transmise ! Votre panier a été réinitialisé.');
+                }, 350);
+            }
+        });
+    }
+
     // Helper: Add Item to Cart Array
     const addItemToCart = ({ name, price, image, slug, flavor, size, quantity = 1 }) => {
         const cart = getCart();
