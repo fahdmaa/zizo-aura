@@ -4,7 +4,7 @@
         <!-- Header -->
         <div class="text-center max-w-2xl mx-auto mb-12 sm:mb-16">
             <h2 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-black tracking-tight leading-tight">
-                Notre Processus &amp; Comment Nous Livrons
+                Process &amp; livraison
             </h2>
             <p class="text-xs sm:text-sm text-zinc-500 font-normal mt-2 leading-relaxed">
                 De la préparation méticuleuse de vos flacons jusqu'à votre boîte aux lettres, chaque étape est pensée pour une expérience sensorielle parfaite.
