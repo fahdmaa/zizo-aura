@@ -218,8 +218,8 @@
                     <div>
                         <h3 class="text-sm font-bold text-zinc-900 mb-1 group-hover:text-pink-600 transition-colors">Téléphone &amp; WhatsApp</h3>
                         <p class="text-xs text-zinc-500 mb-2">Du Lundi au Samedi : 9h00 – 19h30 (Maroc)</p>
-                        <a href="tel:+212522000000" class="text-sm font-bold text-zinc-900 hover:text-pink-600 transition-colors">
-                            +212 (0) 5 22 40 50 60
+                        <a href="https://wa.me/212682787594" target="_blank" rel="noopener noreferrer" class="text-sm font-bold text-zinc-900 hover:text-pink-600 transition-colors">
+                            +212 682-787594
                         </a>
                     </div>
                 </div>

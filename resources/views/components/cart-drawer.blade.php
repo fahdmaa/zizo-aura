@@ -100,7 +100,7 @@
             <!-- WhatsApp Direct Order Button (Popular in Morocco) & Shop Link -->
             <div class="space-y-2 pt-1">
                 <a id="cart-whatsapp-btn"
-                   href="https://wa.me/212600000000?text=Bonjour%20zizo%20aura%2C%20je%20souhaite%20commander"
+                   href="https://wa.me/212682787594?text=Bonjour%20zizo%20aura%2C%20je%20souhaite%20commander"
                    target="_blank"
                    rel="noopener noreferrer"
                    class="btn-card-pill w-full py-3.5 text-xs font-extrabold uppercase tracking-wider bg-emerald-600 hover:bg-emerald-700 hover:border-emerald-700 hover:shadow-[0_8px_20px_rgba(16,185,129,0.3)]">
