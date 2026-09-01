@@ -87,7 +87,7 @@
                 this.container.id = 'admin-toast-container';
                 document.body.appendChild(this.container);
             }
-            this.container.className = 'fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center gap-2 pointer-events-none w-max max-w-[90vw]';
+            this.container.className = 'fixed bottom-24 sm:bottom-28 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center gap-2 pointer-events-none w-max max-w-[90vw]';
         },
         show(message, type = 'success') {
             this.init();
