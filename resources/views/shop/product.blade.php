@@ -27,21 +27,25 @@
                 <div class="relative aspect-square w-full bg-[#f8f9fa] rounded-3xl p-8 sm:p-12 overflow-hidden flex items-center justify-center border border-zinc-100 shadow-sm group">
                     
                     <!-- Watermark Discount in Background -->
-                    <div class="absolute inset-0 flex flex-col justify-between p-6 select-none pointer-events-none z-0">
-                        <span class="watermark-discount text-zinc-200/70 text-left font-black tracking-tighter">
-                            {{ $product['discount'] }}
-                        </span>
-                        <span class="watermark-discount text-zinc-200/70 text-right font-black tracking-tighter">
-                            off
-                        </span>
-                    </div>
+                    @if(!empty($product['discount']))
+                        <div class="absolute inset-0 flex flex-col justify-between p-6 select-none pointer-events-none z-0">
+                            <span class="watermark-discount text-zinc-200/70 text-left font-black tracking-tighter">
+                                {{ $product['discount'] }}
+                            </span>
+                            <span class="watermark-discount text-zinc-200/70 text-right font-black tracking-tighter">
+                                off
+                            </span>
+                        </div>
+                    @endif
 
                     <!-- Floating Badge -->
-                    <div class="absolute top-4 left-4 z-20">
-                        <span class="px-3.5 py-1.5 rounded-full text-xs font-extrabold uppercase tracking-wider shadow-sm {{ $product['badge_color'] }}">
-                            {{ $product['badge'] }}
-                        </span>
-                    </div>
+                    @if(!empty($product['badge']))
+                        <div class="absolute top-4 left-4 z-20">
+                            <span class="px-3.5 py-1.5 rounded-full text-xs font-extrabold uppercase tracking-wider shadow-sm {{ $product['badge_color'] }}">
+                                {{ $product['badge'] }}
+                            </span>
+                        </div>
+                    @endif
 
                     <!-- Product Image Asset -->
                     <img src="{{ $product['image'] }}"
@@ -82,12 +86,14 @@
                     <span class="text-3xl sm:text-4xl font-black text-pink-600 tracking-tight">
                         {{ $product['price'] }} DH
                     </span>
-                    <span class="text-lg font-bold text-zinc-400 line-through">
-                        {{ $product['original_price'] }} DH
-                    </span>
-                    <span class="px-2.5 py-1 rounded-md bg-pink-50 text-pink-600 text-xs font-extrabold uppercase tracking-wider">
-                        Remise de {{ $product['discount'] }}
-                    </span>
+                    @if(!empty($product['discount']) && !empty($product['original_price']) && $product['original_price'] !== $product['price'])
+                        <span class="text-lg font-bold text-zinc-400 line-through">
+                            {{ $product['original_price'] }} DH
+                        </span>
+                        <span class="px-2.5 py-1 rounded-md bg-pink-50 text-pink-600 text-xs font-extrabold uppercase tracking-wider">
+                            Remise de {{ $product['discount'] }}
+                        </span>
+                    @endif
                 </div>
 
                 <!-- Scent / Flavor Switcher (if available) -->

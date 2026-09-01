@@ -115,6 +115,20 @@ class Product extends Model
         $sizes = $this->relationLoaded('sizes') ? $this->sizes : collect();
         $flavors = $this->relationLoaded('flavors') ? $this->flavors : collect();
 
+        // Resolve badge & badge color if not explicitly defined
+        $badge = $this->badge;
+        $badgeColor = $this->badge_color;
+
+        if (empty($badge)) {
+            if ($this->is_bestseller) {
+                $badge = 'Best-Seller';
+                $badgeColor = $badgeColor ?: 'bg-rose-500 text-white';
+            } elseif ($this->is_new) {
+                $badge = 'Nouveau';
+                $badgeColor = $badgeColor ?: 'bg-black text-white';
+            }
+        }
+
         return [
             'id' => $this->id,
             'slug' => $this->slug,
@@ -122,8 +136,8 @@ class Product extends Model
             'name' => $this->name,
             'subtitle' => $this->subtitle ?? '',
             'discount' => $this->discount_percent ? '-'.$this->discount_percent.'%' : null,
-            'badge' => $this->badge,
-            'badge_color' => $this->badge_color ?? 'bg-pink-500 text-white',
+            'badge' => $badge,
+            'badge_color' => $badgeColor ?? 'bg-pink-500 text-white',
             'price' => (string) ($salePrice ?? $price),
             'original_price' => (string) $price,
             'raw_price' => $salePrice ?? $price,

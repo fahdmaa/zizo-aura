@@ -37,21 +37,25 @@
                         <a href="{{ route('shop.product', $product['slug']) }}" class="relative aspect-square w-full bg-[#f8f9fa] rounded-xl overflow-hidden flex items-center justify-center p-5 mb-3.5 block">
                             
                             <!-- Watermark Discount -->
-                            <div class="absolute inset-0 flex flex-col justify-between p-3 select-none pointer-events-none z-0">
-                                <span class="watermark-discount text-zinc-200/70 text-left font-black tracking-tighter">
-                                    {{ $product['discount'] }}
-                                </span>
-                                <span class="watermark-discount text-zinc-200/70 text-right font-black tracking-tighter">
-                                    off
-                                </span>
-                            </div>
+                            @if(!empty($product['discount']))
+                                <div class="absolute inset-0 flex flex-col justify-between p-3 select-none pointer-events-none z-0">
+                                    <span class="watermark-discount text-zinc-200/70 text-left font-black tracking-tighter">
+                                        {{ $product['discount'] }}
+                                    </span>
+                                    <span class="watermark-discount text-zinc-200/70 text-right font-black tracking-tighter">
+                                        off
+                                    </span>
+                                </div>
+                            @endif
 
                             <!-- Floating Badge Pill -->
-                            <div class="absolute top-2.5 inset-x-0 flex justify-center z-20">
-                                <span class="px-2.5 py-0.5 rounded-full text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider shadow-sm {{ $product['badge_color'] }}">
-                                    {{ $product['badge'] }}
-                                </span>
-                            </div>
+                            @if(!empty($product['badge']))
+                                <div class="absolute top-2.5 inset-x-0 flex justify-center z-20">
+                                    <span class="px-2.5 py-0.5 rounded-full text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider shadow-sm {{ $product['badge_color'] }}">
+                                        {{ $product['badge'] }}
+                                    </span>
+                                </div>
+                            @endif
 
                             <!-- Product Image -->
                             <img src="{{ $product['image'] }}"
@@ -86,9 +90,11 @@
                                 <span class="text-base sm:text-lg font-black text-pink-600 tracking-tight">
                                     {{ $product['price'] }} DH
                                 </span>
-                                <span class="text-xs font-semibold text-zinc-400 line-through">
-                                    {{ $product['original_price'] }} DH
-                                </span>
+                                @if(!empty($product['discount']) && !empty($product['original_price']) && $product['original_price'] !== $product['price'])
+                                    <span class="text-xs font-semibold text-zinc-400 line-through">
+                                        {{ $product['original_price'] }} DH
+                                    </span>
+                                @endif
                             </div>
 
                             <!-- Quick Add to Cart Button -->

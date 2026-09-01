@@ -26,6 +26,13 @@
                     class="input-luxury w-full">
             </div>
 
+            <div class="col-span-2">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Sous-titre / Description courte</label>
+                <input type="text" name="subtitle" value="{{ old('subtitle', $product->subtitle ?? '') }}"
+                    placeholder="ex: Mousse de Douche, Gommage Corps & Crème"
+                    class="input-luxury w-full">
+            </div>
+
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Catégorie *</label>
                 <select name="category_id" required
@@ -84,7 +91,7 @@
     </div>
 
     {{-- Badges & flags --}}
-    <div class="bg-white rounded-2xl border border-gray-200 p-6">
+    <div class="bg-white rounded-2xl border border-gray-200 p-6 space-y-5">
         <h2 class="font-semibold text-gray-800 border-b pb-3 mb-5">Badges & disponibilité</h2>
         <div class="grid grid-cols-2 gap-3 sm:grid-cols-3">
             @foreach([
@@ -98,11 +105,39 @@
             <label class="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
                 <input type="hidden" name="{{ $field }}" value="0">
                 <input type="checkbox" name="{{ $field }}" value="1"
-                    {{ old($field, $product->$field ?? true) ? 'checked' : '' }}
+                    {{ old($field, $product->$field ?? ($field === 'in_stock' || $field === 'is_active')) ? 'checked' : '' }}
                     class="w-4 h-4 rounded accent-pink-500">
                 {{ $label }}
             </label>
             @endforeach
+        </div>
+
+        <div class="grid grid-cols-2 gap-4 pt-4 border-t border-gray-100">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Texte du badge personnalisé <span class="text-gray-400 font-normal text-xs">(auto si vide)</span></label>
+                <input type="text" name="badge" value="{{ old('badge', $product->badge ?? '') }}"
+                    placeholder="ex: Best Seller, Coup de Cœur"
+                    class="input-luxury w-full">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Classes CSS du badge</label>
+                <input type="text" name="badge_color" value="{{ old('badge_color', $product->badge_color ?? '') }}"
+                    placeholder="ex: bg-rose-500 text-white"
+                    class="input-luxury w-full">
+            </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4 pt-4 border-t border-gray-100">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Note (sur 5)</label>
+                <input type="number" step="0.1" min="0" max="5" name="rating" value="{{ old('rating', $product->rating ?? 5.0) }}"
+                    class="input-luxury w-full">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Nombre d'avis</label>
+                <input type="number" min="0" name="review_count" value="{{ old('review_count', $product->review_count ?? 1) }}"
+                    class="input-luxury w-full">
+            </div>
         </div>
     </div>
 
