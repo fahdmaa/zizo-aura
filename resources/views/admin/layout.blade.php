@@ -96,20 +96,6 @@
 
             <!-- Header Actions Right -->
             <div class="flex items-center gap-2.5 shrink-0">
-                <div class="hidden sm:inline-flex items-center gap-2 btn-pill-sm rounded-full bg-white border border-zinc-200 text-zinc-700 shadow-2xs select-none">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0"></span>
-                    <span class="text-xs font-bold text-zinc-700">En direct</span>
-                </div>
-
-                <!-- Messages Shortcut with Red Notification Badge -->
-                <a href="#messages" class="relative btn-pill-secondary btn-pill-sm cursor-pointer" title="Messages reçus">
-                    <div class="relative flex items-center justify-center">
-                        <i class="ti ti-mail text-sm"></i>
-                        <span id="header-unread-badge" class="hidden absolute -top-2 -right-2.5 min-w-[17px] h-[17px] px-1 rounded-full bg-red-600 text-white font-black text-[9px] leading-none flex items-center justify-center shadow-xs ring-2 ring-white">0</span>
-                    </div>
-                    <span class="hidden md:inline">Messages</span>
-                </a>
-
                 <button type="button" onclick="if(window.adminApp) window.adminApp.handleHashChange();" class="btn-pill-secondary btn-pill-sm cursor-pointer" title="Rafraîchir les données">
                     <i class="ti ti-refresh text-sm"></i>
                     <span class="hidden md:inline">Actualiser</span>
