@@ -355,7 +355,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 setAppliedCoupon(data);
                 couponInput.value = '';
                 showCouponFeedback('', 'clear');
-                showToast(`✨ Code promo ${data.code} appliqué !`);
+                showToast(`Code promo ${data.code} appliqué !`);
                 renderCartUI();
             } else {
                 showCouponFeedback(data.message || 'Code promo invalide.', 'error');
@@ -457,7 +457,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     saveCart([]);
                     setAppliedCoupon(null);
                     showCouponFeedback('', 'clear');
-                    showToast('✨ Commande transmise ! Votre panier a été réinitialisé.');
+                    showToast('Commande transmise ! Votre panier a été réinitialisé.');
                 }, 350);
             }
         });
@@ -1150,7 +1150,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     storeContactForm.reset();
 
                     // Toast notification
-                    showToast('✨ Message envoyé avec succès !');
+                    showToast('Message envoyé avec succès !');
 
                     // Scroll to top of card smoothly
                     const card = document.getElementById('contact-form-card');
@@ -1159,7 +1159,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 } else {
                     const errorMsg = data.message || (data.errors ? Object.values(data.errors).flat().join(' ') : 'Une erreur est survenue.');
-                    showToast(`⚠️ ${errorMsg}`);
+                    showToast(errorMsg);
                     if (contactSubmitBtn) {
                         contactSubmitBtn.disabled = false;
                         contactSubmitBtn.innerHTML = `

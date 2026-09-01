@@ -469,7 +469,7 @@
                 const [view, param] = hash.split('/');
                 await this.navigate(view || 'dashboard', param);
 
-                showToast('✨ Données et messages actualisés');
+                showToast('Données et messages actualisés');
             } catch (err) {
                 console.error('Refresh error', err);
                 showToast('Erreur lors de l\'actualisation', 'error');
