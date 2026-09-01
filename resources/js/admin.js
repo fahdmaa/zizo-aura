@@ -389,9 +389,9 @@
 
             // Global click listener to close custom floating dropdowns
             document.addEventListener('click', (e) => {
-                if (!e.target.closest('.custom-admin-dropdown')) {
+                if (!e.target.closest('.custom-admin-dropdown') && !e.target.closest('.custom-form-dropdown')) {
                     document.querySelectorAll('.custom-dropdown-panel').forEach(p => p.classList.add('hidden'));
-                    document.querySelectorAll('.custom-admin-dropdown .chevron-icon').forEach(c => c.classList.remove('rotate-180'));
+                    document.querySelectorAll('.custom-admin-dropdown .chevron-icon, .custom-form-dropdown .chevron-icon').forEach(c => c.classList.remove('rotate-180'));
                 }
             });
 
@@ -1201,6 +1201,10 @@
                 }
             }
 
+            const selectedCategory = appState.categoriesCache.find(c => String(c.id) === String(product.category_id)) || appState.categoriesCache[0];
+            const currentCatId = selectedCategory ? selectedCategory.id : (product.category_id || '');
+            const currentCatName = selectedCategory ? selectedCategory.name : 'Choisir une catégorie';
+
             const html = `
                 <div class="p-6 md:p-7 flex flex-col h-full overflow-hidden max-h-[88vh]">
                     <!-- Modal Header -->
@@ -1233,12 +1237,21 @@
 
                                 <div>
                                     <label class="block font-bold text-zinc-700 mb-1">Catégorie <span class="text-pink-600">*</span></label>
-                                    <select name="category_id" required class="select-luxury w-full">
-                                        <option value="">-- Choisir une catégorie --</option>
-                                        ${appState.categoriesCache.map(cat => `
-                                            <option value="${cat.id}" ${product.category_id == cat.id ? 'selected' : ''}>${cat.name}</option>
-                                        `).join('')}
-                                    </select>
+                                    <input type="hidden" name="category_id" id="pe-category-id" value="${currentCatId}" required />
+                                    <div class="relative custom-form-dropdown" id="pe-category-dropdown">
+                                        <button type="button" id="pe-category-trigger" class="w-full px-4 py-3 bg-white border border-zinc-200 hover:border-pink-300 rounded-2xl text-xs font-semibold text-zinc-900 flex items-center justify-between cursor-pointer focus:outline-none focus:border-pink-500 focus:ring-4 focus:ring-pink-500/12 transition-all">
+                                            <span id="pe-category-label" class="font-bold text-zinc-900 truncate">${currentCatName}</span>
+                                            <i class="ti ti-chevron-down text-zinc-400 transition-transform duration-200 chevron-icon"></i>
+                                        </button>
+                                        <div id="pe-category-panel" class="custom-dropdown-panel absolute top-full left-0 right-0 mt-2 bg-white/95 backdrop-blur-md rounded-2xl shadow-[0_15px_35px_rgba(0,0,0,0.14)] border border-zinc-100 p-1.5 z-50 hidden max-h-56 overflow-y-auto">
+                                            ${appState.categoriesCache.map(cat => `
+                                                <button type="button" class="pe-category-opt w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${String(currentCatId) === String(cat.id) ? 'bg-pink-50 text-pink-600' : 'text-zinc-700 hover:bg-zinc-50 hover:text-black'}" data-cat-id="${cat.id}" data-cat-name="${cat.name}">
+                                                    <span class="truncate">${cat.name}</span>
+                                                    <i class="ti ti-check text-xs ${String(currentCatId) === String(cat.id) ? '' : 'hidden'}"></i>
+                                                </button>
+                                            `).join('')}
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div>
@@ -1445,6 +1458,41 @@
             modalSystem.openModal(html, {
                 maxWidth: 'max-w-3xl',
                 onMount: (panel) => {
+                    // Category custom dropdown wiring
+                    const catTrigger = panel.querySelector('#pe-category-trigger');
+                    const catPanel = panel.querySelector('#pe-category-panel');
+                    const catLabel = panel.querySelector('#pe-category-label');
+                    const catInput = panel.querySelector('#pe-category-id');
+                    const catChevron = catTrigger?.querySelector('.chevron-icon');
+
+                    catTrigger?.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const isHidden = catPanel.classList.toggle('hidden');
+                        catChevron?.classList.toggle('rotate-180', !isHidden);
+                    });
+
+                    panel.querySelectorAll('.pe-category-opt').forEach(opt => {
+                        opt.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            const catId = opt.dataset.catId;
+                            const catName = opt.dataset.catName;
+                            if (catInput) catInput.value = catId;
+                            if (catLabel) catLabel.textContent = catName;
+
+                            panel.querySelectorAll('.pe-category-opt').forEach(o => {
+                                const isMatch = o.dataset.catId === catId;
+                                o.classList.toggle('bg-pink-50', isMatch);
+                                o.classList.toggle('text-pink-600', isMatch);
+                                o.classList.toggle('text-zinc-700', !isMatch);
+                                const check = o.querySelector('.ti-check');
+                                if (check) check.classList.toggle('hidden', !isMatch);
+                            });
+
+                            catPanel.classList.add('hidden');
+                            catChevron?.classList.remove('rotate-180');
+                        });
+                    });
+
                     // Image preview live update
                     const imgInput = panel.querySelector('#pe-image');
                     const imgPreview = panel.querySelector('#pe-image-preview');
@@ -2175,6 +2223,9 @@
 
             const expiryFormatted = data.expires_at ? data.expires_at.split('T')[0] : '';
 
+            const currentType = data.type || 'percent';
+            const currentTypeLabel = currentType === 'percent' ? '% Pourcentage' : 'DH Montant fixe';
+
             const html = `
                 <div class="p-6 md:p-7">
                     <div class="flex items-center justify-between pb-4 mb-4 border-b border-zinc-100">
@@ -2198,10 +2249,23 @@
                         <div class="grid grid-cols-2 gap-4">
                             <div>
                                 <label class="block font-bold text-zinc-700 mb-1">Type de remise <span class="text-pink-600">*</span></label>
-                                <select name="type" required class="select-luxury w-full font-semibold">
-                                    <option value="percent" ${data.type === 'percent' ? 'selected' : ''}>% Pourcentage</option>
-                                    <option value="fixed" ${data.type === 'fixed' ? 'selected' : ''}>DH Montant fixe</option>
-                                </select>
+                                <input type="hidden" name="type" id="coupon-type-id" value="${currentType}" required />
+                                <div class="relative custom-form-dropdown" id="coupon-type-dropdown">
+                                    <button type="button" id="coupon-type-trigger" class="w-full px-4 py-3 bg-white border border-zinc-200 hover:border-pink-300 rounded-2xl text-xs font-semibold text-zinc-900 flex items-center justify-between cursor-pointer focus:outline-none focus:border-pink-500 focus:ring-4 focus:ring-pink-500/12 transition-all">
+                                        <span id="coupon-type-label" class="font-bold text-zinc-900">${currentTypeLabel}</span>
+                                        <i class="ti ti-chevron-down text-zinc-400 transition-transform duration-200 chevron-icon"></i>
+                                    </button>
+                                    <div id="coupon-type-panel" class="custom-dropdown-panel absolute top-full left-0 right-0 mt-2 bg-white/95 backdrop-blur-md rounded-2xl shadow-[0_15px_35px_rgba(0,0,0,0.14)] border border-zinc-100 p-1.5 z-50 hidden">
+                                        <button type="button" class="coupon-type-opt w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${currentType === 'percent' ? 'bg-pink-50 text-pink-600' : 'text-zinc-700 hover:bg-zinc-50 hover:text-black'}" data-value="percent" data-label="% Pourcentage">
+                                            <span>% Pourcentage</span>
+                                            <i class="ti ti-check text-xs ${currentType === 'percent' ? '' : 'hidden'}"></i>
+                                        </button>
+                                        <button type="button" class="coupon-type-opt w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${currentType === 'fixed' ? 'bg-pink-50 text-pink-600' : 'text-zinc-700 hover:bg-zinc-50 hover:text-black'}" data-value="fixed" data-label="DH Montant fixe">
+                                            <span>DH Montant fixe</span>
+                                            <i class="ti ti-check text-xs ${currentType === 'fixed' ? '' : 'hidden'}"></i>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                             <div>
                                 <label class="block font-bold text-zinc-700 mb-1">Valeur de la réduction <span class="text-pink-600">*</span></label>
@@ -2248,6 +2312,41 @@
             modalSystem.openModal(html, {
                 maxWidth: 'max-w-md',
                 onMount: (box) => {
+                    // Type custom dropdown wiring
+                    const typeTrigger = box.querySelector('#coupon-type-trigger');
+                    const typePanel = box.querySelector('#coupon-type-panel');
+                    const typeLabel = box.querySelector('#coupon-type-label');
+                    const typeInput = box.querySelector('#coupon-type-id');
+                    const typeChevron = typeTrigger?.querySelector('.chevron-icon');
+
+                    typeTrigger?.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const isHidden = typePanel.classList.toggle('hidden');
+                        typeChevron?.classList.toggle('rotate-180', !isHidden);
+                    });
+
+                    box.querySelectorAll('.coupon-type-opt').forEach(opt => {
+                        opt.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            const val = opt.dataset.value;
+                            const lbl = opt.dataset.label;
+                            if (typeInput) typeInput.value = val;
+                            if (typeLabel) typeLabel.textContent = lbl;
+
+                            box.querySelectorAll('.coupon-type-opt').forEach(o => {
+                                const isMatch = o.dataset.value === val;
+                                o.classList.toggle('bg-pink-50', isMatch);
+                                o.classList.toggle('text-pink-600', isMatch);
+                                o.classList.toggle('text-zinc-700', !isMatch);
+                                const check = o.querySelector('.ti-check');
+                                if (check) check.classList.toggle('hidden', !isMatch);
+                            });
+
+                            typePanel.classList.add('hidden');
+                            typeChevron?.classList.remove('rotate-180');
+                        });
+                    });
+
                     const form = box.querySelector('#coupon-modal-form');
                     form?.addEventListener('submit', async (e) => {
                         e.preventDefault();
