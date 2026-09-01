@@ -19,17 +19,54 @@
             </button>
         </div>
 
-        <!-- Free Delivery Progress Bar (550 DH Threshold) -->
-        <div class="px-5 py-3.5 bg-[#f8f9fa] border-b border-zinc-100">
-            <div class="flex items-center justify-between text-xs font-bold mb-1.5" id="shipping-progress-text">
-                <span class="text-zinc-600 flex items-center gap-1.5">
-                    <i class="ti ti-truck-delivery text-pink-600 text-sm"></i>
-                    <span id="shipping-status-label">Livraison offerte dès 550 DH</span>
-                </span>
-                <span id="shipping-remaining-amount" class="text-pink-600 font-extrabold">Plus que 550 DH</span>
+        <!-- Free Delivery Progress Bar & Discount Code Card -->
+        <div class="px-5 py-3.5 bg-[#f8f9fa] border-b border-zinc-100 space-y-3">
+            <!-- Free Delivery Progress -->
+            <div>
+                <div class="flex items-center justify-between text-xs font-bold mb-1.5" id="shipping-progress-text">
+                    <span id="shipping-status-label" class="text-zinc-700 font-extrabold">Livraison offerte dès 550 DH</span>
+                    <span id="shipping-remaining-amount" class="text-pink-600 font-extrabold">Plus que 550 DH</span>
+                </div>
+                <div class="w-full bg-zinc-200 rounded-full h-1.5 overflow-hidden">
+                    <div id="shipping-progress-bar" class="bg-gradient-to-r from-pink-500 to-rose-500 h-1.5 rounded-full transition-all duration-500 w-0"></div>
+                </div>
             </div>
-            <div class="w-full bg-zinc-200 rounded-full h-1.5 overflow-hidden">
-                <div id="shipping-progress-bar" class="bg-gradient-to-r from-pink-500 to-rose-500 h-1.5 rounded-full transition-all duration-500 w-0"></div>
+
+            <!-- Discount / Promo Code Form in Same Card -->
+            <div id="cart-coupon-card-section" class="pt-2 border-t border-zinc-200/60">
+                <!-- Input Form when no coupon is applied -->
+                <div id="coupon-input-wrapper" class="flex items-center gap-2">
+                    <input type="text"
+                           id="cart-coupon-input"
+                           placeholder="Code promo"
+                           autocomplete="off"
+                           class="flex-1 h-8.5 px-3 text-xs uppercase font-bold bg-white border border-zinc-200 hover:border-pink-300 focus:border-pink-500 focus:ring-2 focus:ring-pink-500/15 rounded-xl outline-none transition-all placeholder:normal-case placeholder:font-normal placeholder:text-zinc-400">
+                    <button type="button"
+                            id="cart-coupon-apply-btn"
+                            class="h-8.5 px-3.5 rounded-xl bg-zinc-900 hover:bg-black text-white text-[11px] font-bold uppercase tracking-wider transition-all cursor-pointer shrink-0 shadow-2xs">
+                        Appliquer
+                    </button>
+                </div>
+
+                <!-- Active Applied Coupon Pill (hidden by default) -->
+                <div id="coupon-applied-badge" class="hidden flex items-center justify-between px-3 py-1.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold">
+                    <div class="flex items-center gap-1.5 truncate">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0"></span>
+                        <span class="text-[11px] font-semibold text-emerald-700">Code :</span>
+                        <span id="applied-coupon-code" class="tracking-wide uppercase font-extrabold"></span>
+                        <span id="applied-coupon-discount" class="text-emerald-600 font-extrabold text-[11px]"></span>
+                    </div>
+                    <button type="button"
+                            id="coupon-remove-btn"
+                            title="Retirer le code promo"
+                            aria-label="Retirer le code promo"
+                            class="w-5 h-5 rounded-full hover:bg-emerald-200/70 text-emerald-800 flex items-center justify-center cursor-pointer transition-colors shrink-0 ml-1">
+                        <i class="ti ti-x text-xs font-bold"></i>
+                    </button>
+                </div>
+
+                <!-- Feedback Message -->
+                <p id="coupon-feedback-msg" class="hidden text-[11px] font-semibold mt-1 px-1"></p>
             </div>
         </div>
 
@@ -44,6 +81,11 @@
                 <div class="flex justify-between text-zinc-500">
                     <span>Sous-total</span>
                     <span id="cart-drawer-subtotal" class="font-bold text-zinc-900">0 DH</span>
+                </div>
+                <!-- Discount Row (hidden by default) -->
+                <div id="cart-drawer-discount-row" class="hidden flex justify-between text-emerald-600 font-bold">
+                    <span id="cart-drawer-discount-label">Remise code promo</span>
+                    <span id="cart-drawer-discount-amount">-0 DH</span>
                 </div>
                 <div class="flex justify-between text-zinc-500">
                     <span>Livraison Maroc</span>

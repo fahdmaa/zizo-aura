@@ -19,24 +19,40 @@ document.addEventListener('DOMContentLoaded', () => {
     // =========================================================================
     // 2. Persistent Cart Management & Slide-over Drawer
     // =========================================================================
-    const CART_STORAGE_KEY = 'zizo_aura_cart_v1';
-    const FREE_SHIPPING_THRESHOLD = 550; // In Moroccan Dirhams (DH)
+    const CART_STORAGE_KEY = 'zizo_aura_shopping_cart';
+    const COUPON_STORAGE_KEY = 'zizo_aura_applied_coupon';
+    const FREE_SHIPPING_THRESHOLD = 550; // DH
 
     const getCart = () => {
         try {
             return JSON.parse(localStorage.getItem(CART_STORAGE_KEY)) || [];
-        } catch {
+        } catch (e) {
             return [];
         }
     };
 
     const saveCart = (cart) => {
-        try {
-            localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
-        } catch (e) {
-            console.error('Failed to save cart to localStorage', e);
-        }
+        localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
         renderCartUI();
+    };
+
+    const getAppliedCoupon = () => {
+        try {
+            const raw = localStorage.getItem(COUPON_STORAGE_KEY);
+            return raw ? JSON.parse(raw) : null;
+        } catch (e) {
+            return null;
+        }
+    };
+
+    const setAppliedCoupon = (coupon) => {
+        try {
+            if (coupon) {
+                localStorage.setItem(COUPON_STORAGE_KEY, JSON.stringify(coupon));
+            } else {
+                localStorage.removeItem(COUPON_STORAGE_KEY);
+            }
+        } catch (e) {}
     };
 
     const cartBadge = document.getElementById('cart-count-badge');
@@ -48,12 +64,25 @@ document.addEventListener('DOMContentLoaded', () => {
     const cartDrawerSubtotal = document.getElementById('cart-drawer-subtotal');
     const cartDrawerShipping = document.getElementById('cart-drawer-shipping');
     const cartDrawerTotal = document.getElementById('cart-drawer-total');
+    const cartDrawerDiscountRow = document.getElementById('cart-drawer-discount-row');
+    const cartDrawerDiscountLabel = document.getElementById('cart-drawer-discount-label');
+    const cartDrawerDiscountAmount = document.getElementById('cart-drawer-discount-amount');
     const shippingProgressBar = document.getElementById('shipping-progress-bar');
     const shippingStatusLabel = document.getElementById('shipping-status-label');
     const shippingRemainingAmount = document.getElementById('shipping-remaining-amount');
     const cartWhatsappBtn = document.getElementById('cart-whatsapp-btn');
     const navbarCartBtn = document.getElementById('navbar-cart-btn');
     const cartContinueShoppingBtn = document.getElementById('cart-continue-shopping-btn');
+
+    // Coupon UI Elements
+    const couponInputWrapper = document.getElementById('coupon-input-wrapper');
+    const couponInput = document.getElementById('cart-coupon-input');
+    const couponApplyBtn = document.getElementById('cart-coupon-apply-btn');
+    const couponAppliedBadge = document.getElementById('coupon-applied-badge');
+    const appliedCouponCode = document.getElementById('applied-coupon-code');
+    const appliedCouponDiscount = document.getElementById('applied-coupon-discount');
+    const couponRemoveBtn = document.getElementById('coupon-remove-btn');
+    const couponFeedbackMsg = document.getElementById('coupon-feedback-msg');
 
     const openCartDrawer = () => {
         if (!cartDrawerBackdrop || !cartDrawerPanel) return;
@@ -74,10 +103,39 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.classList.remove('overflow-hidden');
     };
 
+    const showCouponFeedback = (msg, type) => {
+        if (!couponFeedbackMsg) return;
+        if (type === 'clear' || !msg) {
+            couponFeedbackMsg.textContent = '';
+            couponFeedbackMsg.classList.add('hidden');
+            return;
+        }
+        couponFeedbackMsg.textContent = msg;
+        couponFeedbackMsg.classList.remove('hidden', 'text-rose-600', 'text-emerald-600');
+        if (type === 'success') {
+            couponFeedbackMsg.classList.add('text-emerald-600');
+        } else {
+            couponFeedbackMsg.classList.add('text-rose-600');
+        }
+    };
+
     const renderCartUI = () => {
         const cart = getCart();
         const totalItemsCount = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
         const subtotal = cart.reduce((sum, item) => sum + ((parseFloat(item.price) || 0) * (item.quantity || 1)), 0);
+        const appliedCoupon = getAppliedCoupon();
+
+        // Calculate discount
+        let discountAmount = 0;
+        if (appliedCoupon && subtotal > 0) {
+            if (appliedCoupon.type === 'percent') {
+                discountAmount = Math.round(subtotal * (parseFloat(appliedCoupon.value) || 0) / 100);
+            } else {
+                discountAmount = Math.min(parseFloat(appliedCoupon.value) || 0, subtotal);
+            }
+        } else if (subtotal === 0 && appliedCoupon) {
+            setAppliedCoupon(null);
+        }
 
         // Update count badges
         if (cartBadge) {
@@ -89,14 +147,14 @@ document.addEventListener('DOMContentLoaded', () => {
             cartDrawerCount.textContent = totalItemsCount;
         }
 
-        // Update shipping progress bar
+        // Update shipping progress bar (Clean text without emojis/icons)
         if (shippingProgressBar && shippingStatusLabel && shippingRemainingAmount) {
             if (subtotal >= FREE_SHIPPING_THRESHOLD) {
                 shippingProgressBar.style.width = '100%';
                 shippingProgressBar.classList.remove('from-pink-500', 'to-rose-500');
                 shippingProgressBar.classList.add('bg-emerald-500');
-                shippingStatusLabel.textContent = '🎉 Livraison offerte activée !';
-                shippingRemainingAmount.textContent = 'Offerte 🇲🇦';
+                shippingStatusLabel.textContent = 'Livraison offerte';
+                shippingRemainingAmount.textContent = 'Offerte';
                 shippingRemainingAmount.className = 'text-emerald-600 font-extrabold';
             } else {
                 const percent = Math.min(100, Math.round((subtotal / FREE_SHIPPING_THRESHOLD) * 100));
@@ -108,6 +166,35 @@ document.addEventListener('DOMContentLoaded', () => {
                 shippingRemainingAmount.textContent = `Plus que ${remaining} DH`;
                 shippingRemainingAmount.className = 'text-pink-600 font-extrabold';
             }
+        }
+
+        // Update Coupon Card Display
+        if (appliedCoupon && subtotal > 0) {
+            if (couponInputWrapper) couponInputWrapper.classList.add('hidden');
+            if (couponAppliedBadge) {
+                couponAppliedBadge.classList.remove('hidden');
+                if (appliedCouponCode) appliedCouponCode.textContent = appliedCoupon.code;
+                if (appliedCouponDiscount) appliedCouponDiscount.textContent = `(${appliedCoupon.label || ('-' + appliedCoupon.value + '%')})`;
+            }
+            if (cartDrawerDiscountRow) {
+                cartDrawerDiscountRow.classList.remove('hidden');
+                if (cartDrawerDiscountLabel) cartDrawerDiscountLabel.textContent = `Remise code (${appliedCoupon.code})`;
+                if (cartDrawerDiscountAmount) cartDrawerDiscountAmount.textContent = `-${discountAmount} DH`;
+            }
+        } else {
+            if (couponInputWrapper) couponInputWrapper.classList.remove('hidden');
+            if (couponAppliedBadge) couponAppliedBadge.classList.add('hidden');
+            if (cartDrawerDiscountRow) cartDrawerDiscountRow.classList.add('hidden');
+        }
+
+        // Calculate shipping fee
+        let shippingFee = 0;
+        if (subtotal === 0) {
+            shippingFee = 0;
+        } else if (subtotal >= FREE_SHIPPING_THRESHOLD) {
+            shippingFee = 0;
+        } else {
+            shippingFee = 35;
         }
 
         // Update Totals
@@ -125,7 +212,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
         if (cartDrawerTotal) {
-            const finalTotal = subtotal === 0 ? 0 : (subtotal >= FREE_SHIPPING_THRESHOLD ? subtotal : subtotal + 35);
+            const finalTotal = Math.max(0, subtotal === 0 ? 0 : (subtotal + shippingFee - discountAmount));
             cartDrawerTotal.textContent = `${finalTotal} DH`;
         }
 
@@ -138,8 +225,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     msg += `${i + 1}. *${item.name}* ${variant ? '(' + variant + ')' : ''} x${item.quantity} = ${item.price * item.quantity} DH\n`;
                 });
                 const shippingCost = subtotal >= FREE_SHIPPING_THRESHOLD ? 'Gratuite (Offerte)' : '35 DH';
-                const finalTotal = subtotal >= FREE_SHIPPING_THRESHOLD ? subtotal : subtotal + 35;
-                msg += `\n*Sous-total :* ${subtotal} DH\n*Livraison :* ${shippingCost}\n*Total à payer :* ${finalTotal} DH\n\nMerci de me confirmer la commande !`;
+                const finalTotal = Math.max(0, subtotal + shippingFee - discountAmount);
+                msg += `\n*Sous-total :* ${subtotal} DH\n`;
+                if (appliedCoupon && discountAmount > 0) {
+                    msg += `*Code promo (${appliedCoupon.code}) :* -${discountAmount} DH\n`;
+                }
+                msg += `*Livraison :* ${shippingCost}\n*Total à payer :* ${finalTotal} DH\n\nMerci de me confirmer la commande !`;
                 cartWhatsappBtn.href = `https://wa.me/212600000000?text=${encodeURIComponent(msg)}`;
                 cartWhatsappBtn.classList.remove('opacity-50', 'pointer-events-none');
             } else {
@@ -178,25 +269,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 const productUrl = item.slug ? `/boutique/produit/${item.slug}` : '/boutique';
                 html += `
                     <div class="py-3.5 flex items-center gap-3.5 group">
-                        <a href="${productUrl}" class="w-16 h-16 rounded-xl bg-[#f8f9fa] border border-zinc-100 p-1 flex items-center justify-center shrink-0 overflow-hidden hover:border-pink-300 transition-colors">
-                            <img src="${item.image || '/images/sdj_bum_bum_set.jpg'}" alt="${item.name}" class="w-full h-full object-contain" />
+                        <a href="${productUrl}" class="w-16 h-16 rounded-xl bg-[#f8f9fa] border border-zinc-100 p-1 flex items-center justify-center shrink-0 overflow-hidden">
+                            <img src="${item.image || '/images/sdj_bum_bum_set.jpg'}" alt="${item.name}" class="w-full h-full object-contain group-hover:scale-105 transition-transform" />
                         </a>
                         <div class="flex-1 min-w-0">
-                            <a href="${productUrl}" class="text-xs font-bold text-zinc-900 truncate mb-0.5 leading-snug hover:text-pink-600 transition-colors block">
+                            <a href="${productUrl}" class="text-xs font-bold text-zinc-900 hover:text-pink-600 transition-colors line-clamp-1 block">
                                 ${item.name}
                             </a>
-                            ${variantInfo ? `<p class="text-[10px] text-zinc-400 font-semibold truncate mb-1">${variantInfo}</p>` : ''}
-                            <div class="flex items-center justify-between mt-1">
-                                <span class="text-xs font-black text-pink-600">${item.price} DH</span>
-                                
-                                <!-- Quantity Buttons -->
-                                <div class="flex items-center gap-1.5 bg-zinc-100 border border-zinc-200 rounded-full px-1 py-0.5">
-                                    <button type="button" data-cart-action="dec" data-index="${index}" class="w-5 h-5 rounded-full bg-white hover:bg-zinc-200 text-zinc-800 flex items-center justify-center text-[10px] font-bold cursor-pointer transition-colors shadow-2xs" aria-label="Diminuer la quantité">
-                                        <i class="ti ti-minus text-[9px]"></i>
+                            ${variantInfo ? `<p class="text-[10px] text-zinc-400 font-medium truncate mt-0.5">${variantInfo}</p>` : ''}
+                            <div class="flex items-center justify-between mt-2">
+                                <span class="text-xs font-extrabold text-pink-600">${item.price} DH</span>
+                                <div class="flex items-center bg-[#f8f9fa] border border-zinc-200 rounded-full px-1 py-0.5 shadow-2xs">
+                                    <button type="button" data-cart-action="dec" data-index="${index}" class="btn-circle-action w-5 h-5 bg-white text-zinc-700 flex items-center justify-center cursor-pointer shadow-2xs text-[10px]" aria-label="Diminuer">
+                                        <i class="ti ti-minus"></i>
                                     </button>
-                                    <span class="w-5 text-center text-xs font-black text-zinc-900">${item.quantity}</span>
-                                    <button type="button" data-cart-action="inc" data-index="${index}" class="w-5 h-5 rounded-full bg-white hover:bg-zinc-200 text-zinc-800 flex items-center justify-center text-[10px] font-bold cursor-pointer transition-colors shadow-2xs" aria-label="Augmenter la quantité">
-                                        <i class="ti ti-plus text-[9px]"></i>
+                                    <span class="w-5 text-center text-xs font-bold text-zinc-900 select-none">${item.quantity || 1}</span>
+                                    <button type="button" data-cart-action="inc" data-index="${index}" class="btn-circle-action w-5 h-5 bg-white text-zinc-700 flex items-center justify-center cursor-pointer shadow-2xs text-[10px]" aria-label="Augmenter">
+                                        <i class="ti ti-plus"></i>
                                     </button>
                                 </div>
                             </div>
@@ -210,6 +299,86 @@ document.addEventListener('DOMContentLoaded', () => {
             cartDrawerItems.innerHTML = html;
         }
     };
+
+    // Coupon Application Logic
+    const handleApplyCoupon = async () => {
+        if (!couponInput) return;
+        const code = couponInput.value.trim();
+        if (!code) {
+            showCouponFeedback('Veuillez saisir un code promo.', 'error');
+            return;
+        }
+
+        const cart = getCart();
+        const subtotal = cart.reduce((sum, item) => sum + ((parseFloat(item.price) || 0) * (item.quantity || 1)), 0);
+
+        if (subtotal === 0) {
+            showCouponFeedback('Votre panier est vide.', 'error');
+            return;
+        }
+
+        if (couponApplyBtn) {
+            couponApplyBtn.disabled = true;
+            couponApplyBtn.innerHTML = '<i class="ti ti-loader-2 animate-spin text-xs"></i>';
+        }
+
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+
+        try {
+            const res = await fetch('/api/coupon/validate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken || '',
+                },
+                body: JSON.stringify({ code, subtotal }),
+            });
+
+            const data = await res.json();
+
+            if (res.ok && data.valid) {
+                setAppliedCoupon(data);
+                couponInput.value = '';
+                showCouponFeedback(`Code ${data.code} appliqué (${data.label})`, 'success');
+                showToast(`✨ Code promo ${data.code} appliqué !`);
+                renderCartUI();
+            } else {
+                showCouponFeedback(data.message || 'Code promo invalide.', 'error');
+            }
+        } catch (e) {
+            showCouponFeedback('Erreur lors de la validation du code.', 'error');
+        } finally {
+            if (couponApplyBtn) {
+                couponApplyBtn.disabled = false;
+                couponApplyBtn.textContent = 'Appliquer';
+            }
+        }
+    };
+
+    const handleRemoveCoupon = () => {
+        setAppliedCoupon(null);
+        showCouponFeedback('', 'clear');
+        renderCartUI();
+        showToast('Code promo retiré');
+    };
+
+    if (couponApplyBtn) {
+        couponApplyBtn.addEventListener('click', handleApplyCoupon);
+    }
+
+    if (couponInput) {
+        couponInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                handleApplyCoupon();
+            }
+        });
+    }
+
+    if (couponRemoveBtn) {
+        couponRemoveBtn.addEventListener('click', handleRemoveCoupon);
+    }
 
     // Global Cart Item Controls (Delegate Event Listener)
     if (cartDrawerItems) {
