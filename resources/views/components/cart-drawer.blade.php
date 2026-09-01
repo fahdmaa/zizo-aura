@@ -33,40 +33,40 @@
             </div>
 
             <!-- Discount / Promo Code Form in Same Card -->
-            <div id="cart-coupon-card-section" class="pt-2 border-t border-zinc-200/60">
+            <div id="cart-coupon-card-section" class="pt-2.5 border-t border-zinc-200/60">
                 <!-- Input Form when no coupon is applied -->
                 <div id="coupon-input-wrapper" class="flex items-center gap-2">
                     <input type="text"
                            id="cart-coupon-input"
                            placeholder="Code promo"
                            autocomplete="off"
-                           class="flex-1 h-8.5 px-3 text-xs uppercase font-bold bg-white border border-zinc-200 hover:border-pink-300 focus:border-pink-500 focus:ring-2 focus:ring-pink-500/15 rounded-xl outline-none transition-all placeholder:normal-case placeholder:font-normal placeholder:text-zinc-400">
+                           class="flex-1 !h-10.5 !px-4 text-xs uppercase font-bold !rounded-full bg-white border border-zinc-200 hover:border-pink-300 focus:border-pink-500 focus:ring-4 focus:ring-pink-500/12 outline-none transition-all placeholder:normal-case placeholder:font-normal placeholder:text-zinc-400">
                     <button type="button"
                             id="cart-coupon-apply-btn"
-                            class="h-8.5 px-3.5 rounded-xl bg-zinc-900 hover:bg-black text-white text-[11px] font-bold uppercase tracking-wider transition-all cursor-pointer shrink-0 shadow-2xs">
+                            class="btn-card-pill !h-10.5 !px-5 text-xs uppercase font-extrabold tracking-wider transition-all cursor-pointer shrink-0">
                         Appliquer
                     </button>
                 </div>
 
                 <!-- Active Applied Coupon Pill (hidden by default) -->
-                <div id="coupon-applied-badge" class="hidden flex items-center justify-between px-3 py-1.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold">
+                <div id="coupon-applied-badge" class="hidden flex items-center justify-between px-4 py-2 !rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold shadow-2xs">
                     <div class="flex items-center gap-1.5 truncate">
-                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0"></span>
-                        <span class="text-[11px] font-semibold text-emerald-700">Code :</span>
-                        <span id="applied-coupon-code" class="tracking-wide uppercase font-extrabold"></span>
-                        <span id="applied-coupon-discount" class="text-emerald-600 font-extrabold text-[11px]"></span>
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 shrink-0"></span>
+                        <span class="text-xs font-semibold text-emerald-700">Code :</span>
+                        <span id="applied-coupon-code" class="tracking-wide uppercase font-black"></span>
+                        <span id="applied-coupon-discount" class="text-emerald-600 font-extrabold text-xs"></span>
                     </div>
                     <button type="button"
                             id="coupon-remove-btn"
                             title="Retirer le code promo"
                             aria-label="Retirer le code promo"
-                            class="w-5 h-5 rounded-full hover:bg-emerald-200/70 text-emerald-800 flex items-center justify-center cursor-pointer transition-colors shrink-0 ml-1">
+                            class="w-6 h-6 rounded-full hover:bg-emerald-200/70 text-emerald-800 flex items-center justify-center cursor-pointer transition-colors shrink-0 ml-1">
                         <i class="ti ti-x text-xs font-bold"></i>
                     </button>
                 </div>
 
                 <!-- Feedback Message -->
-                <p id="coupon-feedback-msg" class="hidden text-[11px] font-semibold mt-1 px-1"></p>
+                <p id="coupon-feedback-msg" class="hidden text-[11px] font-semibold mt-1 px-2"></p>
             </div>
         </div>
 
@@ -116,7 +116,7 @@
             </div>
 
             <p class="text-[10px] text-center text-zinc-400 font-medium">
-                Paiement à la livraison partout au Maroc 🇲🇦 &bull; Échantillons offerts
+                Paiement à la livraison partout au Maroc &bull; Échantillons offerts
             </p>
         </div>
 
