@@ -492,10 +492,6 @@
                         <div class="bg-white rounded-3xl p-6 md:p-8 border border-zinc-100 shadow-sm relative overflow-hidden">
                             <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
                                 <div>
-                                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-pink-50 border border-pink-200/60 text-pink-600 text-xs font-extrabold uppercase tracking-wider mb-3">
-                                        <span class="w-2 h-2 rounded-full bg-pink-500 animate-pulse"></span>
-                                        Espace Administrateur
-                                    </div>
                                     <h1 class="text-2xl md:text-3xl font-black tracking-tight text-zinc-900">Tableau de bord Zizo Aura</h1>
                                     <p class="text-zinc-500 text-xs md:text-sm mt-1 max-w-xl font-medium">
                                         Vue d'ensemble de vos ventes, commandes en direct et gestion du catalogue cosmétique.
