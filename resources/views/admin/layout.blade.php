@@ -90,14 +90,8 @@
         <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
             
             <!-- Brand Logo Left -->
-            <a href="#dashboard" class="flex items-center gap-2.5 group shrink-0">
-                <div class="w-9 h-9 rounded-2xl bg-white border border-pink-100 text-pink-600 flex items-center justify-center font-black text-sm group-hover:scale-105 transition-transform shadow-xs">
-                    ZA
-                </div>
-                <div>
-                    <span class="font-black text-lg tracking-tight text-zinc-900 group-hover:text-pink-600 transition-colors">zizo aura</span>
-                    <span class="block text-[9px] uppercase font-extrabold tracking-widest text-pink-600">Admin Suite</span>
-                </div>
+            <a href="#dashboard" class="text-2xl font-extrabold tracking-tight text-black lowercase select-none group shrink-0">
+                <span class="group-hover:text-pink-600 transition-colors">zizo aura</span>
             </a>
 
             <!-- Header Actions Right -->

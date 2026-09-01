@@ -387,6 +387,14 @@
                 sidebarBackdrop.addEventListener('click', closeMenu);
             }
 
+            // Global click listener to close custom floating dropdowns
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.custom-admin-dropdown')) {
+                    document.querySelectorAll('.custom-dropdown-panel').forEach(p => p.classList.add('hidden'));
+                    document.querySelectorAll('.custom-admin-dropdown .chevron-icon').forEach(c => c.classList.remove('rotate-180'));
+                }
+            });
+
             // Router hash listener
             window.addEventListener('hashchange', () => this.handleHashChange());
             this.handleHashChange();
@@ -721,11 +729,16 @@
         async renderProducts(page = 1) {
             appState.productsFilter.page = page;
             const filter = appState.productsFilter;
+            const activeCat = appState.categoriesCache.find(c => String(c.id) === String(filter.category_id));
+            const catLabel = activeCat ? activeCat.name : 'Toutes les catégories';
 
-            let query = `?page=${filter.page}`;
-            if (filter.search) query += `&search=${encodeURIComponent(filter.search)}`;
-            if (filter.category_id) query += `&category_id=${filter.category_id}`;
-            if (filter.status) query += `&status=${filter.status}`;
+            const statusLabels = {
+                '': 'Tous les statuts',
+                'active': 'Actifs',
+                'inactive': 'Inactifs',
+                'deleted': 'Archivés'
+            };
+            const statusLabel = statusLabels[filter.status] || 'Tous les statuts';
 
             this.root.innerHTML = `
                 <div class="space-y-6 animate-fadeIn">
@@ -751,19 +764,46 @@
                             </button>
                         </div>
                         <div class="flex items-center gap-2.5 w-full md:w-auto shrink-0 flex-wrap sm:flex-nowrap">
-                            <select id="prod-cat-select" class="select-luxury-pill w-full sm:w-auto min-w-[200px]">
-                                <option value="">Toutes les catégories</option>
-                                ${appState.categoriesCache.map(cat => `
-                                    <option value="${cat.id}" ${filter.category_id == cat.id ? 'selected' : ''}>${cat.name}</option>
-                                `).join('')}
-                            </select>
+                            <!-- Category Custom Dropdown -->
+                            <div class="relative custom-admin-dropdown" id="prod-cat-dropdown-wrap">
+                                <button type="button" class="btn-pill-secondary btn-pill-sm cursor-pointer flex items-center justify-between gap-2.5 select-none" id="prod-cat-trigger">
+                                    <span class="truncate max-w-[140px] text-zinc-900 font-bold">${catLabel}</span>
+                                    <i class="ti ti-chevron-down text-xs text-zinc-400 transition-transform duration-200 chevron-icon"></i>
+                                </button>
+                                <div class="custom-dropdown-panel absolute left-0 sm:right-0 sm:left-auto top-full mt-2 min-w-[210px] w-max max-w-xs bg-white/95 backdrop-blur-md rounded-2xl shadow-[0_20px_45px_rgba(0,0,0,0.14)] border border-zinc-100 p-1.5 z-50 hidden max-h-64 overflow-y-auto">
+                                    <button type="button" class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${filter.category_id === '' ? 'bg-pink-50 text-pink-600' : 'text-zinc-700 hover:bg-zinc-50 hover:text-black'}" data-cat-id="">
+                                        <span>Toutes les catégories</span>
+                                        ${filter.category_id === '' ? '<i class="ti ti-check text-xs"></i>' : ''}
+                                    </button>
+                                    ${appState.categoriesCache.map(cat => `
+                                        <button type="button" class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${String(filter.category_id) === String(cat.id) ? 'bg-pink-50 text-pink-600' : 'text-zinc-700 hover:bg-zinc-50 hover:text-black'}" data-cat-id="${cat.id}">
+                                            <span class="truncate text-left">${cat.name}</span>
+                                            ${String(filter.category_id) === String(cat.id) ? '<i class="ti ti-check text-xs shrink-0 ml-2"></i>' : ''}
+                                        </button>
+                                    `).join('')}
+                                </div>
+                            </div>
 
-                            <select id="prod-status-select" class="select-luxury-pill w-full sm:w-auto min-w-[160px]">
-                                <option value="" ${filter.status === '' ? 'selected' : ''}>Tous les statuts</option>
-                                <option value="active" ${filter.status === 'active' ? 'selected' : ''}>Actifs</option>
-                                <option value="inactive" ${filter.status === 'inactive' ? 'selected' : ''}>Inactifs</option>
-                                <option value="deleted" ${filter.status === 'deleted' ? 'selected' : ''}>Archivés</option>
-                            </select>
+                            <!-- Status Custom Dropdown -->
+                            <div class="relative custom-admin-dropdown" id="prod-status-dropdown-wrap">
+                                <button type="button" class="btn-pill-secondary btn-pill-sm cursor-pointer flex items-center justify-between gap-2.5 select-none" id="prod-status-trigger">
+                                    <span class="text-zinc-900 font-bold">${statusLabel}</span>
+                                    <i class="ti ti-chevron-down text-xs text-zinc-400 transition-transform duration-200 chevron-icon"></i>
+                                </button>
+                                <div class="custom-dropdown-panel absolute right-0 top-full mt-2 min-w-[170px] bg-white/95 backdrop-blur-md rounded-2xl shadow-[0_20px_45px_rgba(0,0,0,0.14)] border border-zinc-100 p-1.5 z-50 hidden">
+                                    ${[
+                                        ['', 'Tous les statuts'],
+                                        ['active', 'Actifs'],
+                                        ['inactive', 'Inactifs'],
+                                        ['deleted', 'Archivés']
+                                    ].map(([val, lbl]) => `
+                                        <button type="button" class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${filter.status === val ? 'bg-pink-50 text-pink-600' : 'text-zinc-700 hover:bg-zinc-50 hover:text-black'}" data-status-val="${val}">
+                                            <span>${lbl}</span>
+                                            ${filter.status === val ? '<i class="ti ti-check text-xs"></i>' : ''}
+                                        </button>
+                                    `).join('')}
+                                </div>
+                            </div>
 
                             ${(filter.search || filter.category_id || filter.status) ? `
                                 <button type="button" id="prod-reset-filters" class="btn-circle-action w-9 h-9 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-600 text-xs transition cursor-pointer shrink-0" title="Réinitialiser les filtres">
@@ -841,16 +881,62 @@
                 }
             });
 
-            document.getElementById('prod-cat-select')?.addEventListener('change', (e) => {
-                appState.productsFilter.category_id = e.target.value;
-                appState.productsFilter.page = 1;
-                this.loadProductsList();
+            // Category custom dropdown wiring
+            const catWrap = document.getElementById('prod-cat-dropdown-wrap');
+            const catTrigger = document.getElementById('prod-cat-trigger');
+            const catPanel = catWrap?.querySelector('.custom-dropdown-panel');
+            const catChevron = catTrigger?.querySelector('.chevron-icon');
+
+            catTrigger?.addEventListener('click', (e) => {
+                e.stopPropagation();
+                document.querySelectorAll('.custom-dropdown-panel').forEach(p => {
+                    if (p !== catPanel) p.classList.add('hidden');
+                });
+                document.querySelectorAll('.custom-admin-dropdown .chevron-icon').forEach(c => {
+                    if (c !== catChevron) c.classList.remove('rotate-180');
+                });
+                const isHidden = catPanel.classList.toggle('hidden');
+                catChevron?.classList.toggle('rotate-180', !isHidden);
             });
 
-            document.getElementById('prod-status-select')?.addEventListener('change', (e) => {
-                appState.productsFilter.status = e.target.value;
-                appState.productsFilter.page = 1;
-                this.loadProductsList();
+            catWrap?.querySelectorAll('[data-cat-id]').forEach(opt => {
+                opt.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    catPanel?.classList.add('hidden');
+                    catChevron?.classList.remove('rotate-180');
+                    appState.productsFilter.category_id = opt.dataset.catId;
+                    appState.productsFilter.page = 1;
+                    this.renderProducts(1);
+                });
+            });
+
+            // Status custom dropdown wiring
+            const statusWrap = document.getElementById('prod-status-dropdown-wrap');
+            const statusTrigger = document.getElementById('prod-status-trigger');
+            const statusPanel = statusWrap?.querySelector('.custom-dropdown-panel');
+            const statusChevron = statusTrigger?.querySelector('.chevron-icon');
+
+            statusTrigger?.addEventListener('click', (e) => {
+                e.stopPropagation();
+                document.querySelectorAll('.custom-dropdown-panel').forEach(p => {
+                    if (p !== statusPanel) p.classList.add('hidden');
+                });
+                document.querySelectorAll('.custom-admin-dropdown .chevron-icon').forEach(c => {
+                    if (c !== statusChevron) c.classList.remove('rotate-180');
+                });
+                const isHidden = statusPanel.classList.toggle('hidden');
+                statusChevron?.classList.toggle('rotate-180', !isHidden);
+            });
+
+            statusWrap?.querySelectorAll('[data-status-val]').forEach(opt => {
+                opt.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    statusPanel?.classList.add('hidden');
+                    statusChevron?.classList.remove('rotate-180');
+                    appState.productsFilter.status = opt.dataset.statusVal;
+                    appState.productsFilter.page = 1;
+                    this.renderProducts(1);
+                });
             });
 
             document.getElementById('prod-reset-filters')?.addEventListener('click', () => {
@@ -2331,6 +2417,16 @@
         async renderOrders(page = 1) {
             appState.ordersFilter.page = page;
             const filter = appState.ordersFilter;
+            const orderStatusLabels = {
+                '': 'Tous les statuts',
+                'pending': 'En attente',
+                'confirmed': 'Confirmée',
+                'processing': 'En préparation',
+                'shipped': 'Expédiée',
+                'delivered': 'Livrée',
+                'cancelled': 'Annulée'
+            };
+            const orderStatusLabel = orderStatusLabels[filter.status] || 'Tous les statuts';
 
             this.root.innerHTML = `
                 <div class="space-y-6 animate-fadeIn">
@@ -2351,15 +2447,29 @@
                             </button>
                         </div>
                         <div class="flex items-center gap-2.5 w-full md:w-auto shrink-0 flex-wrap sm:flex-nowrap">
-                            <select id="order-status-select" class="select-luxury-pill w-full sm:w-auto min-w-[175px]">
-                                <option value="" ${filter.status === '' ? 'selected' : ''}>Tous les statuts</option>
-                                <option value="pending" ${filter.status === 'pending' ? 'selected' : ''}>En attente</option>
-                                <option value="confirmed" ${filter.status === 'confirmed' ? 'selected' : ''}>Confirmée</option>
-                                <option value="processing" ${filter.status === 'processing' ? 'selected' : ''}>En préparation</option>
-                                <option value="shipped" ${filter.status === 'shipped' ? 'selected' : ''}>Expédiée</option>
-                                <option value="delivered" ${filter.status === 'delivered' ? 'selected' : ''}>Livrée</option>
-                                <option value="cancelled" ${filter.status === 'cancelled' ? 'selected' : ''}>Annulée</option>
-                            </select>
+                            <!-- Order Status Custom Dropdown -->
+                            <div class="relative custom-admin-dropdown" id="order-status-dropdown-wrap">
+                                <button type="button" class="btn-pill-secondary btn-pill-sm cursor-pointer flex items-center justify-between gap-2.5 select-none" id="order-status-trigger">
+                                    <span class="text-zinc-900 font-bold">${orderStatusLabel}</span>
+                                    <i class="ti ti-chevron-down text-xs text-zinc-400 transition-transform duration-200 chevron-icon"></i>
+                                </button>
+                                <div class="custom-dropdown-panel absolute right-0 top-full mt-2 min-w-[190px] bg-white/95 backdrop-blur-md rounded-2xl shadow-[0_20px_45px_rgba(0,0,0,0.14)] border border-zinc-100 p-1.5 z-50 hidden">
+                                    ${[
+                                        ['', 'Tous les statuts'],
+                                        ['pending', 'En attente'],
+                                        ['confirmed', 'Confirmée'],
+                                        ['processing', 'En préparation'],
+                                        ['shipped', 'Expédiée'],
+                                        ['delivered', 'Livrée'],
+                                        ['cancelled', 'Annulée']
+                                    ].map(([val, lbl]) => `
+                                        <button type="button" class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${filter.status === val ? 'bg-pink-50 text-pink-600' : 'text-zinc-700 hover:bg-zinc-50 hover:text-black'}" data-order-status-val="${val}">
+                                            <span>${lbl}</span>
+                                            ${filter.status === val ? '<i class="ti ti-check text-xs"></i>' : ''}
+                                        </button>
+                                    `).join('')}
+                                </div>
+                            </div>
 
                             ${(filter.search || filter.status) ? `
                                 <button type="button" id="order-reset-filters" class="btn-circle-action w-9 h-9 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-600 text-xs transition cursor-pointer shrink-0" title="Réinitialiser les filtres">
@@ -2437,10 +2547,33 @@
                 }
             });
 
-            document.getElementById('order-status-select')?.addEventListener('change', (e) => {
-                appState.ordersFilter.status = e.target.value;
-                appState.ordersFilter.page = 1;
-                this.loadOrdersList();
+            // Order status custom dropdown wiring
+            const orderStatusWrap = document.getElementById('order-status-dropdown-wrap');
+            const orderStatusTrigger = document.getElementById('order-status-trigger');
+            const orderStatusPanel = orderStatusWrap?.querySelector('.custom-dropdown-panel');
+            const orderStatusChevron = orderStatusTrigger?.querySelector('.chevron-icon');
+
+            orderStatusTrigger?.addEventListener('click', (e) => {
+                e.stopPropagation();
+                document.querySelectorAll('.custom-dropdown-panel').forEach(p => {
+                    if (p !== orderStatusPanel) p.classList.add('hidden');
+                });
+                document.querySelectorAll('.custom-admin-dropdown .chevron-icon').forEach(c => {
+                    if (c !== orderStatusChevron) c.classList.remove('rotate-180');
+                });
+                const isHidden = orderStatusPanel.classList.toggle('hidden');
+                orderStatusChevron?.classList.toggle('rotate-180', !isHidden);
+            });
+
+            orderStatusWrap?.querySelectorAll('[data-order-status-val]').forEach(opt => {
+                opt.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    orderStatusPanel?.classList.add('hidden');
+                    orderStatusChevron?.classList.remove('rotate-180');
+                    appState.ordersFilter.status = opt.dataset.orderStatusVal;
+                    appState.ordersFilter.page = 1;
+                    this.renderOrders(1);
+                });
             });
 
             document.getElementById('order-reset-filters')?.addEventListener('click', () => {
