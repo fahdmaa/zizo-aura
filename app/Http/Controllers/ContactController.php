@@ -21,7 +21,15 @@ class ContactController extends Controller
             'message' => 'required|string|max:2000',
         ]);
 
-        ContactMessage::create($validated);
+        $contactMessage = ContactMessage::create($validated);
+
+        if ($request->expectsJson() || $request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Merci pour votre message ! Notre équipe zizo aura vous répondra sous 24h.',
+                'data' => $contactMessage,
+            ]);
+        }
 
         return redirect()->route('contact')->with('success', 'Merci pour votre message ! Notre équipe zizo aura vous répondra sous 24h.');
     }

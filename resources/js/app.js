@@ -902,6 +902,96 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Contact Form AJAX Handler & Success Transition
+    const storeContactForm = document.getElementById('store-contact-form');
+    const contactSuccessState = document.getElementById('contact-success-state');
+    const contactSuccessDesc = document.getElementById('contact-success-desc');
+    const contactSubmitBtn = document.getElementById('contact-submit-btn');
+    const contactNewMsgBtn = document.getElementById('contact-new-message-btn');
+
+    if (storeContactForm && contactSuccessState) {
+        storeContactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            if (contactSubmitBtn) {
+                contactSubmitBtn.disabled = true;
+                contactSubmitBtn.innerHTML = `
+                    <i class="ti ti-loader-2 animate-spin text-base"></i>
+                    <span>Envoi de votre message...</span>
+                `;
+            }
+
+            const formData = new FormData(storeContactForm);
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+
+            try {
+                const response = await fetch(storeContactForm.action, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken || '',
+                    },
+                    body: formData,
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    // Update success description if provided
+                    if (contactSuccessDesc && data.message) {
+                        contactSuccessDesc.textContent = data.message;
+                    }
+
+                    // Smooth transition to luxury success state
+                    storeContactForm.classList.add('hidden');
+                    contactSuccessState.classList.remove('hidden');
+                    contactSuccessState.classList.add('animate-fadeIn');
+
+                    // Reset form fields
+                    storeContactForm.reset();
+
+                    // Toast notification
+                    showToast('✨ Message envoyé avec succès !');
+
+                    // Scroll to top of card smoothly
+                    const card = document.getElementById('contact-form-card');
+                    if (card) {
+                        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                } else {
+                    const errorMsg = data.message || (data.errors ? Object.values(data.errors).flat().join(' ') : 'Une erreur est survenue.');
+                    showToast(`⚠️ ${errorMsg}`);
+                    if (contactSubmitBtn) {
+                        contactSubmitBtn.disabled = false;
+                        contactSubmitBtn.innerHTML = `
+                            <i class="ti ti-send text-base"></i>
+                            <span>Envoyer le message</span>
+                        `;
+                    }
+                }
+            } catch (err) {
+                // Fallback to standard form submission if fetch failed
+                storeContactForm.submit();
+            }
+        });
+
+        if (contactNewMsgBtn) {
+            contactNewMsgBtn.addEventListener('click', () => {
+                contactSuccessState.classList.add('hidden');
+                storeContactForm.classList.remove('hidden');
+                if (contactSubmitBtn) {
+                    contactSubmitBtn.disabled = false;
+                    contactSubmitBtn.innerHTML = `
+                        <i class="ti ti-send text-base"></i>
+                        <span>Envoyer le message</span>
+                    `;
+                }
+                const firstInput = storeContactForm.querySelector('input[name="name"]');
+                if (firstInput) firstInput.focus();
+            });
+        }
+    }
+
     // =========================================================================
     // 10. Global Keyboard Shortcuts (Escape Key Listener)
     // =========================================================================

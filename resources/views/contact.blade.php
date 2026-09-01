@@ -41,9 +41,55 @@
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
             
-            <!-- Contact Form -->
-            <div class="lg:col-span-7 bg-[#f8f9fa] rounded-3xl p-6 sm:p-10 border border-zinc-100 shadow-sm">
-                <form action="{{ route('contact.submit') }}" method="POST" class="space-y-6">
+            <!-- Contact Form Card Container -->
+            <div id="contact-form-card" class="lg:col-span-7 bg-[#f8f9fa] rounded-3xl p-6 sm:p-10 border border-zinc-100 shadow-sm relative overflow-hidden transition-all duration-300">
+                
+                <!-- Success Confirmation State (Theme-styled luxury card) -->
+                <div id="contact-success-state" class="{{ session('success') ? '' : 'hidden' }} text-center py-8 sm:py-12 px-2 sm:px-6 animate-fadeIn">
+                    <div class="relative w-20 h-20 rounded-3xl bg-pink-50 border border-pink-200 text-pink-600 flex items-center justify-center text-4xl mx-auto mb-5 shadow-xs">
+                        <i class="ti ti-mail-check"></i>
+                        <span class="absolute -top-1.5 -right-1.5 w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs shadow-sm ring-2 ring-white">
+                            <i class="ti ti-check"></i>
+                        </span>
+                    </div>
+
+                    <div class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-extrabold mb-3">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                        <span>Message transmis avec succès</span>
+                    </div>
+
+                    <h3 class="text-2xl sm:text-3xl font-black text-zinc-900 tracking-tight mb-2">
+                        Merci pour votre message !
+                    </h3>
+
+                    <p id="contact-success-desc" class="text-xs sm:text-sm text-zinc-500 max-w-md mx-auto leading-relaxed mb-6 font-medium">
+                        {{ session('success') ?? 'Votre demande a bien été envoyée à notre équipe zizo aura. Nous vous répondrons avec grand plaisir sous 24h ouvrées.' }}
+                    </p>
+
+                    <div class="p-4 rounded-2xl bg-white border border-zinc-200/80 max-w-sm mx-auto mb-8 text-left flex items-start gap-3 shadow-2xs">
+                        <div class="w-9 h-9 rounded-xl bg-pink-50 text-pink-600 flex items-center justify-center shrink-0 mt-0.5">
+                            <i class="ti ti-clock-hour-4 text-lg"></i>
+                        </div>
+                        <div class="text-xs">
+                            <p class="font-bold text-zinc-900">Délai moyen de réponse</p>
+                            <p class="text-zinc-500 font-medium mt-0.5">Moins de 24h (Du Lundi au Samedi, 9h à 19h30)</p>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+                        <button type="button" id="contact-new-message-btn" class="btn-card-pill py-3.5 px-6 text-xs uppercase font-extrabold cursor-pointer w-full sm:w-auto">
+                            <i class="ti ti-plus text-sm"></i>
+                            <span>Envoyer un autre message</span>
+                        </button>
+                        <a href="{{ route('shop.index') }}" class="btn-pill-secondary py-3.5 px-6 text-xs font-extrabold w-full sm:w-auto text-center">
+                            <span>Explorer la boutique</span>
+                            <i class="ti ti-arrow-right text-xs"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Contact Form -->
+                <form id="store-contact-form" action="{{ route('contact.submit') }}" method="POST" class="space-y-6 {{ session('success') ? 'hidden' : '' }}">
                     @csrf
 
                     <!-- Name Field -->
@@ -140,7 +186,7 @@
                     </div>
 
                     <!-- Submit Button -->
-                    <button type="submit" class="btn-card-pill w-full py-4 text-sm uppercase tracking-wider font-bold">
+                    <button type="submit" id="contact-submit-btn" class="btn-card-pill w-full py-4 text-sm uppercase tracking-wider font-bold cursor-pointer">
                         <i class="ti ti-send text-base"></i>
                         <span>Envoyer le message</span>
                     </button>
