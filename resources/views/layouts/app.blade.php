@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="zizo aura — Offrez à votre peau des formules solaires & duos d'exception : Victoria's Secret, Rituals, Sol de Janeiro.">
     <meta name="theme-color" content="#ffffff">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon.png">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
     <title>@yield('title', 'zizo aura — Sol de Janeiro, Victoria\'s Secret & Rituals')</title>
