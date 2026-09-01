@@ -96,8 +96,8 @@
 
             <!-- Header Actions Right -->
             <div class="flex items-center gap-2.5 shrink-0">
-                <button type="button" onclick="if(window.adminApp) window.adminApp.handleHashChange();" class="btn-pill-secondary btn-pill-sm cursor-pointer" title="Rafraîchir les données">
-                    <i class="ti ti-refresh text-sm"></i>
+                <button type="button" id="admin-refresh-btn" onclick="if(window.adminApp) window.adminApp.refresh();" class="btn-pill-secondary btn-pill-sm cursor-pointer" title="Rafraîchir les données et messages">
+                    <i class="ti ti-refresh text-sm transition-transform"></i>
                     <span class="hidden md:inline">Actualiser</span>
                 </button>
 

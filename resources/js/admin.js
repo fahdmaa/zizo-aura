@@ -442,6 +442,42 @@
 
             // Load global notification badges (messages & orders)
             this.refreshGlobalBadges();
+
+            // Periodic live polling every 20 seconds
+            setInterval(() => {
+                this.refreshGlobalBadges();
+                if (appState.currentView === 'messages') {
+                    this.loadMessagesList();
+                }
+            }, 20000);
+        },
+
+        async refresh() {
+            const btn = document.getElementById('admin-refresh-btn');
+            const icon = btn?.querySelector('.ti-refresh');
+            if (icon) icon.classList.add('animate-spin');
+
+            try {
+                // 1. Force refresh categories cache
+                await this.ensureCategoriesLoaded(true);
+
+                // 2. Refresh unread messages and pending orders badges
+                await this.refreshGlobalBadges();
+
+                // 3. Re-render current active view with fresh data
+                const hash = window.location.hash.replace('#', '') || 'dashboard';
+                const [view, param] = hash.split('/');
+                await this.navigate(view || 'dashboard', param);
+
+                showToast('✨ Données et messages actualisés');
+            } catch (err) {
+                console.error('Refresh error', err);
+                showToast('Erreur lors de l\'actualisation', 'error');
+            } finally {
+                if (icon) {
+                    setTimeout(() => icon.classList.remove('animate-spin'), 600);
+                }
+            }
         },
 
         async preloadCategories() {
