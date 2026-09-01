@@ -236,9 +236,12 @@ select:focus {
   background: #000000;
   color: #ffffff;
   border-radius: 9999px;
-  padding: 0.75rem 1.5rem;
+  height: 2.625rem; /* 42px */
+  min-height: 2.625rem;
+  padding: 0 1.5rem;
   font-weight: 700;
   font-size: 0.875rem;
+  line-height: 1;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   display: inline-flex;
   align-items: center;
@@ -246,6 +249,7 @@ select:focus {
   gap: 0.5rem;
   cursor: pointer;
   border: 1.5px solid transparent;
+  box-sizing: border-box;
   user-select: none;
 }
 
@@ -272,15 +276,19 @@ select:focus {
   color: #111827;
   border: 1.5px solid #e5e7eb;
   border-radius: 9999px;
-  padding: 0.75rem 1.5rem;
+  height: 2.625rem; /* 42px */
+  min-height: 2.625rem;
+  padding: 0 1.5rem;
   font-weight: 700;
   font-size: 0.875rem;
+  line-height: 1;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
   cursor: pointer;
+  box-sizing: border-box;
   user-select: none;
 }
 
@@ -304,15 +312,19 @@ select:focus {
   color: #e11d48;
   border: 1.5px solid #fecdd3;
   border-radius: 9999px;
-  padding: 0.75rem 1.5rem;
+  height: 2.625rem; /* 42px */
+  min-height: 2.625rem;
+  padding: 0 1.5rem;
   font-weight: 700;
   font-size: 0.875rem;
+  line-height: 1;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
   cursor: pointer;
+  box-sizing: border-box;
   user-select: none;
 }
 
@@ -330,15 +342,28 @@ select:focus {
 
 /* Button Size Modifiers */
 .btn-pill-sm {
-  padding: 0.45rem 1.1rem !important;
+  height: 2.25rem !important; /* 36px */
+  min-height: 2.25rem !important;
+  max-height: 2.25rem !important;
+  padding: 0 1rem !important;
   font-size: 0.75rem !important;
   font-weight: 700 !important;
+  line-height: 1 !important;
+  box-sizing: border-box !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.4rem !important;
 }
 
 .btn-pill-lg {
-  padding: 0.95rem 2.25rem !important;
+  height: 3rem !important; /* 48px */
+  min-height: 3rem !important;
+  padding: 0 2rem !important;
   font-size: 0.9375rem !important;
   font-weight: 800 !important;
+  line-height: 1 !important;
+  box-sizing: border-box !important;
 }
 
 /* 4. Carousel / Circle Action Buttons */

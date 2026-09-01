@@ -101,10 +101,10 @@
             </a>
 
             <!-- Header Actions Right -->
-            <div class="flex items-center gap-3 shrink-0">
-                <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-zinc-200/80 shadow-2xs">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                    <span class="text-xs font-semibold text-zinc-600">En direct</span>
+            <div class="flex items-center gap-2.5 shrink-0">
+                <div class="hidden sm:inline-flex items-center gap-2 btn-pill-sm rounded-full bg-white border border-zinc-200 text-zinc-700 shadow-2xs select-none">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0"></span>
+                    <span class="text-xs font-bold text-zinc-700">En direct</span>
                 </div>
 
                 <button type="button" onclick="if(window.adminApp) window.adminApp.handleHashChange();" class="btn-pill-secondary btn-pill-sm cursor-pointer" title="Rafraîchir les données">
@@ -119,9 +119,9 @@
 
                 <!-- Admin Profile Dropdown / Logout -->
                 <div class="relative group">
-                    <button type="button" class="btn-pill-secondary btn-pill-sm p-1.5 pl-3 pr-1.5 cursor-pointer">
+                    <button type="button" class="btn-pill-secondary btn-pill-sm cursor-pointer pl-3 pr-2">
                         <span class="text-xs font-bold hidden sm:inline mr-1">Admin</span>
-                        <div class="w-6 h-6 rounded-full bg-zinc-900 text-white flex items-center justify-center text-[10px] font-bold">
+                        <div class="w-5 h-5 rounded-full bg-zinc-900 text-white flex items-center justify-center text-[10px] font-bold shrink-0">
                             A
                         </div>
                     </button>
