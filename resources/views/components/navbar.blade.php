@@ -9,7 +9,7 @@
                         <span class="text-white">LIVRAISON OFFERTE DÈS 550 DH DE COMMANDE</span>
                     </span>
                     <span class="text-zinc-600 font-normal">&bull;</span>
-                    <span class="text-zinc-300 font-semibold tracking-wider">PARTOUT AU MAROC 🇲🇦</span>
+                    <span class="text-zinc-300 font-semibold tracking-wider">PARTOUT AU MAROC</span>
                     <span class="text-zinc-600 font-normal">&bull;</span>
                     <span class="text-pink-400 font-bold">ÉCHANTILLONS OFFERTS</span>
                     <span class="text-zinc-600 font-normal">&bull;</span>
@@ -221,7 +221,7 @@
                         <i class="ti ti-truck-delivery text-base"></i>
                         <span>Livraison Offerte dès 550 DH</span>
                     </p>
-                    <p class="text-[10px] text-zinc-500 font-semibold mt-0.5">Partout au Maroc 🇲🇦 sous 24/48h</p>
+                    <p class="text-[10px] text-zinc-500 font-semibold mt-0.5">Partout au Maroc sous 24/48h</p>
                 </div>
 
                 <div class="flex items-center justify-center gap-4 text-zinc-600 pt-1">

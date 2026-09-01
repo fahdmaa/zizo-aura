@@ -193,7 +193,7 @@
                 </form>
             </div>
 
-            <!-- Contact Information Cards with Hover Animations -->
+            <!-- Contact Information Cards with Unified Luxury Style -->
             <div class="lg:col-span-5 space-y-6">
                 
                 <!-- Email Card -->
@@ -217,21 +217,21 @@
                     </div>
                     <div>
                         <h3 class="text-sm font-bold text-zinc-900 mb-1 group-hover:text-pink-600 transition-colors">Téléphone &amp; WhatsApp</h3>
-                        <p class="text-xs text-zinc-500 mb-2">Du Lundi au Samedi : 9h00 – 19h30 (Maroc 🇲🇦)</p>
+                        <p class="text-xs text-zinc-500 mb-2">Du Lundi au Samedi : 9h00 – 19h30 (Maroc)</p>
                         <a href="tel:+212522000000" class="text-sm font-bold text-zinc-900 hover:text-pink-600 transition-colors">
                             +212 (0) 5 22 40 50 60
                         </a>
                     </div>
                 </div>
 
-                <!-- Free Delivery Card with Delivery Tabler Icon & Hover Animation -->
-                <div class="p-6 bg-gradient-to-br from-pink-500 to-rose-600 rounded-3xl text-white shadow-lg shadow-pink-500/20 flex items-center gap-4 transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] hover:shadow-xl hover:shadow-pink-500/35 group">
-                    <div class="w-12 h-12 rounded-2xl bg-white/20 text-white flex items-center justify-center text-2xl shrink-0 group-hover:scale-110 group-hover:bg-white/30 transition-all">
-                        <i class="ti ti-truck-delivery"></i>
+                <!-- Free Delivery Card -->
+                <div class="p-6 bg-white rounded-2xl border border-zinc-100 shadow-sm flex items-start gap-4 transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] hover:shadow-[0_12px_28px_rgba(255,27,122,0.12)] hover:border-pink-200 group">
+                    <div class="w-12 h-12 rounded-2xl bg-pink-50 text-pink-600 flex items-center justify-center shrink-0 group-hover:bg-pink-100 group-hover:scale-110 transition-all">
+                        <i class="ti ti-truck-delivery text-2xl"></i>
                     </div>
                     <div>
-                        <h4 class="text-sm font-bold mb-1">Livraison offerte dès 550 DH</h4>
-                        <p class="text-xs text-white/90 leading-relaxed">Expédition express suivie sous 24h avec échantillons offerts dans chaque commande.</p>
+                        <h3 class="text-sm font-bold text-zinc-900 mb-1 group-hover:text-pink-600 transition-colors">Livraison offerte dès 550 DH</h3>
+                        <p class="text-xs text-zinc-500 leading-relaxed">Expédition express suivie sous 24h avec échantillons offerts dans chaque commande.</p>
                     </div>
                 </div>
 
