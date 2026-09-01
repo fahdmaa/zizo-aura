@@ -87,6 +87,87 @@ class ProductController extends Controller
         return back()->with('success', 'Produit archivé.');
     }
 
+    public function duplicate(Product $product)
+    {
+        $product->load(['sizes', 'flavors']);
+
+        $duplicated = DB::transaction(function () use ($product) {
+            $baseName = preg_replace('/\s*\(\d+\)$/', '', $product->name);
+            $i = 1;
+            $newName = "{$baseName} (1)";
+            $newSlug = Str::slug($newName);
+
+            do {
+                $candidateName = "{$baseName} ({$i})";
+                $candidateSlug = Str::slug($candidateName);
+                $exists = Product::withTrashed()->where(function ($q) use ($candidateName, $candidateSlug) {
+                    $q->where('name', $candidateName)->orWhere('slug', $candidateSlug);
+                })->exists();
+
+                if (! $exists) {
+                    $newName = $candidateName;
+                    $newSlug = $candidateSlug;
+                    break;
+                }
+                $i++;
+            } while ($i < 1000);
+
+            $data = $product->only([
+                'category_id',
+                'subtitle',
+                'description',
+                'ingredients',
+                'olfactory',
+                'usage',
+                'price',
+                'discounted_price',
+                'image',
+                'gallery',
+                'badge',
+                'badge_color',
+                'rating',
+                'review_count',
+                'is_new',
+                'is_bestseller',
+                'in_stock',
+                'is_active',
+                'stock_quantity',
+                'has_sizes',
+                'has_flavors',
+                'sort_order',
+            ]);
+
+            $data['name'] = $newName;
+            $data['slug'] = $newSlug;
+            $data['sort_order'] = ($product->sort_order ?? 0) + 1;
+
+            $newProduct = Product::create($data);
+
+            foreach ($product->sizes as $size) {
+                $newProduct->sizes()->create([
+                    'label'      => $size->label,
+                    'price'      => $size->price,
+                    'in_stock'   => $size->in_stock,
+                    'sort_order' => $size->sort_order,
+                ]);
+            }
+
+            foreach ($product->flavors as $flavor) {
+                $newProduct->flavors()->create([
+                    'label'      => $flavor->label,
+                    'color_hex'  => $flavor->color_hex,
+                    'in_stock'   => $flavor->in_stock,
+                    'sort_order' => $flavor->sort_order,
+                ]);
+            }
+
+            return $newProduct;
+        });
+
+        return redirect()->route('admin.products.edit', $duplicated)
+            ->with('success', "Produit \"{$duplicated->name}\" dupliqué avec succès.");
+    }
+
     public function restore(int $id)
     {
         Product::withTrashed()->findOrFail($id)->restore();

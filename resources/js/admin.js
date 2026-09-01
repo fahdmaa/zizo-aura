@@ -1176,6 +1176,9 @@
                                                             <i class="ti ti-refresh mr-1"></i> Restaurer
                                                         </button>
                                                     ` : `
+                                                        <button type="button" data-action="duplicate" data-id="${p.id}" data-name="${p.name}" class="p-2 rounded-xl bg-purple-50 hover:bg-purple-600 hover:text-white text-purple-600 transition cursor-pointer" title="Dupliquer le produit">
+                                                            <i class="ti ti-copy text-sm"></i>
+                                                        </button>
                                                         <button type="button" data-action="edit" data-id="${p.id}" class="p-2 rounded-xl bg-zinc-100 hover:bg-zinc-900 hover:text-white text-zinc-700 transition cursor-pointer" title="Modifier">
                                                             <i class="ti ti-edit text-sm"></i>
                                                         </button>
@@ -1209,6 +1212,24 @@
                 `;
 
                 // Wire row actions
+                tableBox.querySelectorAll('button[data-action="duplicate"]').forEach(btn => {
+                    btn.addEventListener('click', async () => {
+                        const id = btn.dataset.id;
+                        const origHtml = btn.innerHTML;
+                        btn.disabled = true;
+                        btn.innerHTML = '<i class="ti ti-loader-2 animate-spin text-sm"></i>';
+                        try {
+                            const res = await api.post(`/api/admin/products/${id}/duplicate`);
+                            toast.show(`Produit "${res.name}" dupliqué avec succès !`);
+                            await this.loadProductsList();
+                        } catch (err) {
+                            toast.show(err.message || 'Erreur lors de la duplication', 'error');
+                            btn.disabled = false;
+                            btn.innerHTML = origHtml;
+                        }
+                    });
+                });
+
                 tableBox.querySelectorAll('button[data-action="edit"]').forEach(btn => {
                     btn.addEventListener('click', () => this.openProductEditor(btn.dataset.id));
                 });
@@ -1609,14 +1630,24 @@
                     </form>
 
                     <!-- Modal Footer -->
-                    <div class="flex items-center justify-end gap-3 pt-4 border-t border-zinc-100 mt-5 shrink-0">
-                        <button type="button" data-close-modal class="btn-pill-secondary btn-pill-sm cursor-pointer">
-                            Annuler
-                        </button>
-                        <button type="submit" form="product-editor-form" id="pe-submit-btn" class="btn-pill-primary btn-pill-sm">
-                            <i class="ti ti-check text-sm"></i>
-                            <span>${isEditing ? 'Enregistrer les modifications' : 'Créer le produit'}</span>
-                        </button>
+                    <div class="flex items-center justify-between gap-3 pt-4 border-t border-zinc-100 mt-5 shrink-0">
+                        <div>
+                            ${isEditing ? `
+                                <button type="button" id="pe-duplicate-btn" class="btn-pill-secondary btn-pill-sm text-purple-700 bg-purple-50 hover:bg-purple-100 hover:border-purple-200 cursor-pointer flex items-center gap-1.5" title="Créer une copie de ce produit">
+                                    <i class="ti ti-copy text-sm"></i>
+                                    <span>Dupliquer</span>
+                                </button>
+                            ` : ''}
+                        </div>
+                        <div class="flex items-center gap-2.5">
+                            <button type="button" data-close-modal class="btn-pill-secondary btn-pill-sm cursor-pointer">
+                                Annuler
+                            </button>
+                            <button type="submit" form="product-editor-form" id="pe-submit-btn" class="btn-pill-primary btn-pill-sm">
+                                <i class="ti ti-check text-sm"></i>
+                                <span>${isEditing ? 'Enregistrer les modifications' : 'Créer le produit'}</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             `;
@@ -1920,6 +1951,27 @@
                             toast.show(err.message || 'Erreur lors de l\'enregistrement', 'error');
                             submitBtn.disabled = false;
                             submitBtn.innerHTML = `<i class="ti ti-check text-sm"></i><span>${isEditing ? 'Enregistrer les modifications' : 'Créer le produit'}</span>`;
+                        }
+                    });
+
+                    // Duplicate product from modal
+                    const duplicateBtn = panel.querySelector('#pe-duplicate-btn');
+                    duplicateBtn?.addEventListener('click', async () => {
+                        const origHtml = duplicateBtn.innerHTML;
+                        duplicateBtn.disabled = true;
+                        duplicateBtn.innerHTML = '<i class="ti ti-loader-2 animate-spin text-sm"></i><span>Duplication...</span>';
+                        try {
+                            const res = await api.post(`/api/admin/products/${productId}/duplicate`);
+                            toast.show(`Produit "${res.name}" dupliqué avec succès !`);
+                            modalSystem.closeModal();
+                            if (appState.currentView === 'products') {
+                                await this.loadProductsList();
+                            }
+                            this.openProductEditor(res.id);
+                        } catch (err) {
+                            toast.show(err.message || 'Erreur lors de la duplication', 'error');
+                            duplicateBtn.disabled = false;
+                            duplicateBtn.innerHTML = origHtml;
                         }
                     });
                 }

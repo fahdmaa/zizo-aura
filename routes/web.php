@@ -131,6 +131,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         // Products
         Route::post('/produits/restaurer/{id}', [ProductController::class, 'restore'])->name('products.restore');
+        Route::post('/produits/{product}/dupliquer', [ProductController::class, 'duplicate'])->name('products.duplicate');
         Route::resource('produits', ProductController::class)->except(['show'])->parameters(['produits' => 'product'])->names('products');
 
         // Categories
@@ -155,6 +156,7 @@ Route::prefix('api/admin')->middleware('admin.auth')->group(function () {
     Route::post('/products', [AdminApiController::class, 'storeProduct']);
     Route::get('/products/{product}', [AdminApiController::class, 'product']);
     Route::put('/products/{product}', [AdminApiController::class, 'updateProduct']);
+    Route::post('/products/{product}/duplicate', [AdminApiController::class, 'duplicateProduct']);
     Route::delete('/products/{product}', [AdminApiController::class, 'deleteProduct']);
     Route::post('/products/{id}/restore', [AdminApiController::class, 'restoreProduct']);
     Route::get('/categories', [AdminApiController::class, 'categories']);
