@@ -103,13 +103,21 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.classList.remove('overflow-hidden');
     };
 
+    let couponFeedbackTimeout = null;
+
     const showCouponFeedback = (msg, type) => {
         if (!couponFeedbackMsg) return;
+        if (couponFeedbackTimeout) {
+            clearTimeout(couponFeedbackTimeout);
+            couponFeedbackTimeout = null;
+        }
+
         if (type === 'clear' || !msg) {
             couponFeedbackMsg.textContent = '';
             couponFeedbackMsg.classList.add('hidden');
             return;
         }
+
         couponFeedbackMsg.textContent = msg;
         couponFeedbackMsg.classList.remove('hidden', 'text-rose-600', 'text-emerald-600');
         if (type === 'success') {
@@ -117,6 +125,12 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             couponFeedbackMsg.classList.add('text-rose-600');
         }
+
+        // Auto-dissolve after exactly 3 seconds to keep UI clean and non-redundant
+        couponFeedbackTimeout = setTimeout(() => {
+            couponFeedbackMsg.textContent = '';
+            couponFeedbackMsg.classList.add('hidden');
+        }, 3000);
     };
 
     const renderCartUI = () => {
