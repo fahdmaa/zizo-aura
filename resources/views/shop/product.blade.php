@@ -19,12 +19,25 @@
             <span class="text-zinc-900 font-bold truncate max-w-[200px] sm:max-w-none">{{ $product['name'] }}</span>
         </nav>
 
+@php
+    $rawGallery = $product['gallery'] ?? [];
+    if (is_string($rawGallery)) {
+        $rawGallery = json_decode($rawGallery, true) ?: [];
+    }
+    $allImages = array_values(array_unique(array_filter(array_merge([$product['image']], (array) $rawGallery))));
+    if (empty($allImages)) {
+        $allImages = [$product['image'] ?: '/images/sdj_bum_bum_set.jpg'];
+    }
+@endphp
+
         <!-- Product Main Showcase Grid -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start mb-20">
             
-            <!-- Left: High-Res Product Image Gallery -->
-            <div class="lg:col-span-6 sticky top-24">
-                <div class="relative aspect-square w-full bg-[#f8f9fa] rounded-3xl p-8 sm:p-12 overflow-hidden flex items-center justify-center border border-zinc-100 shadow-sm group">
+            <!-- Left: High-Res Product Image Gallery Showcase (Main Stage + Interactive Thumbnails) -->
+            <div class="lg:col-span-6 sticky top-24 space-y-4" id="product-gallery-showcase">
+                
+                <!-- Main Stage Image Box -->
+                <div class="relative aspect-square w-full bg-[#f8f9fa] rounded-3xl p-6 sm:p-10 overflow-hidden flex items-center justify-center border border-zinc-100 shadow-sm group select-none transition-all">
                     
                     <!-- Watermark Discount in Background -->
                     @if(!empty($product['discount']))
@@ -47,11 +60,59 @@
                         </div>
                     @endif
 
-                    <!-- Product Image Asset -->
-                    <img src="{{ $product['image'] }}"
+                    <!-- Photos Counter Badge (when multiple images) -->
+                    @if(count($allImages) > 1)
+                        <div class="absolute top-4 right-4 z-20">
+                            <span id="gallery-counter-badge" class="px-3 py-1 rounded-full bg-black/70 backdrop-blur-md text-white text-[11px] font-extrabold shadow-sm flex items-center gap-1">
+                                <i class="ti ti-photo text-xs"></i>
+                                <span><span id="gallery-current-idx">1</span> / {{ count($allImages) }}</span>
+                            </span>
+                        </div>
+                    @endif
+
+                    <!-- Main Stage Image with Smooth Transition -->
+                    <img id="product-main-stage-img"
+                         src="{{ $allImages[0] }}"
                          alt="{{ $product['name'] }}"
-                         class="relative z-10 w-full h-full object-contain max-h-[380px] sm:max-h-[440px] group-hover:scale-105 transition-transform duration-700 ease-out" />
+                         data-current-index="0"
+                         class="relative z-10 w-full h-full object-contain max-h-[380px] sm:max-h-[440px] group-hover:scale-105 transition-all duration-300 ease-out cursor-zoom-in" />
+
+                    <!-- Prev / Next Navigation Overlay Buttons (when multiple images) -->
+                    @if(count($allImages) > 1)
+                        <button type="button"
+                                id="gallery-prev-btn"
+                                aria-label="Photo précédente"
+                                class="absolute left-3.5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/90 hover:bg-white text-zinc-800 shadow-md border border-zinc-200/80 flex items-center justify-center cursor-pointer transition-all hover:scale-110 hover:text-pink-600 opacity-90 sm:opacity-0 group-hover:opacity-100">
+                            <i class="ti ti-chevron-left text-lg font-bold"></i>
+                        </button>
+                        <button type="button"
+                                id="gallery-next-btn"
+                                aria-label="Photo suivante"
+                                class="absolute right-3.5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/90 hover:bg-white text-zinc-800 shadow-md border border-zinc-200/80 flex items-center justify-center cursor-pointer transition-all hover:scale-110 hover:text-pink-600 opacity-90 sm:opacity-0 group-hover:opacity-100">
+                            <i class="ti ti-chevron-right text-lg font-bold"></i>
+                        </button>
+                    @endif
                 </div>
+
+                <!-- Interactive Thumbnails Carousel / Strip (when multiple images) -->
+                @if(count($allImages) > 1)
+                    <div class="relative">
+                        <div id="gallery-thumbs-track" class="flex items-center gap-3 overflow-x-auto custom-scrollbar pb-2 pt-1 px-1 scroll-smooth">
+                            @foreach($allImages as $idx => $imgUrl)
+                                <button type="button"
+                                        class="gallery-thumb-btn relative w-20 h-20 sm:w-22 sm:h-22 rounded-2xl bg-[#f8f9fa] border-2 p-1.5 shrink-0 overflow-hidden cursor-pointer transition-all duration-200 group {{ $idx === 0 ? 'border-pink-500 ring-2 ring-pink-500/20 shadow-sm scale-105 opacity-100' : 'border-zinc-200 hover:border-pink-300 opacity-70 hover:opacity-100' }}"
+                                        data-image-src="{{ $imgUrl }}"
+                                        data-index="{{ $idx }}"
+                                        aria-label="Afficher la photo {{ $idx + 1 }}">
+                                    <img src="{{ $imgUrl }}"
+                                         alt="{{ $product['name'] }} — Vue {{ $idx + 1 }}"
+                                         class="w-full h-full object-contain transition-transform group-hover:scale-105" />
+                                </button>
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
+
             </div>
 
             <!-- Right: Product Purchase Options & Details -->
@@ -311,6 +372,29 @@
             </div>
         @endif
 
+    </div>
+</div>
+
+<!-- Full-Screen High-Res Lightbox Visualizer Modal -->
+<div id="product-lightbox-modal" class="fixed inset-0 z-50 bg-black/95 backdrop-blur-xl flex items-center justify-center p-4 sm:p-8 opacity-0 pointer-events-none transition-all duration-300 select-none">
+    <button type="button" id="lightbox-close-btn" class="absolute top-5 right-5 w-11 h-11 rounded-full bg-white/15 hover:bg-white text-white hover:text-black flex items-center justify-center text-xl transition-all cursor-pointer z-50 shadow-lg">
+        <i class="ti ti-x"></i>
+    </button>
+
+    <button type="button" id="lightbox-prev-btn" class="absolute left-4 sm:left-8 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/15 hover:bg-white text-white hover:text-black flex items-center justify-center text-xl transition-all cursor-pointer z-50 shadow-lg">
+        <i class="ti ti-chevron-left"></i>
+    </button>
+
+    <div class="relative max-w-4xl max-h-[85vh] w-full flex items-center justify-center p-2">
+        <img id="lightbox-main-img" src="{{ $allImages[0] }}" alt="{{ $product['name'] }}" class="max-w-full max-h-[80vh] object-contain rounded-2xl shadow-2xl transition-all duration-300" />
+    </div>
+
+    <button type="button" id="lightbox-next-btn" class="absolute right-4 sm:right-8 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/15 hover:bg-white text-white hover:text-black flex items-center justify-center text-xl transition-all cursor-pointer z-50 shadow-lg">
+        <i class="ti ti-chevron-right"></i>
+    </button>
+
+    <div class="absolute bottom-6 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/20 text-white text-xs font-black tracking-wide">
+        <span id="lightbox-counter">1 / {{ count($allImages) }}</span>
     </div>
 </div>
 @endsection

@@ -30,7 +30,7 @@ class CatalogSeeder extends Seeder
                 'category_id' => $categoryIds[$legacy['category']], 'name' => $legacy['name'], 'subtitle' => $legacy['subtitle'], 'slug' => $legacy['slug'],
                 'description' => $legacy['description'], 'ingredients' => $legacy['ingredients'], 'olfactory' => $legacy['olfactory'], 'usage' => $legacy['usage'],
                 'price' => $legacy['original_price'], 'discounted_price' => $legacy['raw_price'] < $legacy['original_price'] ? $legacy['raw_price'] : null,
-                'image' => $legacy['image'], 'gallery' => null, 'badge' => $legacy['badge'], 'badge_color' => $legacy['badge_color'], 'rating' => $legacy['rating'], 'review_count' => $legacy['review_count'],
+                'image' => $legacy['image'], 'gallery' => json_encode($legacy['gallery'] ?? [$legacy['image']]), 'badge' => $legacy['badge'], 'badge_color' => $legacy['badge_color'], 'rating' => $legacy['rating'], 'review_count' => $legacy['review_count'],
                 'is_new' => false, 'is_bestseller' => false, 'in_stock' => true, 'is_active' => true, 'stock_quantity' => null,
                 'has_sizes' => ! empty($legacy['sizes']), 'has_flavors' => ! empty($legacy['flavors']), 'sort_order' => $position, 'created_at' => $now, 'updated_at' => $now, 'deleted_at' => null,
             ])->all(),

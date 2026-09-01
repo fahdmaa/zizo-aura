@@ -1033,6 +1033,167 @@ document.addEventListener('DOMContentLoaded', () => {
         revealElements.forEach(el => revealObserver.observe(el));
     }
 
+    // =========================================================================
+    // 12. Product Full Page: Interactive Multi-Image Gallery & Lightbox
+    // =========================================================================
+    const galleryShowcase = document.getElementById('product-gallery-showcase');
+    const mainStageImg = document.getElementById('product-main-stage-img');
+    const galleryCounterIdx = document.getElementById('gallery-current-idx');
+    const galleryPrevBtn = document.getElementById('gallery-prev-btn');
+    const galleryNextBtn = document.getElementById('gallery-next-btn');
+    const galleryThumbs = document.querySelectorAll('.gallery-thumb-btn');
+
+    // Lightbox modal elements
+    const lightboxModal = document.getElementById('product-lightbox-modal');
+    const lightboxCloseBtn = document.getElementById('lightbox-close-btn');
+    const lightboxPrevBtn = document.getElementById('lightbox-prev-btn');
+    const lightboxNextBtn = document.getElementById('lightbox-next-btn');
+    const lightboxMainImg = document.getElementById('lightbox-main-img');
+    const lightboxCounter = document.getElementById('lightbox-counter');
+
+    if (galleryShowcase && mainStageImg) {
+        const imagesList = Array.from(galleryThumbs).map(b => b.dataset.imageSrc).filter(Boolean);
+        if (imagesList.length === 0 && mainStageImg.src) {
+            imagesList.push(mainStageImg.src);
+        }
+
+        let currentIndex = 0;
+
+        const updateGalleryUI = (newIndex) => {
+            if (imagesList.length === 0) return;
+            currentIndex = (newIndex + imagesList.length) % imagesList.length;
+            const currentSrc = imagesList[currentIndex];
+
+            // Smooth fade effect
+            mainStageImg.style.opacity = '0.3';
+            mainStageImg.style.transform = 'scale(0.97)';
+            setTimeout(() => {
+                mainStageImg.src = currentSrc;
+                mainStageImg.dataset.currentIndex = currentIndex;
+                mainStageImg.style.opacity = '1';
+                mainStageImg.style.transform = '';
+            }, 120);
+
+            if (galleryCounterIdx) {
+                galleryCounterIdx.textContent = currentIndex + 1;
+            }
+
+            // Update thumbnails active state
+            galleryThumbs.forEach((thumb, idx) => {
+                if (idx === currentIndex) {
+                    thumb.classList.remove('border-zinc-200', 'opacity-70');
+                    thumb.classList.add('border-pink-500', 'ring-2', 'ring-pink-500/20', 'shadow-sm', 'scale-105', 'opacity-100');
+                    thumb.scrollIntoView({ behavior: 'smooth', inline: 'nearest', block: 'nearest' });
+                } else {
+                    thumb.classList.remove('border-pink-500', 'ring-2', 'ring-pink-500/20', 'shadow-sm', 'scale-105', 'opacity-100');
+                    thumb.classList.add('border-zinc-200', 'opacity-70');
+                }
+            });
+
+            // Update Lightbox image if open
+            if (lightboxMainImg && lightboxCounter) {
+                lightboxMainImg.src = currentSrc;
+                lightboxCounter.textContent = `${currentIndex + 1} / ${imagesList.length}`;
+            }
+        };
+
+        // Wire thumbnail click
+        galleryThumbs.forEach((thumb, idx) => {
+            thumb.addEventListener('click', (e) => {
+                e.preventDefault();
+                updateGalleryUI(idx);
+            });
+        });
+
+        // Wire Prev & Next buttons
+        if (galleryPrevBtn) {
+            galleryPrevBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                updateGalleryUI(currentIndex - 1);
+            });
+        }
+
+        if (galleryNextBtn) {
+            galleryNextBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                updateGalleryUI(currentIndex + 1);
+            });
+        }
+
+        // Touch Swipe gestures on Mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        mainStageImg.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+
+        mainStageImg.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            const diff = touchEndX - touchStartX;
+            if (Math.abs(diff) > 40) {
+                if (diff < 0) {
+                    updateGalleryUI(currentIndex + 1); // Swipe left -> next
+                } else {
+                    updateGalleryUI(currentIndex - 1); // Swipe right -> prev
+                }
+            }
+        }, { passive: true });
+
+        // Lightbox Modal open on clicking main stage image
+        const openLightbox = () => {
+            if (!lightboxModal || !lightboxMainImg) return;
+            lightboxMainImg.src = imagesList[currentIndex] || mainStageImg.src;
+            if (lightboxCounter) lightboxCounter.textContent = `${currentIndex + 1} / ${imagesList.length}`;
+            lightboxModal.classList.remove('opacity-0', 'pointer-events-none');
+            lightboxModal.classList.add('opacity-100', 'pointer-events-auto');
+            document.body.classList.add('overflow-hidden');
+        };
+
+        const closeLightbox = () => {
+            if (!lightboxModal) return;
+            lightboxModal.classList.remove('opacity-100', 'pointer-events-auto');
+            lightboxModal.classList.add('opacity-0', 'pointer-events-none');
+            document.body.classList.remove('overflow-hidden');
+        };
+
+        mainStageImg.addEventListener('click', openLightbox);
+
+        if (lightboxCloseBtn) lightboxCloseBtn.addEventListener('click', closeLightbox);
+        if (lightboxModal) {
+            lightboxModal.addEventListener('click', (e) => {
+                if (e.target === lightboxModal) closeLightbox();
+            });
+        }
+
+        if (lightboxPrevBtn) {
+            lightboxPrevBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                updateGalleryUI(currentIndex - 1);
+            });
+        }
+
+        if (lightboxNextBtn) {
+            lightboxNextBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                updateGalleryUI(currentIndex + 1);
+            });
+        }
+
+        // Keyboard navigation Left & Right Arrow keys
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') {
+                updateGalleryUI(currentIndex - 1);
+            } else if (e.key === 'ArrowRight') {
+                updateGalleryUI(currentIndex + 1);
+            } else if (e.key === 'Escape') {
+                closeLightbox();
+            }
+        });
+    }
+
     // Initial render of cart badges on page load
     renderCartUI();
 });
