@@ -211,22 +211,26 @@ document.addEventListener('DOMContentLoaded', () => {
             shippingFee = 35;
         }
 
-        // Update Totals
+        // Calculate final total (Subtotal - Discount + Shipping)
+        const finalTotal = subtotal === 0 ? 0 : Math.max(0, subtotal - discountAmount + shippingFee);
+
+        // Update Totals Display
         if (cartDrawerSubtotal) cartDrawerSubtotal.textContent = `${subtotal} DH`;
+
         if (cartDrawerShipping) {
             if (subtotal === 0) {
-                cartDrawerShipping.textContent = 'Calculée au paiement';
-                cartDrawerShipping.className = 'font-bold text-zinc-500';
+                cartDrawerShipping.textContent = '0 DH';
+                cartDrawerShipping.className = 'font-bold text-zinc-400';
             } else if (subtotal >= FREE_SHIPPING_THRESHOLD) {
-                cartDrawerShipping.textContent = 'GRATUITE (0 DH)';
+                cartDrawerShipping.textContent = 'Offerte (0 DH)';
                 cartDrawerShipping.className = 'font-bold text-emerald-600';
             } else {
-                cartDrawerShipping.textContent = '35 DH (Standard Maroc)';
-                cartDrawerShipping.className = 'font-bold text-zinc-700';
+                cartDrawerShipping.textContent = '35 DH';
+                cartDrawerShipping.className = 'font-bold text-zinc-900';
             }
         }
+
         if (cartDrawerTotal) {
-            const finalTotal = Math.max(0, subtotal === 0 ? 0 : (subtotal + shippingFee - discountAmount));
             cartDrawerTotal.textContent = `${finalTotal} DH`;
         }
 
@@ -238,13 +242,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     const variant = [item.flavor, item.size].filter(Boolean).join(' • ');
                     msg += `${i + 1}. *${item.name}* ${variant ? '(' + variant + ')' : ''} x${item.quantity} = ${item.price * item.quantity} DH\n`;
                 });
-                const shippingCost = subtotal >= FREE_SHIPPING_THRESHOLD ? 'Gratuite (Offerte)' : '35 DH';
-                const finalTotal = Math.max(0, subtotal + shippingFee - discountAmount);
+                const shippingCostText = subtotal >= FREE_SHIPPING_THRESHOLD ? 'Offerte (0 DH)' : '35 DH';
                 msg += `\n*Sous-total :* ${subtotal} DH\n`;
                 if (appliedCoupon && discountAmount > 0) {
                     msg += `*Code promo (${appliedCoupon.code}) :* -${discountAmount} DH\n`;
                 }
-                msg += `*Livraison :* ${shippingCost}\n*Total à payer :* ${finalTotal} DH\n\nMerci de me confirmer la commande !`;
+                msg += `*Livraison :* ${shippingCostText}\n*Total à payer :* ${finalTotal} DH\n\nMerci de me confirmer la commande !`;
                 cartWhatsappBtn.href = `https://wa.me/212600000000?text=${encodeURIComponent(msg)}`;
                 cartWhatsappBtn.classList.remove('opacity-50', 'pointer-events-none');
             } else {

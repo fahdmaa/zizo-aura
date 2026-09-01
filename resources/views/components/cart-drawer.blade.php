@@ -88,8 +88,8 @@
                     <span id="cart-drawer-discount-amount">-0 DH</span>
                 </div>
                 <div class="flex justify-between text-zinc-500">
-                    <span>Livraison Maroc</span>
-                    <span id="cart-drawer-shipping" class="font-bold text-emerald-600">Calculée au paiement</span>
+                    <span>Livraison</span>
+                    <span id="cart-drawer-shipping" class="font-bold text-zinc-900">Calculée au paiement</span>
                 </div>
                 <div class="flex justify-between text-sm font-extrabold text-zinc-900 pt-2 border-t border-zinc-200">
                     <span>Total estimé</span>
