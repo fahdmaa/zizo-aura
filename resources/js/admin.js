@@ -2460,13 +2460,20 @@
                                             <td class="px-6 py-4">
                                                 <button type="button" data-toggle-coupon="${c.id}" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-extrabold cursor-pointer transition ${
                                                     c.is_active ? 'bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100' : 'bg-zinc-100 text-zinc-500 hover:bg-zinc-200'
-                                                }">
+                                                }" title="${c.is_active ? 'Cliquez pour désactiver' : 'Cliquez pour activer'}">
                                                     <span class="w-1.5 h-1.5 rounded-full ${c.is_active ? 'bg-emerald-500' : 'bg-zinc-400'}"></span>
                                                     <span>${c.is_active ? 'Actif' : 'Désactivé'}</span>
                                                 </button>
                                             </td>
                                             <td class="px-6 py-4 text-right">
                                                 <div class="flex items-center justify-end gap-2">
+                                                    <button type="button" data-toggle-coupon="${c.id}" class="p-2 rounded-xl transition cursor-pointer ${
+                                                        c.is_active
+                                                            ? 'bg-emerald-50 hover:bg-amber-500 hover:text-white text-emerald-700 border border-emerald-200/80 hover:border-amber-500'
+                                                            : 'bg-zinc-100 hover:bg-emerald-600 hover:text-white text-zinc-400'
+                                                    }" title="${c.is_active ? 'Désactiver le code promo' : 'Activer le code promo'}">
+                                                        <i class="ti ${c.is_active ? 'ti-power' : 'ti-power'} text-sm"></i>
+                                                    </button>
                                                     <button type="button" data-coupon-edit="${c.id}" class="p-2 rounded-xl bg-zinc-100 hover:bg-zinc-900 hover:text-white text-zinc-700 transition cursor-pointer" title="Modifier">
                                                         <i class="ti ti-edit text-sm"></i>
                                                     </button>
@@ -2487,12 +2494,17 @@
                 box.querySelectorAll('[data-toggle-coupon]').forEach(btn => {
                     btn.addEventListener('click', async () => {
                         const id = btn.dataset.toggleCoupon;
+                        const origHtml = btn.innerHTML;
+                        btn.disabled = true;
+                        btn.innerHTML = '<i class="ti ti-loader-2 animate-spin text-sm"></i>';
                         try {
                             const res = await api.post(`/api/admin/coupons/${id}/toggle`);
                             toast.show(`Code promo ${res.code} ${res.is_active ? 'activé' : 'désactivé'}.`);
-                            this.loadCouponsList();
+                            await this.loadCouponsList();
                         } catch (err) {
                             toast.show(err.message || 'Erreur', 'error');
+                            btn.disabled = false;
+                            btn.innerHTML = origHtml;
                         }
                     });
                 });
