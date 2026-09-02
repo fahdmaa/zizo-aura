@@ -44,7 +44,7 @@
 .animate-marquee-top {
   display: flex;
   width: max-content;
-  animation: marquee-scroll 24s linear infinite;
+  animation: marquee-scroll 25s linear infinite;
   will-change: transform;
 }
 
