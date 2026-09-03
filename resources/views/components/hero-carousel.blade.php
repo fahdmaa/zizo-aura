@@ -1,200 +1,129 @@
-<section id="hero-carousel-section" class="w-full relative overflow-hidden bg-[#0c0907] text-white border-b border-zinc-900/80 select-none isolate" data-hero-brand="sol-de-janeiro">
+<section id="hero-carousel-section" class="w-full relative overflow-hidden bg-white select-none border-b border-zinc-100" aria-label="Bannière principale zizo aura">
     
-    <!-- =========================================================================
-         1. DYNAMIC AMBIENT AURA BACKGROUND
-         ========================================================================= -->
-    <div class="hero-aura-container pointer-events-none absolute inset-0 -z-10 overflow-hidden" aria-hidden="true">
-        <div class="hero-aura-deep absolute inset-0"></div>
-        <div class="hero-aura-sweep hero-aura-sweep-a absolute"></div>
-        <div class="hero-aura-sweep hero-aura-sweep-b absolute"></div>
-        <div class="hero-aura-core absolute"></div>
-        <div class="hero-aura-vignette absolute inset-0"></div>
-        <div class="hero-aura-grain absolute inset-0"></div>
-    </div>
-
-    <!-- =========================================================================
-         2. CAROUSEL STAGE & 3D VIEWPORT (No overlay CTA buttons, pure image banners)
-         ========================================================================= -->
-    <div class="relative w-full max-w-[1560px] mx-auto pt-4 sm:pt-6 lg:pt-8 pb-3 sm:pb-4 px-2 sm:px-6 lg:px-12 flex flex-col items-center">
+    <!-- Full-Width Hero Slider Viewport -->
+    <div id="heroCarouselStage" class="relative w-full overflow-hidden aspect-[1717/916] min-h-[260px] sm:min-h-[380px] md:min-h-[460px] lg:min-h-[540px] xl:min-h-[620px] bg-zinc-100">
         
-        <!-- Main Carousel Stage -->
-        <div id="heroCarouselStage" class="relative w-full flex items-center justify-center overflow-visible my-2 sm:my-4" aria-roledescription="carousel" aria-label="Curated Beauty Carousel">
+        <!-- Sliding Horizontal Track -->
+        <div id="heroCarouselTrack" class="flex w-full h-full will-change-transform transition-transform duration-700 ease-[cubic-bezier(0.25,1,0.5,1)]">
             
-            <!-- Left Manual Switch Arrow -->
-            <button type="button"
-                    id="heroPrevBtn"
-                    aria-label="Diapositive précédente"
-                    class="hero-nav-arrow hero-nav-arrow-prev group">
-                <i class="ti ti-chevron-left text-xl sm:text-2xl group-hover:-translate-x-0.5 transition-transform"></i>
-            </button>
-
-            <!-- 3D Carousel Viewport & Track -->
-            <div class="hero-carousel-viewport w-full max-w-[1140px] flex items-center justify-center">
-                <div id="heroCarouselTrack" class="hero-carousel-track w-full flex items-center justify-center">
-                    
-                    <!-- Slide 1: Sol de Janeiro -->
-                    <div class="hero-slide is-active" data-index="0" data-brand="sol-de-janeiro" role="group" aria-roledescription="slide" aria-label="1 of 4: Sol de Janeiro">
-                        <div class="hero-slide-card">
-                            <div class="hero-slide-media">
-                                <img src="/images/hero-carousel/sol-de-janeiro.png"
-                                     alt="Sol de Janeiro Collection - zizo aura"
-                                     class="hero-slide-img"
-                                     loading="eager"
-                                     draggable="false" />
-                                <div class="hero-slide-glow"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Slide 2: Rituals -->
-                    <div class="hero-slide is-next" data-index="1" data-brand="rituals" role="group" aria-roledescription="slide" aria-label="2 of 4: Rituals">
-                        <div class="hero-slide-card">
-                            <div class="hero-slide-media">
-                                <img src="/images/hero-carousel/rituals.png"
-                                     alt="Rituals Collection - zizo aura"
-                                     class="hero-slide-img"
-                                     loading="eager"
-                                     draggable="false" />
-                                <div class="hero-slide-glow"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Slide 3: Victoria's Secret -->
-                    <div class="hero-slide is-hidden-right" data-index="2" data-brand="victoria-secret" role="group" aria-roledescription="slide" aria-label="3 of 4: Victoria's Secret">
-                        <div class="hero-slide-card">
-                            <div class="hero-slide-media">
-                                <img src="/images/hero-carousel/victoria-secret.png"
-                                     alt="Victoria's Secret Collection - zizo aura"
-                                     class="hero-slide-img"
-                                     loading="lazy"
-                                     draggable="false" />
-                                <div class="hero-slide-glow"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Slide 4: The Ordinary -->
-                    <div class="hero-slide is-prev" data-index="3" data-brand="ordinary" role="group" aria-roledescription="slide" aria-label="4 of 4: The Ordinary">
-                        <div class="hero-slide-card">
-                            <div class="hero-slide-media">
-                                <img src="/images/hero-carousel/ordinary.png"
-                                     alt="The Ordinary Clinical Skincare - zizo aura"
-                                     class="hero-slide-img"
-                                     loading="lazy"
-                                     draggable="false" />
-                                <div class="hero-slide-glow"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
+            <!-- Slide 1: Sol de Janeiro -->
+            <div class="hero-slide w-full h-full shrink-0 relative" data-index="0" data-brand="sol-de-janeiro" role="group" aria-roledescription="slide" aria-label="1 sur 4 : Sol de Janeiro">
+                <img src="/images/hero-carousel/sol-de-janeiro.png"
+                     alt="Sol de Janeiro Collection - zizo aura"
+                     class="w-full h-full object-cover object-center select-none pointer-events-none"
+                     loading="eager"
+                     draggable="false" />
             </div>
 
-            <!-- Right Manual Switch Arrow -->
-            <button type="button"
-                    id="heroNextBtn"
-                    aria-label="Diapositive suivante"
-                    class="hero-nav-arrow hero-nav-arrow-next group">
-                <i class="ti ti-chevron-right text-xl sm:text-2xl group-hover:translate-x-0.5 transition-transform"></i>
-            </button>
+            <!-- Slide 2: Rituals -->
+            <div class="hero-slide w-full h-full shrink-0 relative" data-index="1" data-brand="rituals" role="group" aria-roledescription="slide" aria-label="2 sur 4 : Rituals">
+                <img src="/images/hero-carousel/rituals.png"
+                     alt="Rituals Collection - zizo aura"
+                     class="w-full h-full object-cover object-center select-none pointer-events-none"
+                     loading="eager"
+                     draggable="false" />
+            </div>
+
+            <!-- Slide 3: Victoria's Secret -->
+            <div class="hero-slide w-full h-full shrink-0 relative" data-index="2" data-brand="victoria-secret" role="group" aria-roledescription="slide" aria-label="3 sur 4 : Victoria's Secret">
+                <img src="/images/hero-carousel/victoria-secret.png"
+                     alt="Victoria's Secret Collection - zizo aura"
+                     class="w-full h-full object-cover object-center select-none pointer-events-none"
+                     loading="lazy"
+                     draggable="false" />
+            </div>
+
+            <!-- Slide 4: The Ordinary -->
+            <div class="hero-slide w-full h-full shrink-0 relative" data-index="3" data-brand="ordinary" role="group" aria-roledescription="slide" aria-label="4 sur 4 : The Ordinary">
+                <img src="/images/hero-carousel/ordinary.png"
+                     alt="The Ordinary Clinical Skincare - zizo aura"
+                     class="w-full h-full object-cover object-center select-none pointer-events-none"
+                     loading="lazy"
+                     draggable="false" />
+            </div>
 
         </div>
 
-        <!-- =========================================================================
-             3. BOTTOM CONTROLS & MANUAL BRAND TABS (with progress indicators)
-             ========================================================================= -->
-        <div class="hero-carousel-rail w-full max-w-[1140px] mt-3 sm:mt-5 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 py-2 sm:py-3 px-3 sm:px-5 rounded-2xl bg-black/40 backdrop-blur-xl border border-white/10 shadow-lg">
-            
-            <!-- Left: Counter Display -->
-            <div class="flex items-center gap-2 font-mono text-xs sm:text-sm text-zinc-400 font-semibold shrink-0">
-                <span id="heroCounterCurrent" class="text-base sm:text-lg font-black text-pink-400">01</span>
-                <span class="text-zinc-600">/</span>
-                <span class="text-zinc-400">04</span>
-            </div>
+        <!-- Left Manual Switch Arrow (Floating Glassmorphism Button) -->
+        <button type="button"
+                id="heroPrevBtn"
+                aria-label="Image précédente"
+                class="absolute left-3 sm:left-6 lg:left-8 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-13 sm:h-13 rounded-full bg-white/85 hover:bg-white text-zinc-900 shadow-[0_8px_30px_rgba(0,0,0,0.18)] backdrop-blur-md border border-white/60 flex items-center justify-center transition-all duration-300 hover:scale-108 active:scale-95 cursor-pointer">
+            <i class="ti ti-chevron-left text-lg sm:text-2xl -ml-0.5"></i>
+        </button>
 
-            <!-- Center: 4 Brand Selection Tabs -->
-            <div class="flex items-center justify-center gap-1.5 sm:gap-3 flex-wrap w-full sm:w-auto" role="tablist" aria-label="Sélection rapide de marque">
+        <!-- Right Manual Switch Arrow (Floating Glassmorphism Button) -->
+        <button type="button"
+                id="heroNextBtn"
+                aria-label="Image suivante"
+                class="absolute right-3 sm:right-6 lg:right-8 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-13 sm:h-13 rounded-full bg-white/85 hover:bg-white text-zinc-900 shadow-[0_8px_30px_rgba(0,0,0,0.18)] backdrop-blur-md border border-white/60 flex items-center justify-center transition-all duration-300 hover:scale-108 active:scale-95 cursor-pointer">
+            <i class="ti ti-chevron-right text-lg sm:text-2xl -mr-0.5"></i>
+        </button>
+
+        <!-- Floating Bottom Brand Navigation Pills -->
+        <div class="absolute bottom-3 sm:bottom-6 inset-x-0 z-20 flex items-center justify-center px-3 pointer-events-none">
+            <nav id="heroBrandNav" class="pointer-events-auto inline-flex items-center gap-1 sm:gap-2 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-full bg-black/45 hover:bg-black/60 backdrop-blur-xl border border-white/20 shadow-2xl transition-all duration-300" aria-label="Sélection de la marque">
                 
+                <!-- 1. Sol de Janeiro -->
                 <button type="button"
-                        class="hero-brand-tab is-active group"
+                        class="hero-brand-pill is-active group"
                         data-slide-target="0"
                         role="tab"
                         aria-selected="true"
-                        aria-label="Voir Sol de Janeiro">
-                    <div class="flex items-center gap-1.5">
-                        <span class="hero-tab-num font-mono text-[10px] text-zinc-500 font-semibold group-hover:text-white transition-colors">01</span>
-                        <span class="hero-tab-name text-xs sm:text-sm font-bold text-zinc-300 group-hover:text-white transition-colors">Sol de Janeiro</span>
-                    </div>
-                    <div class="hero-tab-track">
-                        <div class="hero-tab-progress"></div>
-                    </div>
+                        aria-label="Afficher Sol de Janeiro">
+                    <span class="pill-dot"></span>
+                    <span class="pill-label">Sol de Janeiro</span>
                 </button>
 
+                <!-- 2. Rituals -->
                 <button type="button"
-                        class="hero-brand-tab group"
+                        class="hero-brand-pill group"
                         data-slide-target="1"
                         role="tab"
                         aria-selected="false"
-                        aria-label="Voir Rituals">
-                    <div class="flex items-center gap-1.5">
-                        <span class="hero-tab-num font-mono text-[10px] text-zinc-500 font-semibold group-hover:text-white transition-colors">02</span>
-                        <span class="hero-tab-name text-xs sm:text-sm font-bold text-zinc-300 group-hover:text-white transition-colors">Rituals</span>
-                    </div>
-                    <div class="hero-tab-track">
-                        <div class="hero-tab-progress"></div>
-                    </div>
+                        aria-label="Afficher Rituals">
+                    <span class="pill-dot"></span>
+                    <span class="pill-label">Rituals</span>
                 </button>
 
+                <!-- 3. Victoria's Secret -->
                 <button type="button"
-                        class="hero-brand-tab group"
+                        class="hero-brand-pill group"
                         data-slide-target="2"
                         role="tab"
                         aria-selected="false"
-                        aria-label="Voir Victoria's Secret">
-                    <div class="flex items-center gap-1.5">
-                        <span class="hero-tab-num font-mono text-[10px] text-zinc-500 font-semibold group-hover:text-white transition-colors">03</span>
-                        <span class="hero-tab-name text-xs sm:text-sm font-bold text-zinc-300 group-hover:text-white transition-colors">Victoria's Secret</span>
-                    </div>
-                    <div class="hero-tab-track">
-                        <div class="hero-tab-progress"></div>
-                    </div>
+                        aria-label="Afficher Victoria's Secret">
+                    <span class="pill-dot"></span>
+                    <span class="pill-label">Victoria's Secret</span>
                 </button>
 
+                <!-- 4. The Ordinary -->
                 <button type="button"
-                        class="hero-brand-tab group"
+                        class="hero-brand-pill group"
                         data-slide-target="3"
                         role="tab"
                         aria-selected="false"
-                        aria-label="Voir The Ordinary">
-                    <div class="flex items-center gap-1.5">
-                        <span class="hero-tab-num font-mono text-[10px] text-zinc-500 font-semibold group-hover:text-white transition-colors">04</span>
-                        <span class="hero-tab-name text-xs sm:text-sm font-bold text-zinc-300 group-hover:text-white transition-colors">The Ordinary</span>
-                    </div>
-                    <div class="hero-tab-track">
-                        <div class="hero-tab-progress"></div>
-                    </div>
+                        aria-label="Afficher The Ordinary">
+                    <span class="pill-dot"></span>
+                    <span class="pill-label">The Ordinary</span>
                 </button>
 
-            </div>
-
-            <!-- Right: Play/Pause Autoplay Toggle Button -->
-            <div class="flex items-center justify-end shrink-0">
+                <!-- Divider & Play/Pause -->
+                <div class="w-px h-4 bg-white/20 mx-1 hidden sm:block"></div>
                 <button type="button"
                         id="heroAutoplayToggle"
-                        class="hero-autoplay-btn group"
-                        aria-label="Mettre en pause ou reprendre le défilement automatique"
-                        title="Pause / Reprendre">
+                        class="p-1 sm:p-1.5 rounded-full text-white/80 hover:text-white transition-colors cursor-pointer hidden sm:flex items-center justify-center"
+                        aria-label="Pause ou lecture du défilement"
+                        title="Pause / Lecture">
                     <span class="hero-autoplay-icon-pause flex items-center justify-center">
                         <i class="ti ti-player-pause text-xs"></i>
                     </span>
                     <span class="hero-autoplay-icon-play hidden items-center justify-center text-pink-400">
                         <i class="ti ti-player-play text-xs"></i>
                     </span>
-                    <span class="text-[11px] font-mono tracking-wider text-zinc-400 uppercase font-semibold group-hover:text-white transition-colors">Auto</span>
                 </button>
-            </div>
 
+            </nav>
         </div>
 
     </div>
