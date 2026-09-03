@@ -1,25 +1,4 @@
 <header class="w-full bg-white border-b border-zinc-100 sticky top-0 z-50 transition-colors">
-    <!-- Top Announcement Scrolling Band -->
-    <div class="w-full bg-black text-white text-[10px] sm:text-[11px] font-extrabold uppercase tracking-widest py-2 sm:py-2.5 overflow-hidden border-b border-zinc-900 select-none relative z-50">
-        <div class="animate-marquee-top flex items-center whitespace-nowrap">
-            @for($i = 0; $i < 6; $i++)
-                <div class="flex items-center gap-5 sm:gap-6 mx-3 sm:mx-4 shrink-0">
-                    <span class="flex items-center gap-2">
-                        <span class="w-1.5 h-1.5 rounded-full bg-pink-500 animate-pulse"></span>
-                        <span class="text-white">LIVRAISON OFFERTE DÈS 550 DH DE COMMANDE</span>
-                    </span>
-                    <span class="text-zinc-600 font-normal">&bull;</span>
-                    <span class="text-zinc-300 font-semibold tracking-wider">PARTOUT AU MAROC</span>
-                    <span class="text-zinc-600 font-normal">&bull;</span>
-                    <span class="text-pink-400 font-bold">ÉCHANTILLONS OFFERTS</span>
-                    <span class="text-zinc-600 font-normal">&bull;</span>
-                    <span class="text-zinc-300 font-semibold">EXPÉDITION EXPRESS 24/48H</span>
-                    <span class="text-zinc-600 font-normal">&bull;</span>
-                </div>
-            @endfor
-        </div>
-    </div>
-
     <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
         
         <!-- Left: Hamburger Button (Mobile) + Brand Logo -->
