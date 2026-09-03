@@ -21,7 +21,10 @@
     color: var(--text-main);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
     overflow-x: hidden;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
   }
 
   h1, h2, h3, h4 {
@@ -48,18 +51,19 @@
   will-change: transform;
 }
 
-.animate-marquee-top:hover {
-  animation-play-state: paused;
-}
-
 .animate-marquee-infinite {
   display: flex;
   width: max-content;
   animation: marquee-scroll 32s linear infinite;
 }
 
-.animate-marquee-infinite:hover {
-  animation-play-state: paused;
+@media (hover: hover) {
+  .animate-marquee-top:hover {
+    animation-play-state: paused;
+  }
+  .animate-marquee-infinite:hover {
+    animation-play-state: paused;
+  }
 }
 
 /* Page-to-Page Appearing Transition Animations */
@@ -262,6 +266,22 @@ select.select-luxury-pill:focus {
   border-color: #ff1b7a !important;
   outline: none !important;
   box-shadow: 0 0 0 4px rgba(255, 27, 122, 0.12), 0 2px 10px rgba(0, 0, 0, 0.04) !important;
+}
+
+/* Prevent iOS Safari auto-zoom on input focus */
+@media (max-width: 640px) {
+  .input-luxury,
+  input[type="text"],
+  input[type="email"],
+  input[type="number"],
+  input[type="password"],
+  input[type="search"],
+  input[type="tel"],
+  input[type="date"],
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
 }
 
 /* ========================================================
@@ -537,6 +557,7 @@ select.select-luxury-pill:focus {
 
 .search-pill.is-expanded {
   width: 13.5rem; /* ~216px mobile */
+  max-width: calc(100vw - 125px);
   background-color: #f4f4f5;
   border-color: #e4e4e7;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
@@ -859,4 +880,15 @@ input#order-search-input[type="text"] {
     display: inline;
   }
 }
+
+/* Touch & Mobile Optimizations */
+#reviews-slider {
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+.review-slide-card {
+  scroll-snap-align: start;
+}
+
 

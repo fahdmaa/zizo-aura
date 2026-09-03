@@ -31,7 +31,7 @@
         <div id="reviews-slider" class="flex gap-6 overflow-x-auto scroll-smooth no-scrollbar pt-3 pb-8 -mx-4 px-4 sm:mx-0 sm:px-0">
             
             <!-- Review 1 -->
-            <div class="review-slide-card w-[300px] sm:w-[380px] lg:w-[420px] shrink-0 bg-zinc-100/90 rounded-3xl p-6 sm:p-8 border border-zinc-200 shadow-xs hover:-translate-y-2 hover:bg-zinc-100 hover:border-zinc-300 hover:shadow-lg hover:shadow-zinc-900/5 transition-all duration-300 ease-out flex flex-col justify-between">
+            <div class="review-slide-card w-[82vw] max-w-[340px] sm:w-[380px] lg:w-[420px] shrink-0 bg-zinc-100/90 rounded-3xl p-6 sm:p-8 border border-zinc-200 shadow-xs hover:-translate-y-2 hover:bg-zinc-100 hover:border-zinc-300 hover:shadow-lg hover:shadow-zinc-900/5 transition-all duration-300 ease-out flex flex-col justify-between">
                 <div>
                     <!-- Top: Avatar, Name & Product Role -->
                     <div class="flex items-center gap-3.5 mb-5">
@@ -66,7 +66,7 @@
             </div>
 
             <!-- Review 2 -->
-            <div class="review-slide-card w-[300px] sm:w-[380px] lg:w-[420px] shrink-0 bg-zinc-100/90 rounded-3xl p-6 sm:p-8 border border-zinc-200 shadow-xs hover:-translate-y-2 hover:bg-zinc-100 hover:border-zinc-300 hover:shadow-lg hover:shadow-zinc-900/5 transition-all duration-300 ease-out flex flex-col justify-between">
+            <div class="review-slide-card w-[82vw] max-w-[340px] sm:w-[380px] lg:w-[420px] shrink-0 bg-zinc-100/90 rounded-3xl p-6 sm:p-8 border border-zinc-200 shadow-xs hover:-translate-y-2 hover:bg-zinc-100 hover:border-zinc-300 hover:shadow-lg hover:shadow-zinc-900/5 transition-all duration-300 ease-out flex flex-col justify-between">
                 <div>
                     <!-- Top: Avatar, Name & Product Role -->
                     <div class="flex items-center gap-3.5 mb-5">
@@ -101,7 +101,7 @@
             </div>
 
             <!-- Review 3 -->
-            <div class="review-slide-card w-[300px] sm:w-[380px] lg:w-[420px] shrink-0 bg-zinc-100/90 rounded-3xl p-6 sm:p-8 border border-zinc-200 shadow-xs hover:-translate-y-2 hover:bg-zinc-100 hover:border-zinc-300 hover:shadow-lg hover:shadow-zinc-900/5 transition-all duration-300 ease-out flex flex-col justify-between">
+            <div class="review-slide-card w-[82vw] max-w-[340px] sm:w-[380px] lg:w-[420px] shrink-0 bg-zinc-100/90 rounded-3xl p-6 sm:p-8 border border-zinc-200 shadow-xs hover:-translate-y-2 hover:bg-zinc-100 hover:border-zinc-300 hover:shadow-lg hover:shadow-zinc-900/5 transition-all duration-300 ease-out flex flex-col justify-between">
                 <div>
                     <!-- Top: Avatar, Name & Product Role -->
                     <div class="flex items-center gap-3.5 mb-5">
@@ -136,7 +136,7 @@
             </div>
 
             <!-- Review 4 -->
-            <div class="review-slide-card w-[300px] sm:w-[380px] lg:w-[420px] shrink-0 bg-zinc-100/90 rounded-3xl p-6 sm:p-8 border border-zinc-200 shadow-xs hover:-translate-y-2 hover:bg-zinc-100 hover:border-zinc-300 hover:shadow-lg hover:shadow-zinc-900/5 transition-all duration-300 ease-out flex flex-col justify-between">
+            <div class="review-slide-card w-[82vw] max-w-[340px] sm:w-[380px] lg:w-[420px] shrink-0 bg-zinc-100/90 rounded-3xl p-6 sm:p-8 border border-zinc-200 shadow-xs hover:-translate-y-2 hover:bg-zinc-100 hover:border-zinc-300 hover:shadow-lg hover:shadow-zinc-900/5 transition-all duration-300 ease-out flex flex-col justify-between">
                 <div>
                     <!-- Top: Avatar, Name & Product Role -->
                     <div class="flex items-center gap-3.5 mb-5">
@@ -171,7 +171,7 @@
             </div>
 
             <!-- Review 5 -->
-            <div class="review-slide-card w-[300px] sm:w-[380px] lg:w-[420px] shrink-0 bg-zinc-100/90 rounded-3xl p-6 sm:p-8 border border-zinc-200 shadow-xs hover:-translate-y-2 hover:bg-zinc-100 hover:border-zinc-300 hover:shadow-lg hover:shadow-zinc-900/5 transition-all duration-300 ease-out flex flex-col justify-between">
+            <div class="review-slide-card w-[82vw] max-w-[340px] sm:w-[380px] lg:w-[420px] shrink-0 bg-zinc-100/90 rounded-3xl p-6 sm:p-8 border border-zinc-200 shadow-xs hover:-translate-y-2 hover:bg-zinc-100 hover:border-zinc-300 hover:shadow-lg hover:shadow-zinc-900/5 transition-all duration-300 ease-out flex flex-col justify-between">
                 <div>
                     <!-- Top: Avatar, Name & Product Role -->
                     <div class="flex items-center gap-3.5 mb-5">
@@ -206,7 +206,7 @@
             </div>
 
             <!-- Review 6 -->
-            <div class="review-slide-card w-[300px] sm:w-[380px] lg:w-[420px] shrink-0 bg-zinc-100/90 rounded-3xl p-6 sm:p-8 border border-zinc-200 shadow-xs hover:-translate-y-2 hover:bg-zinc-100 hover:border-zinc-300 hover:shadow-lg hover:shadow-zinc-900/5 transition-all duration-300 ease-out flex flex-col justify-between">
+            <div class="review-slide-card w-[82vw] max-w-[340px] sm:w-[380px] lg:w-[420px] shrink-0 bg-zinc-100/90 rounded-3xl p-6 sm:p-8 border border-zinc-200 shadow-xs hover:-translate-y-2 hover:bg-zinc-100 hover:border-zinc-300 hover:shadow-lg hover:shadow-zinc-900/5 transition-all duration-300 ease-out flex flex-col justify-between">
                 <div>
                     <!-- Top: Avatar, Name & Product Role -->
                     <div class="flex items-center gap-3.5 mb-5">

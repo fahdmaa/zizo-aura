@@ -2,7 +2,9 @@
 <html lang="fr" class="h-full bg-[#faf9f6]">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Administration') · Zizo Aura</title>
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -149,22 +151,22 @@
     <!-- ═══════════════════════════════════════════════════════════════════════════
          BOTTOM FLOATING NAVBAR (Pill Dock with Clean Color Transitions)
          ═══════════════════════════════════════════════════════════════════════════ -->
-    <div class="fixed bottom-4 sm:bottom-6 left-0 right-0 z-40 flex justify-center px-3 pointer-events-none">
-        <nav id="admin-bottom-dock" class="pointer-events-auto relative bg-white/95 backdrop-blur-md border border-zinc-200/90 rounded-[32px] shadow-[0_12px_40px_rgba(0,0,0,0.1)] w-full max-w-xl md:max-w-2xl px-3 py-2 flex items-center justify-between">
+    <div class="fixed bottom-3 sm:bottom-6 left-0 right-0 z-40 flex justify-center px-2 sm:px-3 pointer-events-none">
+        <nav id="admin-bottom-dock" class="pointer-events-auto relative bg-white/95 backdrop-blur-md border border-zinc-200/90 rounded-[32px] shadow-[0_12px_40px_rgba(0,0,0,0.1)] w-full max-w-xl md:max-w-2xl px-1.5 sm:px-3 py-1.5 sm:py-2 flex items-center justify-between">
             
             <!-- 1. Accueil / Dashboard -->
-            <a href="#dashboard" data-view="dashboard" class="admin-dock-tab relative flex-1 flex flex-col items-center justify-center py-1 px-1 rounded-2xl group cursor-pointer text-zinc-600 hover:text-zinc-900 select-none">
+            <a href="#dashboard" data-view="dashboard" class="admin-dock-tab relative flex-1 min-w-0 flex flex-col items-center justify-center py-1 px-0.5 sm:px-1 rounded-2xl group cursor-pointer text-zinc-600 hover:text-zinc-900 select-none">
                 <div class="tab-icon text-zinc-700">
                     <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                         <polyline points="9 22 9 12 15 12 15 22"></polyline>
                     </svg>
                 </div>
-                <span class="tab-label text-[10px] sm:text-[11px] font-medium tracking-tight mt-1 transition-colors duration-200">Accueil</span>
+                <span class="tab-label text-[9.5px] sm:text-[11px] font-medium tracking-tight mt-1 transition-colors duration-200 truncate max-w-full">Accueil</span>
             </a>
 
             <!-- 2. Produits -->
-            <a href="#products" data-view="products" class="admin-dock-tab relative flex-1 flex flex-col items-center justify-center py-1 px-1 rounded-2xl group cursor-pointer text-zinc-600 hover:text-zinc-900 select-none">
+            <a href="#products" data-view="products" class="admin-dock-tab relative flex-1 min-w-0 flex flex-col items-center justify-center py-1 px-0.5 sm:px-1 rounded-2xl group cursor-pointer text-zinc-600 hover:text-zinc-900 select-none">
                 <div class="tab-icon text-zinc-700">
                     <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
@@ -172,11 +174,11 @@
                         <line x1="12" y1="22.08" x2="12" y2="12"></line>
                     </svg>
                 </div>
-                <span class="tab-label text-[10px] sm:text-[11px] font-medium tracking-tight mt-1 transition-colors duration-200">Produits</span>
+                <span class="tab-label text-[9.5px] sm:text-[11px] font-medium tracking-tight mt-1 transition-colors duration-200 truncate max-w-full">Produits</span>
             </a>
 
             <!-- 3. Catégories -->
-            <a href="#categories" data-view="categories" class="admin-dock-tab relative flex-1 flex flex-col items-center justify-center py-1 px-1 rounded-2xl group cursor-pointer text-zinc-600 hover:text-zinc-900 select-none">
+            <a href="#categories" data-view="categories" class="admin-dock-tab relative flex-1 min-w-0 flex flex-col items-center justify-center py-1 px-0.5 sm:px-1 rounded-2xl group cursor-pointer text-zinc-600 hover:text-zinc-900 select-none">
                 <div class="tab-icon text-zinc-700">
                     <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="7" height="7" rx="1.5"></rect>
@@ -185,22 +187,22 @@
                         <rect x="3" y="14" width="7" height="7" rx="1.5"></rect>
                     </svg>
                 </div>
-                <span class="tab-label text-[10px] sm:text-[11px] font-medium tracking-tight mt-1 transition-colors duration-200">Catégories</span>
+                <span class="tab-label text-[9.5px] sm:text-[11px] font-medium tracking-tight mt-1 transition-colors duration-200 truncate max-w-full">Catégories</span>
             </a>
 
             <!-- 4. Remises -->
-            <a href="#discounts" data-view="discounts" class="admin-dock-tab relative flex-1 flex flex-col items-center justify-center py-1 px-1 rounded-2xl group cursor-pointer text-zinc-600 hover:text-zinc-900 select-none">
+            <a href="#discounts" data-view="discounts" class="admin-dock-tab relative flex-1 min-w-0 flex flex-col items-center justify-center py-1 px-0.5 sm:px-1 rounded-2xl group cursor-pointer text-zinc-600 hover:text-zinc-900 select-none">
                 <div class="tab-icon text-zinc-700">
                     <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
                         <line x1="7" y1="7" x2="7.01" y2="7"></line>
                     </svg>
                 </div>
-                <span class="tab-label text-[10px] sm:text-[11px] font-medium tracking-tight mt-1 transition-colors duration-200">Remises</span>
+                <span class="tab-label text-[9.5px] sm:text-[11px] font-medium tracking-tight mt-1 transition-colors duration-200 truncate max-w-full">Remises</span>
             </a>
 
             <!-- 5. Commandes -->
-            <a href="#orders" data-view="orders" class="admin-dock-tab relative flex-1 flex flex-col items-center justify-center py-1 px-1 rounded-2xl group cursor-pointer text-zinc-600 hover:text-zinc-900 select-none">
+            <a href="#orders" data-view="orders" class="admin-dock-tab relative flex-1 min-w-0 flex flex-col items-center justify-center py-1 px-0.5 sm:px-1 rounded-2xl group cursor-pointer text-zinc-600 hover:text-zinc-900 select-none">
                 <div class="tab-icon relative text-zinc-700">
                     <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
@@ -209,18 +211,18 @@
                     </svg>
                     <span id="dock-pending-badge" class="hidden absolute -top-1 -right-2 px-1.5 py-0.2 rounded-full bg-amber-500 text-white font-black text-[9px] shadow-xs">0</span>
                 </div>
-                <span class="tab-label text-[10px] sm:text-[11px] font-medium tracking-tight mt-1 transition-colors duration-200">Commandes</span>
+                <span class="tab-label text-[9.5px] sm:text-[11px] font-medium tracking-tight mt-1 transition-colors duration-200 truncate max-w-full">Commandes</span>
             </a>
 
             <!-- 6. Messages -->
-            <a href="#messages" data-view="messages" class="admin-dock-tab relative flex-1 flex flex-col items-center justify-center py-1 px-1 rounded-2xl group cursor-pointer text-zinc-600 hover:text-zinc-900 select-none">
+            <a href="#messages" data-view="messages" class="admin-dock-tab relative flex-1 min-w-0 flex flex-col items-center justify-center py-1 px-0.5 sm:px-1 rounded-2xl group cursor-pointer text-zinc-600 hover:text-zinc-900 select-none">
                 <div class="tab-icon relative text-zinc-700 flex items-center justify-center">
                     <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
                     </svg>
                     <span id="dock-unread-badge" class="hidden absolute -top-1.5 -right-2.5 min-w-[17px] h-[17px] px-1 rounded-full bg-red-600 text-white font-black text-[9px] leading-none flex items-center justify-center shadow-xs ring-2 ring-white">0</span>
                 </div>
-                <span class="tab-label text-[10px] sm:text-[11px] font-medium tracking-tight mt-1 transition-colors duration-200">Messages</span>
+                <span class="tab-label text-[9.5px] sm:text-[11px] font-medium tracking-tight mt-1 transition-colors duration-200 truncate max-w-full">Messages</span>
             </a>
 
         </nav>

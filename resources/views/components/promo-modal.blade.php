@@ -12,7 +12,7 @@
         </button>
 
         <!-- Left Column: Attached Model Image -->
-        <div class="md:col-span-5 relative bg-amber-50 min-h-[260px] md:min-h-[380px] overflow-hidden flex items-center justify-center">
+        <div class="md:col-span-5 relative bg-amber-50 min-h-[200px] sm:min-h-[260px] md:min-h-[380px] overflow-hidden flex items-center justify-center">
             <img src="/images/popup_summer_sale.png"
                  alt="Offre Été Sol de Janeiro — zizo aura"
                  class="w-full h-full object-cover object-center select-none" />

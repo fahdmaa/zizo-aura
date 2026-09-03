@@ -196,10 +196,10 @@
 
                 <!-- Quantity Selector + Add to Cart Row (Compact & Clean) -->
                 <div class="space-y-4 mb-8">
-                    <div class="flex items-center gap-3">
+                    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                         
                         <!-- Number of Units Wanted Pill (Compact with no browser spinners) -->
-                        <div class="flex items-center justify-between bg-[#f8f9fa] border border-zinc-200 rounded-full px-1.5 py-1 h-11 w-28 shrink-0 shadow-2xs">
+                        <div class="flex items-center justify-between bg-[#f8f9fa] border border-zinc-200 rounded-full px-2 py-1 h-11 w-full sm:w-28 shrink-0 shadow-2xs">
                             <button type="button"
                                     id="qty-minus-btn"
                                     aria-label="Diminuer la quantité"
@@ -207,7 +207,7 @@
                                 <i class="ti ti-minus text-xs font-bold"></i>
                             </button>
 
-                            <span id="product-quantity-display" class="w-6 text-center font-extrabold text-sm text-zinc-900 select-none">
+                            <span id="product-quantity-display" class="w-8 sm:w-6 text-center font-extrabold text-sm text-zinc-900 select-none">
                                 1
                             </span>
                             <input type="hidden" id="product-quantity-input" name="quantity" value="1" />
@@ -223,7 +223,7 @@
                         <!-- Compact Add to Cart Button -->
                         <button id="product-add-cart-btn"
                                 type="button"
-                                class="btn-card-pill h-11 px-5 sm:px-6 py-2 text-xs sm:text-sm font-extrabold uppercase tracking-wider flex items-center justify-center gap-2 shadow-sm"
+                                class="btn-card-pill h-11 px-5 sm:px-6 py-2 text-xs sm:text-sm font-extrabold uppercase tracking-wider flex-1 flex items-center justify-center gap-2 shadow-sm"
                                 data-product-name="{{ $product['name'] }}"
                                 data-unit-price="{{ $product['raw_price'] ?? $product['price'] }}"
                                 data-product-price="{{ $product['price'] }}"
@@ -373,6 +373,28 @@
         @endif
 
     </div>
+</div>
+
+<!-- Mobile Sticky Purchase Bottom Bar (High Conversion Mobile Element) -->
+<div id="mobile-sticky-buy-bar" class="fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur-md border-t border-zinc-200/80 p-3 z-40 sm:hidden shadow-[0_-8px_30px_rgba(0,0,0,0.08)] transform translate-y-full transition-transform duration-300 ease-out flex items-center justify-between gap-3 pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))]">
+    <div class="flex items-center gap-2.5 min-w-0">
+        <img src="{{ $product['image'] }}" alt="{{ $product['name'] }}" class="w-10 h-10 rounded-xl bg-zinc-50 border border-zinc-100 object-contain p-0.5 shrink-0" />
+        <div class="truncate">
+            <h4 class="text-xs font-bold text-zinc-900 truncate leading-tight">{{ $product['name'] }}</h4>
+            <div class="flex items-center gap-1.5 mt-0.5">
+                <span class="text-xs font-black text-pink-600">{{ $product['price'] }} DH</span>
+                @if(!empty($product['discount']) && !empty($product['original_price']) && $product['original_price'] !== $product['price'])
+                    <span class="text-[10px] font-bold text-zinc-400 line-through">{{ $product['original_price'] }} DH</span>
+                @endif
+            </div>
+        </div>
+    </div>
+    <button type="button"
+            id="mobile-sticky-add-btn"
+            class="btn-card-pill py-2.5 px-4 text-xs font-extrabold uppercase tracking-wider shrink-0 shadow-sm">
+        <i class="ti ti-shopping-bag-plus text-sm"></i>
+        <span>Ajouter</span>
+    </button>
 </div>
 
 <!-- Full-Screen High-Res Lightbox Visualizer Modal -->

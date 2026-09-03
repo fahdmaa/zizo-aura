@@ -103,7 +103,7 @@
                 </form>
 
                 <!-- Floating Suggestions Box -->
-                <div id="navbar-suggestions-box" class="absolute right-0 top-full mt-2.5 w-72 sm:w-80 bg-white/95 backdrop-blur-md rounded-2xl shadow-[0_20px_45px_rgba(0,0,0,0.12)] border border-zinc-100 p-2 hidden z-50">
+                <div id="navbar-suggestions-box" class="absolute right-0 top-full mt-2.5 w-72 sm:w-80 max-w-[calc(100vw-2rem)] bg-white/95 backdrop-blur-md rounded-2xl shadow-[0_20px_45px_rgba(0,0,0,0.12)] border border-zinc-100 p-2 hidden z-50">
                     <div id="navbar-results-list" class="divide-y divide-zinc-100 max-h-[340px] overflow-y-auto">
                         <!-- Live suggestions injected here via JS -->
                     </div>
@@ -156,17 +156,17 @@
                     <div class="rounded-2xl {{ request()->routeIs('shop.*') ? 'bg-zinc-50/80' : '' }}">
                         <button type="button"
                                 id="mobile-boutique-toggle"
-                                aria-expanded="false"
+                                aria-expanded="{{ request()->routeIs('shop.*') ? 'true' : 'false' }}"
                                 aria-controls="mobile-boutique-sublinks"
                                 class="w-full flex items-center justify-between px-4 py-3 text-xs font-extrabold uppercase tracking-wider text-zinc-900 hover:text-pink-600 transition-colors cursor-pointer">
                             <span class="flex items-center gap-2">
                                 <span>Boutique</span>
                                 <span class="px-1.5 py-0.5 rounded-full bg-pink-100 text-pink-600 text-[10px] font-black">16</span>
                             </span>
-                            <i id="mobile-boutique-chevron" class="ti ti-chevron-down text-xs transition-transform duration-200"></i>
+                            <i id="mobile-boutique-chevron" class="ti ti-chevron-down text-xs transition-transform duration-200 {{ request()->routeIs('shop.*') ? 'rotate-180' : '' }}"></i>
                         </button>
 
-                        <div id="mobile-boutique-sublinks" class="space-y-1 px-3 pb-2">
+                        <div id="mobile-boutique-sublinks" class="{{ request()->routeIs('shop.*') ? '' : 'hidden' }} space-y-1 px-3 pb-2">
                             <a href="{{ route('shop.index') }}" class="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-bold text-zinc-700 hover:text-pink-600 hover:bg-pink-50/60 transition-colors">
                                 <span>Tous les packs &amp; produits</span>
                                 <i class="ti ti-chevron-right text-xs text-pink-600"></i>

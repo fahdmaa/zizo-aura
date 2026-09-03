@@ -67,10 +67,10 @@
         </div>
 
         <!-- Category Filter Pills Bar -->
-        <div class="flex items-center gap-2 overflow-x-auto pb-4 mb-6 no-scrollbar">
+        <div class="flex items-center gap-2 overflow-x-auto pb-4 mb-6 no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0 scroll-smooth">
             @foreach($categories as $cat)
                 <a href="{{ route('shop.index', array_filter(['category' => $cat['slug'], 'sort' => $sortBy, 'q' => $searchQuery ?? null])) }}"
-                   class="px-5 py-2 rounded-full text-xs font-extrabold uppercase tracking-wider whitespace-nowrap transition-all duration-200 {{ $selectedCategory === $cat['slug'] ? 'bg-black text-white shadow-md' : 'bg-zinc-100 text-zinc-700 hover:bg-zinc-200' }}">
+                   class="px-5 py-2 rounded-full text-xs font-extrabold uppercase tracking-wider whitespace-nowrap transition-all duration-200 shrink-0 {{ $selectedCategory === $cat['slug'] ? 'bg-black text-white shadow-md' : 'bg-zinc-100 text-zinc-700 hover:bg-zinc-200 active:scale-95' }}">
                     {{ $cat['name'] }}
                 </a>
             @endforeach
@@ -102,9 +102,9 @@
         @endif
 
         <!-- 4-Column Product Catalog Grid -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             @forelse($products as $product)
-                <div class="product-card reveal-on-scroll group flex flex-col bg-white rounded-2xl p-3 sm:p-4 border border-zinc-100 shadow-[0_2px_10px_rgba(0,0,0,0.03)] hover:shadow-[0_12px_30px_rgba(0,0,0,0.08)] transition-all duration-300"
+                <div class="product-card reveal-on-scroll group flex flex-col bg-white rounded-2xl p-3.5 sm:p-4 border border-zinc-100 shadow-[0_2px_10px_rgba(0,0,0,0.03)] hover:shadow-[0_12px_30px_rgba(0,0,0,0.08)] transition-all duration-300"
                      style="transition-delay: {{ ($loop->index % 4) * 80 }}ms;">
                     
                     <!-- Product Image Box linking to Product Subpage -->
