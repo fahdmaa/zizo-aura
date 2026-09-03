@@ -58,7 +58,7 @@
             </div>
 
             <a href="{{ route('contact') }}" class="hover:text-pink-600 transition-colors {{ request()->routeIs('contact') ? 'text-pink-600' : '' }}">
-                <span>CONTACT</span>
+                <span>CONTACTEZ-NOUS</span>
             </a>
         </nav>
 
