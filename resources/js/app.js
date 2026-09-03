@@ -1396,6 +1396,238 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // =========================================================================
+    // 25. 4-Picture Hero 3D Carousel & Ambient Aura Controller
+    // =========================================================================
+    const initHeroCarousel = () => {
+        const heroSection = document.getElementById('hero-carousel-section');
+        const stage = document.getElementById('heroCarouselStage');
+        const track = document.getElementById('heroCarouselTrack');
+        if (!heroSection || !stage || !track) return;
+
+        const slides = Array.from(heroSection.querySelectorAll('.hero-slide'));
+        const brandTabs = Array.from(heroSection.querySelectorAll('.hero-brand-tab'));
+        const prevBtn = document.getElementById('heroPrevBtn');
+        const nextBtn = document.getElementById('heroNextBtn');
+        const autoplayToggle = document.getElementById('heroAutoplayToggle');
+        const counterCurrent = document.getElementById('heroCounterCurrent');
+
+        if (slides.length === 0) return;
+
+        const HERO_SLIDES = [
+            { id: 'sol-de-janeiro', num: '01', name: 'Sol de Janeiro' },
+            { id: 'rituals', num: '02', name: 'Rituals' },
+            { id: 'victoria-secret', num: '03', name: "Victoria's Secret" },
+            { id: 'ordinary', num: '04', name: 'The Ordinary' }
+        ];
+
+        const TOTAL = slides.length;
+        const AUTOPLAY_DURATION = 5500; // ms
+        const PROGRESS_TICK = 50; // ms
+
+        let currentIndex = 0;
+        let isTransitioning = false;
+        let progressTimer = null;
+        let elapsed = 0;
+        let isPaused = false;
+        let isHovered = false;
+
+        let startX = 0;
+        let currentX = 0;
+        let isDragging = false;
+
+        const setSlide = (newIndex, { instant = false } = {}) => {
+            newIndex = ((newIndex % TOTAL) + TOTAL) % TOTAL;
+            if (newIndex === currentIndex && !instant) return;
+            if (isTransitioning) return;
+
+            isTransitioning = true;
+            currentIndex = newIndex;
+            const currentItem = HERO_SLIDES[currentIndex] || { id: 'sol-de-janeiro', num: `0${currentIndex + 1}` };
+
+            // 1. Update Ambient Aura Dataset
+            heroSection.dataset.heroBrand = currentItem.id;
+
+            // 2. Update Counter
+            if (counterCurrent) {
+                counterCurrent.textContent = currentItem.num;
+            }
+
+            // 3. Update 3D spatial slide classes
+            slides.forEach((slide, idx) => {
+                slide.classList.remove('is-active', 'is-prev', 'is-next', 'is-hidden-left', 'is-hidden-right');
+                const diff = (idx - currentIndex + TOTAL) % TOTAL;
+
+                if (diff === 0) {
+                    slide.classList.add('is-active');
+                    slide.setAttribute('aria-hidden', 'false');
+                } else if (diff === 1) {
+                    slide.classList.add('is-next');
+                    slide.setAttribute('aria-hidden', 'true');
+                } else if (diff === TOTAL - 1) {
+                    slide.classList.add('is-prev');
+                    slide.setAttribute('aria-hidden', 'true');
+                } else if (diff < TOTAL / 2) {
+                    slide.classList.add('is-hidden-right');
+                    slide.setAttribute('aria-hidden', 'true');
+                } else {
+                    slide.classList.add('is-hidden-left');
+                    slide.setAttribute('aria-hidden', 'true');
+                }
+            });
+
+            // 4. Update Brand Selection Tabs
+            brandTabs.forEach((tab, idx) => {
+                const isActive = idx === currentIndex;
+                tab.classList.toggle('is-active', isActive);
+                tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
+                const bar = tab.querySelector('.hero-tab-progress');
+                if (bar) {
+                    bar.style.width = idx < currentIndex ? '100%' : '0%';
+                }
+            });
+
+            // 5. Reset progress timer
+            elapsed = 0;
+
+            setTimeout(() => {
+                isTransitioning = false;
+            }, 450);
+        };
+
+        const startAutoplay = () => {
+            stopAutoplay();
+            if (isPaused) return;
+
+            progressTimer = setInterval(() => {
+                if (isHovered || isDragging) return;
+
+                elapsed += PROGRESS_TICK;
+                const progressPercent = Math.min((elapsed / AUTOPLAY_DURATION) * 100, 100);
+
+                const activeTab = brandTabs[currentIndex];
+                const activeBar = activeTab?.querySelector('.hero-tab-progress');
+                if (activeBar) {
+                    activeBar.style.width = `${progressPercent}%`;
+                }
+
+                if (elapsed >= AUTOPLAY_DURATION) {
+                    elapsed = 0;
+                    setSlide(currentIndex + 1);
+                }
+            }, PROGRESS_TICK);
+        };
+
+        const stopAutoplay = () => {
+            if (progressTimer) {
+                clearInterval(progressTimer);
+                progressTimer = null;
+            }
+        };
+
+        // Event Listeners: Navigation Arrows
+        if (prevBtn) {
+            prevBtn.addEventListener('click', () => setSlide(currentIndex - 1));
+        }
+        if (nextBtn) {
+            nextBtn.addEventListener('click', () => setSlide(currentIndex + 1));
+        }
+
+        // Direct Click on Slides
+        slides.forEach((slide) => {
+            slide.addEventListener('click', () => {
+                if (slide.classList.contains('is-prev')) {
+                    setSlide(currentIndex - 1);
+                } else if (slide.classList.contains('is-next')) {
+                    setSlide(currentIndex + 1);
+                }
+            });
+        });
+
+        // Direct Click on Brand Tabs
+        brandTabs.forEach((tab) => {
+            tab.addEventListener('click', () => {
+                const target = parseInt(tab.dataset.slideTarget, 10);
+                if (!isNaN(target)) {
+                    setSlide(target);
+                }
+            });
+        });
+
+        // Autoplay Toggle Button
+        if (autoplayToggle) {
+            autoplayToggle.addEventListener('click', () => {
+                isPaused = !isPaused;
+                autoplayToggle.classList.toggle('is-paused', isPaused);
+                if (isPaused) {
+                    stopAutoplay();
+                } else {
+                    startAutoplay();
+                }
+            });
+        }
+
+        // Pause on Hover
+        stage.addEventListener('mouseenter', () => {
+            isHovered = true;
+        });
+        stage.addEventListener('mouseleave', () => {
+            isHovered = false;
+        });
+
+        // Touch & Drag Gestures
+        const handleDragStart = (e) => {
+            startX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+            currentX = startX;
+            isDragging = true;
+        };
+
+        const handleDragMove = (e) => {
+            if (!isDragging) return;
+            currentX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+        };
+
+        const handleDragEnd = () => {
+            if (!isDragging) return;
+            isDragging = false;
+            const deltaX = currentX - startX;
+            if (deltaX > 50) {
+                setSlide(currentIndex - 1);
+            } else if (deltaX < -50) {
+                setSlide(currentIndex + 1);
+            }
+        };
+
+        track.addEventListener('touchstart', handleDragStart, { passive: true });
+        track.addEventListener('touchmove', handleDragMove, { passive: true });
+        track.addEventListener('touchend', handleDragEnd);
+
+        track.addEventListener('mousedown', handleDragStart);
+        window.addEventListener('mousemove', handleDragMove);
+        window.addEventListener('mouseup', handleDragEnd);
+
+        // Keyboard Navigation
+        window.addEventListener('keydown', (e) => {
+            const rect = heroSection.getBoundingClientRect();
+            const isInView = rect.top < window.innerHeight && rect.bottom > 0;
+            if (!isInView) return;
+
+            if (e.key === 'ArrowLeft') {
+                setSlide(currentIndex - 1);
+            } else if (e.key === 'ArrowRight') {
+                setSlide(currentIndex + 1);
+            }
+        });
+
+        // Hash-based Initial Slide
+        const hash = (location.hash || '').replace(/^#/, '').toLowerCase();
+        const initialIdx = HERO_SLIDES.findIndex(s => s.id === hash);
+        setSlide(initialIdx >= 0 ? initialIdx : 0, { instant: true });
+        startAutoplay();
+    };
+
+    initHeroCarousel();
+
     // Initial render of cart badges on page load
     renderCartUI();
 });
