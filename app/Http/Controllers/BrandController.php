@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Review;
 use Illuminate\Http\Request;
 
 class BrandController extends Controller
@@ -20,9 +21,13 @@ class BrandController extends Controller
 
         $top8Discounts = array_slice($discountProducts, 0, 8);
 
+        // Visible reviews
+        $reviews = Review::visible()->orderBy('sort_order', 'asc')->orderBy('created_at', 'desc')->get();
+
         return view('brand', [
             'top8Discounts' => $top8Discounts,
             'products' => $top8Discounts,
+            'reviews' => $reviews,
         ]);
     }
 }

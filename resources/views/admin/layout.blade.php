@@ -201,6 +201,16 @@
                 <span class="tab-label text-[9.5px] sm:text-[11px] font-medium tracking-tight mt-1 transition-colors duration-200 truncate max-w-full">Remises</span>
             </a>
 
+            <!-- 5. Avis -->
+            <a href="#reviews" data-view="reviews" class="admin-dock-tab relative flex-1 min-w-0 flex flex-col items-center justify-center py-1 px-0.5 sm:px-1 rounded-2xl group cursor-pointer text-zinc-600 hover:text-zinc-900 select-none">
+                <div class="tab-icon text-zinc-700">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                    </svg>
+                </div>
+                <span class="tab-label text-[9.5px] sm:text-[11px] font-medium tracking-tight mt-1 transition-colors duration-200 truncate max-w-full">Avis</span>
+            </a>
+
             <!-- 5. Commandes -->
             <a href="#orders" data-view="orders" class="admin-dock-tab relative flex-1 min-w-0 flex flex-col items-center justify-center py-1 px-0.5 sm:px-1 rounded-2xl group cursor-pointer text-zinc-600 hover:text-zinc-900 select-none">
                 <div class="tab-icon relative text-zinc-700">

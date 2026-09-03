@@ -10,5 +10,5 @@
     <x-delivery-process />
 
     <!-- Customer Feedback & Reviews -->
-    <x-customer-reviews />
+    <x-customer-reviews :reviews="$reviews ?? null" />
 @endsection

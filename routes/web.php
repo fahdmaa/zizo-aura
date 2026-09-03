@@ -174,4 +174,10 @@ Route::prefix('api/admin')->middleware('admin.auth')->group(function () {
     Route::get('/messages', [AdminApiController::class, 'messages']);
     Route::patch('/messages/{contactMessage}/read', [AdminApiController::class, 'markMessageRead']);
     Route::delete('/messages/{contactMessage}', [AdminApiController::class, 'deleteMessage']);
+    Route::get('/reviews', [AdminApiController::class, 'reviews']);
+    Route::post('/reviews', [AdminApiController::class, 'storeReview']);
+    Route::get('/reviews/{review}', [AdminApiController::class, 'review']);
+    Route::put('/reviews/{review}', [AdminApiController::class, 'updateReview']);
+    Route::post('/reviews/{review}/toggle', [AdminApiController::class, 'toggleReview']);
+    Route::delete('/reviews/{review}', [AdminApiController::class, 'deleteReview']);
 });

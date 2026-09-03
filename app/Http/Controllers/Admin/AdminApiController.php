@@ -8,6 +8,7 @@ use App\Models\ContactMessage;
 use App\Models\Coupon;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\Review;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -25,6 +26,8 @@ class AdminApiController extends Controller
                 'revenue' => (float) Order::whereNotIn('status', ['cancelled'])->sum('total'),
                 'active_coupons' => Coupon::where('is_active', true)->count(),
                 'unread_messages' => ContactMessage::where('is_read', false)->count(),
+                'total_reviews' => Review::count(),
+                'visible_reviews' => Review::where('is_visible', true)->count(),
             ],
             'recent_orders' => Order::with('items')->latest()->limit(5)->get(),
         ]);
@@ -224,6 +227,81 @@ class AdminApiController extends Controller
         return response()->json([
             'success' => true,
             'unread_messages' => ContactMessage::where('is_read', false)->count(),
+        ]);
+    }
+
+    public function reviews(Request $request): JsonResponse
+    {
+        $query = Review::query();
+
+        if ($request->filled('search')) {
+            $search = $request->string('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('author_name', 'ilike', "%{$search}%")
+                  ->orWhere('author_role', 'ilike', "%{$search}%")
+                  ->orWhere('comment', 'ilike', "%{$search}%");
+            });
+        }
+
+        if ($request->input('status') === 'visible') {
+            $query->where('is_visible', true);
+        } elseif ($request->input('status') === 'hidden') {
+            $query->where('is_visible', false);
+        }
+
+        $reviews = $query->orderBy('sort_order', 'asc')->orderBy('created_at', 'desc')->get();
+        return response()->json($reviews);
+    }
+
+    public function review(Review $review): JsonResponse
+    {
+        return response()->json($review);
+    }
+
+    public function storeReview(Request $request): JsonResponse
+    {
+        $data = $this->reviewData($request);
+        if (!empty($data['avatar'])) {
+            $data['avatar'] = \App\Services\ImageOptimizer::optimizeBase64($data['avatar'], 400, 85);
+        }
+        $review = Review::create($data);
+        return response()->json($review, 201);
+    }
+
+    public function updateReview(Request $request, Review $review): JsonResponse
+    {
+        $data = $this->reviewData($request, $review->id);
+        if (!empty($data['avatar'])) {
+            $data['avatar'] = \App\Services\ImageOptimizer::optimizeBase64($data['avatar'], 400, 85);
+        }
+        $review->update($data);
+        return response()->json($review->fresh());
+    }
+
+    public function toggleReview(Review $review): JsonResponse
+    {
+        $review->update(['is_visible' => ! $review->is_visible]);
+        return response()->json($review->fresh());
+    }
+
+    public function deleteReview(Review $review): JsonResponse
+    {
+        $review->delete();
+        return response()->json([], 204);
+    }
+
+    private function reviewData(Request $request, ?int $id = null): array
+    {
+        return $request->validate([
+            'author_name' => 'required|string|max:255',
+            'author_role' => 'nullable|string|max:255',
+            'rating' => 'required|integer|min:1|max:5',
+            'comment' => 'required|string|max:2000',
+            'avatar' => 'nullable|string',
+            'badge' => 'nullable|string|max:100',
+            'ring_color' => 'nullable|string|max:50',
+            'is_visible' => 'boolean',
+            'sort_order' => 'integer',
         ]);
     }
 
