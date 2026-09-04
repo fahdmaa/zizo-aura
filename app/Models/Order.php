@@ -62,6 +62,30 @@ class Order extends Model
         };
     }
 
+    public function getOrderNumberAttribute(): string
+    {
+        return 'CMD-' . str_pad((string) $this->id, 5, '0', STR_PAD_LEFT);
+    }
+
+    public function getWhatsappPhoneAttribute(): string
+    {
+        $digits = preg_replace('/[^0-9]/', '', (string) $this->customer_phone);
+        if (str_starts_with($digits, '0')) {
+            return '212' . substr($digits, 1);
+        }
+        return $digits;
+    }
+
+    public function getWhatsappUrlAttribute(): string
+    {
+        $phone = $this->whatsapp_phone;
+        if (empty($phone)) {
+            return '#';
+        }
+        $msg = "Bonjour {$this->customer_name}, concernant votre commande {$this->order_number} sur Zizo Aura :";
+        return 'https://wa.me/' . $phone . '?text=' . rawurlencode($msg);
+    }
+
     public function getStatusColorAttribute(): string
     {
         return match ($this->status) {

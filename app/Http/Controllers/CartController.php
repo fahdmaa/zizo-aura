@@ -65,6 +65,16 @@ class CartController extends Controller
         return response()->json($this->summary($request));
     }
 
+    public static function getFallbackCoupons(): array
+    {
+        return [
+            'SUMMER20' => ['type' => 'percent', 'value' => 20, 'min_order' => 0],
+            'WELCOME10' => ['type' => 'percent', 'value' => 10, 'min_order' => 0],
+            'RIO35' => ['type' => 'percent', 'value' => 35, 'min_order' => 300],
+            'ZIZO10' => ['type' => 'percent', 'value' => 10, 'min_order' => 0],
+        ];
+    }
+
     public function coupon(Request $request): JsonResponse
     {
         $data = $request->validate(['code' => ['required', 'string', 'max:50']]);
@@ -74,6 +84,21 @@ class CartController extends Controller
         $coupon = Coupon::whereRaw('upper(code) = ?', [$code])->first();
 
         if (! $coupon) {
+            $fallbacks = self::getFallbackCoupons();
+            if (isset($fallbacks[$code])) {
+                $fb = $fallbacks[$code];
+                if ($subtotal > 0 && $subtotal < $fb['min_order']) {
+                    return response()->json([
+                        'message' => 'Montant minimum d\'achat de ' . $fb['min_order'] . ' DH requis.',
+                    ], 422);
+                }
+                $discount = $fb['type'] === 'percent' ? round($subtotal * $fb['value'] / 100, 2) : min($fb['value'], $subtotal);
+                $summary['discount_amount'] = $discount;
+                $summary['coupon'] = $code;
+                $summary['total'] = max(0, round($subtotal + $summary['shipping_cost'] - $discount, 2));
+                return response()->json($summary);
+            }
+
             return response()->json(['message' => 'Code promo invalide.'], 422);
         }
 
@@ -96,6 +121,76 @@ class CartController extends Controller
         }
 
         return response()->json($this->summary($request, $coupon));
+    }
+
+    public function validateCoupon(Request $request): JsonResponse
+    {
+        $data = $request->validate([
+            'code' => ['required', 'string', 'max:50'],
+            'subtotal' => ['nullable', 'numeric', 'min:0'],
+        ]);
+
+        $code = mb_strtoupper(trim($data['code']));
+        $subtotal = (float) ($data['subtotal'] ?? 0);
+
+        $coupon = Coupon::whereRaw('upper(code) = ?', [$code])->first();
+
+        if (! $coupon) {
+            $fallbacks = self::getFallbackCoupons();
+
+            if (isset($fallbacks[$code])) {
+                $fb = $fallbacks[$code];
+                if ($subtotal > 0 && $subtotal < $fb['min_order']) {
+                    return response()->json([
+                        'valid' => false,
+                        'message' => 'Montant minimum d\'achat de ' . $fb['min_order'] . ' DH requis.',
+                    ], 422);
+                }
+                $discount = $fb['type'] === 'percent' ? round($subtotal * $fb['value'] / 100, 2) : min($fb['value'], $subtotal);
+                return response()->json([
+                    'valid' => true,
+                    'code' => $code,
+                    'type' => $fb['type'],
+                    'value' => (float) $fb['value'],
+                    'label' => $fb['type'] === 'percent' ? '-' . (int) $fb['value'] . '%' : '-' . (int) $fb['value'] . ' DH',
+                    'discount_amount' => $discount,
+                    'message' => 'Code promo ' . $code . ' appliqué avec succès !',
+                ]);
+            }
+
+            return response()->json(['valid' => false, 'message' => 'Code promo invalide.'], 422);
+        }
+
+        if (! $coupon->is_active) {
+            return response()->json(['valid' => false, 'message' => 'Ce code promo est inactif.'], 422);
+        }
+
+        if ($coupon->isExpired()) {
+            return response()->json(['valid' => false, 'message' => 'Ce code promo a expiré.'], 422);
+        }
+
+        if ($coupon->isExhausted()) {
+            return response()->json(['valid' => false, 'message' => 'Ce code promo a atteint sa limite d\'utilisation.'], 422);
+        }
+
+        if ($subtotal > 0 && $subtotal < (float) $coupon->min_order_amount) {
+            return response()->json([
+                'valid' => false,
+                'message' => 'Montant minimum d\'achat de ' . (int) $coupon->min_order_amount . ' DH requis.',
+            ], 422);
+        }
+
+        $discount = $subtotal > 0 ? $coupon->calculateDiscount($subtotal) : 0;
+
+        return response()->json([
+            'valid' => true,
+            'code' => $coupon->code,
+            'type' => $coupon->type,
+            'value' => (float) $coupon->value,
+            'label' => $coupon->type === 'percent' ? '-' . (int) $coupon->value . '%' : '-' . (int) $coupon->value . ' DH',
+            'discount_amount' => $discount,
+            'message' => 'Code promo ' . $coupon->code . ' appliqué avec succès !',
+        ]);
     }
 
     private function ensureOwner(Request $request, CartItem $cartItem): void

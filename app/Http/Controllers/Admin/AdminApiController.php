@@ -206,12 +206,14 @@ class AdminApiController extends Controller
         if ($request->filled('search')) {
             $term = trim((string) $request->string('search'));
             $like = DB::getDriverName() === 'pgsql' ? 'ilike' : 'like';
-            $query->where(function ($q) use ($term, $like) {
+            $num = preg_replace('/[^0-9]/', '', $term);
+            $query->where(function ($q) use ($term, $like, $num) {
                 $q->where('customer_name', $like, '%'.$term.'%')
-                  ->orWhere('customer_phone', 'like', '%'.$term.'%');
+                  ->orWhere('customer_phone', 'like', '%'.$term.'%')
+                  ->orWhere('city', $like, '%'.$term.'%');
 
-                if (is_numeric($term)) {
-                    $q->orWhere('id', (int) $term);
+                if ($num !== '') {
+                    $q->orWhere('id', (int) $num);
                 }
             });
         }

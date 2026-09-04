@@ -54,7 +54,7 @@
                     @endif
                 </div>
                 <div style="margin-top: 12px;">
-                    <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $order->customer_phone) }}" class="cta-btn" target="_blank">
+                    <a href="{{ $order->whatsapp_url }}" class="cta-btn" target="_blank">
                         Contacter le client sur WhatsApp &rarr;
                     </a>
                 </div>

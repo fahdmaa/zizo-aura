@@ -348,5 +348,64 @@ class CommerceApiTest extends TestCase
 
         \Illuminate\Support\Facades\Mail::assertSent(\App\Mail\OrderReceived::class);
     }
+
+    public function test_coupon_validate_endpoint_handles_fallback_and_db_coupons(): void
+    {
+        // Fallback coupon
+        $res = $this->postJson('/api/coupon/validate', [
+            'code' => 'SUMMER20',
+            'subtotal' => 200,
+        ]);
+        $res->assertOk()
+            ->assertJsonPath('valid', true)
+            ->assertJsonPath('discount_amount', 40);
+
+        // Database coupon
+        Coupon::create([
+            'code' => 'CUSTOM50',
+            'type' => 'fixed',
+            'value' => 50,
+            'min_order_amount' => 100,
+            'is_active' => true,
+        ]);
+
+        $resDb = $this->postJson('/api/coupon/validate', [
+            'code' => 'CUSTOM50',
+            'subtotal' => 200,
+        ]);
+        $resDb->assertOk()
+            ->assertJsonPath('valid', true)
+            ->assertJsonPath('discount_amount', 50);
+    }
+
+    public function test_order_whatsapp_attributes_and_admin_cmd_search(): void
+    {
+        $order = Order::create([
+            'customer_name' => 'Fatima Zahra',
+            'customer_phone' => '0661998877',
+            'shipping_address' => '12 Rue Zerktouni',
+            'city' => 'Casablanca',
+            'subtotal' => 300,
+            'total' => 335,
+            'status' => 'pending',
+        ]);
+
+        $this->assertSame('212661998877', $order->whatsapp_phone);
+        $this->assertStringContainsString('https://wa.me/212661998877', $order->whatsapp_url);
+        $this->assertStringContainsString('CMD-', $order->order_number);
+
+        // Search by CMD prefix
+        $searchRes = $this->withSession(['admin_authenticated' => true])
+            ->getJson('/api/admin/orders?search=CMD-' . str_pad((string) $order->id, 5, '0', STR_PAD_LEFT));
+        $searchRes->assertOk();
+        $this->assertCount(1, $searchRes->json('data'));
+        $this->assertSame($order->id, $searchRes->json('data.0.id'));
+    }
+
+    public function test_shop_category_route_alias(): void
+    {
+        $res = $this->get('/shop/victorias-secret');
+        $res->assertOk();
+    }
 }
 
