@@ -405,6 +405,7 @@
         messagesFilter: { page: 1, filter: 'all' },
         reviewsData: null,
         reviewsFilter: { search: '', status: '' },
+        reviewsViewMode: localStorage.getItem('admin_reviews_view_mode') || 'cards',
         unreadMessagesCount: 0,
         pendingOrdersCount: 0,
     };
@@ -3722,7 +3723,31 @@
                             <h1 class="text-2xl font-black text-zinc-900 tracking-tight">Avis & Témoignages Clients</h1>
                             <p class="text-xs text-zinc-400 font-medium">Gérez les avis affichés en temps réel sur le storefront et personnalisez leur visibilité</p>
                         </div>
-                        <div class="flex items-center gap-2">
+                        <div class="flex items-center gap-2.5 flex-wrap sm:flex-nowrap">
+                            <!-- Card / List View Switcher -->
+                            <div class="inline-flex items-center bg-zinc-100/90 p-1 rounded-2xl shrink-0 border border-zinc-200/50">
+                                <button type="button" id="reviews-view-cards-btn" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${appState.reviewsViewMode === 'cards' ? 'bg-white text-zinc-900 shadow-xs' : 'text-zinc-500 hover:text-zinc-900'}" title="Vue Grille / Cartes">
+                                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="3" y="3" width="7" height="7" rx="1.5"></rect>
+                                        <rect x="14" y="3" width="7" height="7" rx="1.5"></rect>
+                                        <rect x="14" y="14" width="7" height="7" rx="1.5"></rect>
+                                        <rect x="3" y="14" width="7" height="7" rx="1.5"></rect>
+                                    </svg>
+                                    <span>Cartes</span>
+                                </button>
+                                <button type="button" id="reviews-view-list-btn" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${appState.reviewsViewMode === 'list' ? 'bg-white text-zinc-900 shadow-xs' : 'text-zinc-500 hover:text-zinc-900'}" title="Vue Tableau / Liste">
+                                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <line x1="8" y1="6" x2="21" y2="6"></line>
+                                        <line x1="8" y1="12" x2="21" y2="12"></line>
+                                        <line x1="8" y1="18" x2="21" y2="18"></line>
+                                        <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                                        <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                                        <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                                    </svg>
+                                    <span>Liste</span>
+                                </button>
+                            </div>
+
                             <button type="button" id="btn-create-review" class="btn-pill-primary btn-pill-sm shrink-0 cursor-pointer">
                                 <i class="ti ti-plus text-sm"></i>
                                 <span>Ajouter un avis</span>
@@ -3899,6 +3924,30 @@
                 this.renderReviews();
             });
 
+            // View mode switchers wiring
+            const viewCardsBtn = document.getElementById('reviews-view-cards-btn');
+            const viewListBtn = document.getElementById('reviews-view-list-btn');
+
+            const setViewMode = (mode) => {
+                appState.reviewsViewMode = mode;
+                localStorage.setItem('admin_reviews_view_mode', mode);
+                if (mode === 'cards') {
+                    viewCardsBtn?.classList.remove('text-zinc-500', 'hover:text-zinc-900');
+                    viewCardsBtn?.classList.add('bg-white', 'text-zinc-900', 'shadow-xs');
+                    viewListBtn?.classList.remove('bg-white', 'text-zinc-900', 'shadow-xs');
+                    viewListBtn?.classList.add('text-zinc-500', 'hover:text-zinc-900');
+                } else {
+                    viewListBtn?.classList.remove('text-zinc-500', 'hover:text-zinc-900');
+                    viewListBtn?.classList.add('bg-white', 'text-zinc-900', 'shadow-xs');
+                    viewCardsBtn?.classList.remove('bg-white', 'text-zinc-900', 'shadow-xs');
+                    viewCardsBtn?.classList.add('text-zinc-500', 'hover:text-zinc-900');
+                }
+                this.loadReviewsList();
+            };
+
+            viewCardsBtn?.addEventListener('click', () => setViewMode('cards'));
+            viewListBtn?.addEventListener('click', () => setViewMode('list'));
+
             document.getElementById('btn-create-review')?.addEventListener('click', () => {
                 this.openReviewEditor(null);
             });
@@ -3961,86 +4010,180 @@
                     indigo: 'ring-indigo-500/30 bg-indigo-50',
                 };
 
-                box.innerHTML = `
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        ${reviews.map(r => {
-                            const ringStyle = ringClasses[r.ring_color] || ringClasses.pink;
-                            const ratingNum = parseInt(r.rating, 10) || 5;
-                            const avatarSrc = r.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(r.author_name)}&background=ff1b7a&color=fff&size=128`;
+                const isListView = appState.reviewsViewMode === 'list';
 
-                            let starsHtml = '';
-                            for (let i = 1; i <= 5; i++) {
-                                if (i <= ratingNum) {
-                                    starsHtml += '<i class="ti ti-star-filled text-amber-400 text-xs"></i>';
-                                } else {
-                                    starsHtml += '<i class="ti ti-star text-zinc-300 text-xs"></i>';
+                if (isListView) {
+                    box.innerHTML = `
+                        <div class="bg-white rounded-3xl border border-zinc-100 shadow-sm overflow-hidden animate-fadeIn">
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left text-xs">
+                                    <thead class="bg-zinc-50/80 text-zinc-400 font-bold uppercase tracking-wider text-[10px] border-b border-zinc-100">
+                                        <tr>
+                                            <th class="px-6 py-3.5">Cliente / Auteur</th>
+                                            <th class="px-6 py-3.5">Note</th>
+                                            <th class="px-6 py-3.5">Témoignage</th>
+                                            <th class="px-6 py-3.5">Ordre</th>
+                                            <th class="px-6 py-3.5">Visibilité</th>
+                                            <th class="px-6 py-3.5 text-right">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-zinc-100">
+                                        ${reviews.map(r => {
+                                            const ringStyle = ringClasses[r.ring_color] || ringClasses.pink;
+                                            const ratingNum = parseInt(r.rating, 10) || 5;
+                                            const avatarSrc = r.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(r.author_name)}&background=ff1b7a&color=fff&size=128`;
+
+                                            let starsHtml = '';
+                                            for (let i = 1; i <= 5; i++) {
+                                                if (i <= ratingNum) {
+                                                    starsHtml += '<i class="ti ti-star-filled text-amber-400 text-xs"></i>';
+                                                } else {
+                                                    starsHtml += '<i class="ti ti-star text-zinc-300 text-xs"></i>';
+                                                }
+                                            }
+
+                                            return `
+                                                <tr class="hover:bg-pink-50/30 transition-colors ${!r.is_visible ? 'bg-zinc-50/50' : ''}">
+                                                    <td class="px-6 py-4 font-medium text-zinc-900">
+                                                        <div class="flex items-center gap-3">
+                                                            <div class="w-10 h-10 rounded-full overflow-hidden shrink-0 ring-2 ${ringStyle} shadow-2xs">
+                                                                <img src="${avatarSrc}" alt="${escapeHtml(r.author_name)}" class="w-full h-full object-cover select-none" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(r.author_name)}&background=ff1b7a&color=fff&size=128'" />
+                                                            </div>
+                                                            <div>
+                                                                <div class="flex items-center gap-1.5 flex-wrap">
+                                                                    <span class="font-extrabold text-zinc-900">${escapeHtml(r.author_name)}</span>
+                                                                    <span class="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-[9px] font-bold bg-pink-50 text-pink-700 border border-pink-200/60">
+                                                                        <i class="ti ti-circle-check-filled text-pink-600 text-[10px]"></i>
+                                                                        ${escapeHtml(r.badge || 'Achat vérifié')}
+                                                                    </span>
+                                                                </div>
+                                                                ${r.author_role ? `<p class="text-[11px] text-zinc-400 font-medium">${escapeHtml(r.author_role)}</p>` : ''}
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td class="px-6 py-4 whitespace-nowrap">
+                                                        <div class="flex items-center gap-1">
+                                                            ${starsHtml}
+                                                            <span class="text-[10px] font-bold text-zinc-400 ml-1">(${ratingNum}/5)</span>
+                                                        </div>
+                                                    </td>
+                                                    <td class="px-6 py-4 max-w-xs md:max-w-md">
+                                                        <p class="text-zinc-600 italic line-clamp-2" title="${escapeHtml(r.comment)}">
+                                                            &laquo;&nbsp;${escapeHtml(r.comment)}&nbsp;&raquo;
+                                                        </p>
+                                                    </td>
+                                                    <td class="px-6 py-4">
+                                                        <span class="px-2 py-0.5 rounded-lg bg-zinc-100 text-zinc-600 font-mono text-[10px] font-bold">#${r.sort_order || 0}</span>
+                                                    </td>
+                                                    <td class="px-6 py-4 whitespace-nowrap">
+                                                        <label class="inline-flex items-center gap-2 cursor-pointer select-none">
+                                                            <input type="checkbox" data-review-toggle="${r.id}" ${r.is_visible ? 'checked' : ''} class="w-4 h-4 rounded accent-pink-600 cursor-pointer" />
+                                                            <span class="text-[11px] font-bold ${r.is_visible ? 'text-emerald-700' : 'text-zinc-400'}">
+                                                                ${r.is_visible ? 'Visible' : 'Masqué'}
+                                                            </span>
+                                                        </label>
+                                                    </td>
+                                                    <td class="px-6 py-4 text-right whitespace-nowrap">
+                                                        <div class="flex items-center justify-end gap-1.5">
+                                                            <button type="button" data-review-edit="${r.id}" class="btn-pill-secondary btn-pill-sm cursor-pointer" title="Modifier l'avis">
+                                                                <i class="ti ti-edit text-xs"></i>
+                                                                <span>Modifier</span>
+                                                            </button>
+                                                            <button type="button" data-review-delete="${r.id}" class="btn-pill-danger btn-pill-sm cursor-pointer" title="Supprimer">
+                                                                <i class="ti ti-trash text-xs"></i>
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            `;
+                                        }).join('')}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    box.innerHTML = `
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 animate-fadeIn">
+                            ${reviews.map(r => {
+                                const ringStyle = ringClasses[r.ring_color] || ringClasses.pink;
+                                const ratingNum = parseInt(r.rating, 10) || 5;
+                                const avatarSrc = r.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(r.author_name)}&background=ff1b7a&color=fff&size=128`;
+
+                                let starsHtml = '';
+                                for (let i = 1; i <= 5; i++) {
+                                    if (i <= ratingNum) {
+                                        starsHtml += '<i class="ti ti-star-filled text-amber-400 text-xs"></i>';
+                                    } else {
+                                        starsHtml += '<i class="ti ti-star text-zinc-300 text-xs"></i>';
+                                    }
                                 }
-                            }
 
-                            return `
-                                <div class="bg-white rounded-3xl p-5 sm:p-6 border border-zinc-100 shadow-sm hover:shadow-md transition-all flex flex-col justify-between group relative ${!r.is_visible ? 'opacity-75 bg-zinc-50/70 border-dashed border-zinc-300' : ''}">
-                                    <div>
-                                        <!-- Card Top Header -->
-                                        <div class="flex items-start justify-between gap-3 mb-4">
-                                            <div class="flex items-center gap-3">
-                                                <div class="w-12 h-12 rounded-full overflow-hidden shrink-0 ring-2 ${ringStyle} shadow-2xs">
-                                                    <img src="${avatarSrc}" alt="${escapeHtml(r.author_name)}" class="w-full h-full object-cover select-none" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(r.author_name)}&background=ff1b7a&color=fff&size=128'" />
-                                                </div>
-                                                <div>
-                                                    <div class="flex items-center gap-1.5 flex-wrap">
-                                                        <h3 class="text-sm font-extrabold text-zinc-900 leading-tight">${escapeHtml(r.author_name)}</h3>
-                                                        <span class="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full text-[10px] font-bold bg-pink-50 text-pink-700 border border-pink-200/60">
-                                                            <i class="ti ti-circle-check-filled text-pink-600 text-xs"></i>
-                                                            ${escapeHtml(r.badge || 'Achat vérifié')}
-                                                        </span>
+                                return `
+                                    <div class="bg-white rounded-3xl p-5 sm:p-6 border border-zinc-100 shadow-sm hover:shadow-md transition-all flex flex-col justify-between group relative ${!r.is_visible ? 'opacity-75 bg-zinc-50/70 border-dashed border-zinc-300' : ''}">
+                                        <div>
+                                            <!-- Card Top Header -->
+                                            <div class="flex items-start justify-between gap-3 mb-4">
+                                                <div class="flex items-center gap-3">
+                                                    <div class="w-12 h-12 rounded-full overflow-hidden shrink-0 ring-2 ${ringStyle} shadow-2xs">
+                                                        <img src="${avatarSrc}" alt="${escapeHtml(r.author_name)}" class="w-full h-full object-cover select-none" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(r.author_name)}&background=ff1b7a&color=fff&size=128'" />
                                                     </div>
-                                                    ${r.author_role ? `<p class="text-xs text-zinc-500 font-medium mt-0.5">${escapeHtml(r.author_role)}</p>` : ''}
+                                                    <div>
+                                                        <div class="flex items-center gap-1.5 flex-wrap">
+                                                            <h3 class="text-sm font-extrabold text-zinc-900 leading-tight">${escapeHtml(r.author_name)}</h3>
+                                                            <span class="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full text-[10px] font-bold bg-pink-50 text-pink-700 border border-pink-200/60">
+                                                                <i class="ti ti-circle-check-filled text-pink-600 text-xs"></i>
+                                                                ${escapeHtml(r.badge || 'Achat vérifié')}
+                                                            </span>
+                                                        </div>
+                                                        ${r.author_role ? `<p class="text-xs text-zinc-500 font-medium mt-0.5">${escapeHtml(r.author_role)}</p>` : ''}
+                                                    </div>
+                                                </div>
+
+                                                <div class="flex items-center gap-1 shrink-0">
+                                                    <span class="px-2 py-0.5 rounded-lg bg-zinc-100 text-zinc-600 font-mono text-[10px] font-bold" title="Ordre d'affichage">#${r.sort_order || 0}</span>
                                                 </div>
                                             </div>
 
-                                            <div class="flex items-center gap-1 shrink-0">
-                                                <span class="px-2 py-0.5 rounded-lg bg-zinc-100 text-zinc-600 font-mono text-[10px] font-bold" title="Ordre d'affichage">#${r.sort_order || 0}</span>
+                                            <!-- Stars -->
+                                            <div class="flex items-center gap-1 mb-2.5">
+                                                ${starsHtml}
+                                                <span class="text-[11px] font-bold text-zinc-400 ml-1">(${ratingNum}/5)</span>
+                                            </div>
+
+                                            <!-- Comment Quote -->
+                                            <blockquote class="text-xs text-zinc-600 leading-relaxed italic bg-zinc-50/80 rounded-2xl p-3 border border-zinc-100 mb-4">
+                                                &laquo;&nbsp;${escapeHtml(r.comment)}&nbsp;&raquo;
+                                            </blockquote>
+                                        </div>
+
+                                        <!-- Bottom Action Bar & Visibility Toggle -->
+                                        <div class="pt-3 border-t border-zinc-100 flex items-center justify-between gap-2 flex-wrap">
+                                            <!-- Visibility Switch -->
+                                            <label class="inline-flex items-center gap-2 cursor-pointer select-none">
+                                                <input type="checkbox" data-review-toggle="${r.id}" ${r.is_visible ? 'checked' : ''} class="w-4 h-4 rounded accent-pink-600 cursor-pointer" />
+                                                <span class="text-xs font-bold ${r.is_visible ? 'text-emerald-700' : 'text-zinc-400'}">
+                                                    ${r.is_visible ? 'Visible en vitrine' : 'Masqué'}
+                                                </span>
+                                            </label>
+
+                                            <!-- Actions -->
+                                            <div class="flex items-center gap-1.5">
+                                                <button type="button" data-review-edit="${r.id}" class="btn-pill-secondary btn-pill-sm cursor-pointer" title="Modifier l'avis">
+                                                    <i class="ti ti-edit text-xs"></i>
+                                                    <span class="text-xs">Modifier</span>
+                                                </button>
+                                                <button type="button" data-review-delete="${r.id}" class="btn-pill-danger btn-pill-sm cursor-pointer" title="Supprimer">
+                                                    <i class="ti ti-trash text-xs"></i>
+                                                </button>
                                             </div>
                                         </div>
-
-                                        <!-- Stars -->
-                                        <div class="flex items-center gap-1 mb-2.5">
-                                            ${starsHtml}
-                                            <span class="text-[11px] font-bold text-zinc-400 ml-1">(${ratingNum}/5)</span>
-                                        </div>
-
-                                        <!-- Comment Quote -->
-                                        <blockquote class="text-xs text-zinc-600 leading-relaxed italic bg-zinc-50/80 rounded-2xl p-3 border border-zinc-100 mb-4">
-                                            &laquo;&nbsp;${escapeHtml(r.comment)}&nbsp;&raquo;
-                                        </blockquote>
                                     </div>
-
-                                    <!-- Bottom Action Bar & Visibility Toggle -->
-                                    <div class="pt-3 border-t border-zinc-100 flex items-center justify-between gap-2 flex-wrap">
-                                        <!-- Visibility Switch -->
-                                        <label class="inline-flex items-center gap-2 cursor-pointer select-none">
-                                            <input type="checkbox" data-review-toggle="${r.id}" ${r.is_visible ? 'checked' : ''} class="w-4 h-4 rounded accent-pink-600 cursor-pointer" />
-                                            <span class="text-xs font-bold ${r.is_visible ? 'text-emerald-700' : 'text-zinc-400'}">
-                                                ${r.is_visible ? 'Visible en vitrine' : 'Masqué'}
-                                            </span>
-                                        </label>
-
-                                        <!-- Actions -->
-                                        <div class="flex items-center gap-1.5">
-                                            <button type="button" data-review-edit="${r.id}" class="btn-pill-secondary btn-pill-sm cursor-pointer" title="Modifier l'avis">
-                                                <i class="ti ti-edit text-xs"></i>
-                                                <span class="text-xs">Modifier</span>
-                                            </button>
-                                            <button type="button" data-review-delete="${r.id}" class="btn-pill-danger btn-pill-sm cursor-pointer" title="Supprimer">
-                                                <i class="ti ti-trash text-xs"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            `;
-                        }).join('')}
-                    </div>
-                `;
+                                `;
+                            }).join('')}
+                        </div>
+                    `;
+                }
 
                 // Wire Actions
                 box.querySelectorAll('[data-review-toggle]').forEach(checkbox => {
