@@ -1,12 +1,88 @@
 @php
     $currentCategory = collect($categories)->firstWhere('slug', $selectedCategory);
-    $categoryTitle = $currentCategory && $selectedCategory !== 'all' ? $currentCategory['name'] : null;
-    $seoTitle = $categoryTitle 
-        ? $categoryTitle . ' Maroc — Prix en DH & Livraison 24-48h | zizo aura'
-        : 'Boutique Cosmétiques & Parfums Maroc — Sol de Janeiro, Victoria\'s Secret | zizo aura';
-    $seoDescription = $categoryTitle
-        ? 'Achetez vos produits ' . $categoryTitle . ' authentiques au Maroc. Prix en Dirhams (DH), paiement à la livraison (Cash on Delivery) et livraison express 24-48h partout au Maroc.'
-        : 'Découvrez la boutique en ligne zizo aura Maroc : brumes Victoria\'s Secret, crèmes Sol de Janeiro, sérums The Ordinary. 100% originaux, prix en DH et paiement à la livraison.';
+    $categorySlug = $selectedCategory ?? 'all';
+
+    if ($categorySlug === 'rituals') {
+        $seoTitle = 'Coffrets Rituals Maroc — Coffrets Cadeaux Sakura, Ayurveda & Karma en DH | Zizo Aura';
+        $seoHeading = 'Coffrets Cadeaux Rituals Maroc';
+        $seoDescription = 'Achetez votre coffret Rituals authentique au Maroc : The Ritual of Sakura, Ayurveda, Karma, Mehr et Jing. Prix en DH (390 DH), livraison express 24-48h et paiement à la livraison (Cash on Delivery).';
+        $seoIntro = 'Explorez notre collection exclusive de coffrets cadeaux Rituals au Maroc. Mousse de douche onctueuse, gommages exfoliants et crèmes hydratantes aux senteurs iconiques. 100% Originaux avec livraison 24-48h et paiement à la livraison.';
+        $faqItems = [
+            [
+                'q' => 'Où acheter un coffret Rituals original au Maroc ?',
+                'a' => 'Sur la boutique officielle Zizo Aura Maroc, vous retrouvez les coffrets originaux The Ritual of Sakura, Ayurveda, Karma, Mehr et Jing avec livraison sous 24-48h et paiement à la livraison partout au Maroc.'
+            ],
+            [
+                'q' => 'Quel est le prix d\'un coffret Rituals au Maroc ?',
+                'a' => 'Les coffrets cadeaux Rituals grand format (mousse de douche, gommage, crème corps, brume d\'oreiller) sont proposés au prix de 390 DH avec échantillons offerts.'
+            ],
+            [
+                'q' => 'Quels sont les délais de livraison pour les coffrets Rituals au Maroc ?',
+                'a' => 'Expédition express sous 24h à 48h dans toutes les villes du Maroc : Casablanca, Rabat, Marrakech, Tanger, Fès, Agadir, Meknès, Oujda, Kénitra et autres.'
+            ]
+        ];
+    } elseif ($categorySlug === 'sol-de-janeiro') {
+        $seoTitle = 'Sol de Janeiro Maroc — Brazilian Bum Bum Cream, Brumes Cheirosa & Jet Sets | Zizo Aura';
+        $seoHeading = 'Sol de Janeiro Maroc';
+        $seoDescription = 'Retrouvez toute la gamme Sol de Janeiro au Maroc : Brazilian Bum Bum Cream, brumes Cheirosa 68, 62, 59, 40 et Jet Sets voyage. 100% Originaux, prix en DH et livraison express à domicile avec paiement à la livraison.';
+        $seoIntro = 'Sublimez votre peau avec les soins iconiques Sol de Janeiro au Maroc. Crèmes raffermissantes au beurre de Cupuaçu et brumes parfumées gourmandes. Livraison 24-48h partout au Royaume.';
+        $faqItems = [
+            [
+                'q' => 'Où trouver les brumes et crèmes Sol de Janeiro au Maroc ?',
+                'a' => 'Zizo Aura propose les soins et brumes Sol de Janeiro 100% originaux au Maroc au meilleur prix en Dirhams avec livraison rapide.'
+            ],
+            [
+                'q' => 'Quel est le prix des coffrets Jet Set Sol de Janeiro au Maroc ?',
+                'a' => 'Les coffrets Jet Set (Bum Bum, Beija Flor, Bom Dia Bright, Delícia Drench) sont à 320 DH avec livraison express 24-48h.'
+            ]
+        ];
+    } elseif ($categorySlug === 'victorias-secret') {
+        $seoTitle = 'Brumes & Coffrets Victoria\'s Secret Maroc — Bare Vanilla, Pure Seduction (250ml) | Zizo Aura';
+        $seoHeading = 'Brumes & Coffrets Victoria\'s Secret Maroc';
+        $seoDescription = 'Achetez vos brumes parfumées et packs duos Victoria\'s Secret originaux au Maroc (Bare Vanilla, Pure Seduction, Velvet Petals, Love Spell). Prix en DH & paiement à la livraison.';
+        $seoIntro = 'Découvrez les brumes corporelles 250ml et coffrets de luxe Victoria\'s Secret au Maroc. Parfums irrésistibles, formules originales et livraison express 24-48h dans toutes les villes.';
+        $faqItems = [
+            [
+                'q' => 'Combien coûte une brume Victoria\'s Secret originale au Maroc ?',
+                'a' => 'Nos brumes standard 250ml Victoria\'s Secret sont proposées à 195 DH au lieu de 280 DH avec garantie d\'authenticité absolue.'
+            ],
+            [
+                'q' => 'Quelles sont les meilleures brumes Victoria\'s Secret au Maroc ?',
+                'a' => 'Les best-sellers incontournables sont Bare Vanilla (vanille & cachemire), Pure Seduction (prune rouge & freesia) et Velvet Petals (fleurs douces & amande).'
+            ]
+        ];
+    } elseif ($categorySlug === 'the-ordinary') {
+        $seoTitle = 'The Ordinary Maroc — Sérums Niacinamide, Acide Hyaluronique & Peeling Rouge | Zizo Aura';
+        $seoHeading = 'Sérums & Soins The Ordinary Maroc';
+        $seoDescription = 'Retrouvez les sérums The Ordinary 100% authentiques au Maroc : Niacinamide 10%, Peeling Rouge AHA 30%, Acide Hyaluronique 2%, Acide Glycolique 7%. Prix en DH et livraison rapide.';
+        $seoIntro = 'Traitements dermatologiques ultra-ciblés The Ordinary au Maroc. Corrigez les imperfections, sublimez votre grain de peau et hydratez intensément avec nos formules certifiées originales.';
+        $faqItems = [
+            [
+                'q' => 'Comment être sûr que les produits The Ordinary sont originaux au Maroc ?',
+                'a' => 'Tous les sérums The Ordinary chez Zizo Aura sont importés des distributeurs officiels certifiés avec packaging intact et numéro de lot vérifié.'
+            ],
+            [
+                'q' => 'Quel est le prix du sérum Niacinamide The Ordinary au Maroc ?',
+                'a' => 'Le sérum Niacinamide 10% + Zinc 1% (30ml) est disponible à 140 DH sur Zizo Aura Maroc.'
+            ]
+        ];
+    } else {
+        $seoTitle = 'Boutique Cosmétiques & Parfums Maroc — Sol de Janeiro, Rituals, Victoria\'s Secret | Zizo Aura';
+        $seoHeading = 'Nos Formules, Coffrets & Soins Solaires';
+        $seoDescription = 'Boutique en ligne officielle de soins, brumes et coffrets de luxe au Maroc : Sol de Janeiro, Victoria\'s Secret, Rituals, The Ordinary. 100% Originaux, livraison express 24-48h et paiement à la livraison.';
+        $seoIntro = 'Découvrez nos brumes Cheirosa emblématiques, coffrets cadeaux Rituals, crèmes raffermissantes et élixirs botaniques formulés pour sublimer chaque peau.';
+        $faqItems = [
+            [
+                'q' => 'Quelles sont les conditions de livraison partout au Maroc ?',
+                'a' => 'Livraison express suivie en 24h à 48h à Casablanca, Rabat, Marrakech, Tanger, Agadir, Fès et toutes les villes du Royaume (35 DH).'
+            ],
+            [
+                'q' => 'Quels sont les moyens de paiement acceptés ?',
+                'a' => 'Paiement en espèces à la livraison (Cash on Delivery) après vérification de votre commande.'
+            ]
+        ];
+    }
+
     $canonicalUrl = $selectedCategory && $selectedCategory !== 'all'
         ? route('shop.category', $selectedCategory)
         : route('shop.index');
@@ -29,35 +105,55 @@
 <script type="application/ld+json">
 {
     "{{ '@' }}context": "https://schema.org",
-    "{{ '@' }}type": "CollectionPage",
-    "name": "{{ $seoTitle }}",
-    "description": "{{ $seoDescription }}",
-    "url": "{{ $canonicalUrl }}",
-    "breadcrumb": {
-        "{{ '@' }}type": "BreadcrumbList",
-        "itemListElement": [
-            {
-                "{{ '@' }}type": "ListItem",
-                "position": 1,
-                "name": "Accueil",
-                "item": "{{ url('/') }}"
-            },
-            {
-                "{{ '@' }}type": "ListItem",
-                "position": 2,
-                "name": "Boutique",
-                "item": "{{ route('shop.index') }}"
+    "{{ '@' }}graph": [
+        {
+            "{{ '@' }}type": "CollectionPage",
+            "name": "{{ $seoTitle }}",
+            "description": "{{ $seoDescription }}",
+            "url": "{{ $canonicalUrl }}",
+            "breadcrumb": {
+                "{{ '@' }}type": "BreadcrumbList",
+                "itemListElement": [
+                    {
+                        "{{ '@' }}type": "ListItem",
+                        "position": 1,
+                        "name": "Accueil",
+                        "item": "{{ url('/') }}"
+                    },
+                    {
+                        "{{ '@' }}type": "ListItem",
+                        "position": 2,
+                        "name": "Boutique",
+                        "item": "{{ route('shop.index') }}"
+                    }
+                    @if($currentCategory && $selectedCategory !== 'all')
+                    ,{
+                        "{{ '@' }}type": "ListItem",
+                        "position": 3,
+                        "name": "{{ $currentCategory['name'] }}",
+                        "item": "{{ $canonicalUrl }}"
+                    }
+                    @endif
+                ]
             }
-            @if($categoryTitle)
-            ,{
-                "{{ '@' }}type": "ListItem",
-                "position": 3,
-                "name": "{{ $categoryTitle }}",
-                "item": "{{ $canonicalUrl }}"
-            }
-            @endif
-        ]
-    }
+        },
+        {
+            "{{ '@' }}type": "FAQPage",
+            "{{ '@' }}id": "{{ $canonicalUrl }}#faq",
+            "mainEntity": [
+                @foreach($faqItems as $idx => $faq)
+                {
+                    "{{ '@' }}type": "Question",
+                    "name": "{{ addslashes($faq['q']) }}",
+                    "acceptedAnswer": {
+                        "{{ '@' }}type": "Answer",
+                        "text": "{{ addslashes($faq['a']) }}"
+                    }
+                }{{ $loop->last ? '' : ',' }}
+                @endforeach
+            ]
+        }
+    ]
 }
 </script>
 @endsection
@@ -70,10 +166,10 @@
         <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8 border-b border-zinc-100 mb-8">
             <div>
                 <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-black tracking-tight leading-tight">
-                    Nos Formules &amp; Soins Solaires
+                    {{ $seoHeading }}
                 </h1>
                 <p class="text-sm sm:text-base text-zinc-500 font-normal mt-2 max-w-xl">
-                    Découvrez nos brumes Cheirosa emblématiques, crèmes raffermissantes et élixirs botaniques formulés pour sublimer chaque peau.
+                    {{ $seoIntro }}
                 </p>
             </div>
 
@@ -273,6 +369,40 @@
                 </div>
             @endforelse
         </div>
+
+        <!-- SEO Content & Moroccan FAQ Accordion Section -->
+        @if(!empty($faqItems))
+            <div class="mt-20 pt-12 border-t border-zinc-100 max-w-4xl mx-auto">
+                <div class="text-center mb-10">
+                    <span class="px-3.5 py-1 rounded-full bg-pink-50 text-pink-600 text-xs font-black uppercase tracking-wider inline-block mb-3">
+                        Guide d'achat &amp; FAQ Maroc
+                    </span>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-zinc-900 tracking-tight">
+                        Questions fréquentes sur nos commandes au Maroc
+                    </h2>
+                    <p class="text-xs sm:text-sm text-zinc-500 mt-2">
+                        Tout ce que vous devez savoir sur l'authenticité de nos produits, nos prix en Dirhams et la livraison express.
+                    </p>
+                </div>
+
+                <div class="space-y-4">
+                    @foreach($faqItems as $idx => $item)
+                        <details class="group bg-[#f8f9fa] rounded-2xl p-5 sm:p-6 border border-zinc-100 transition-all duration-200 open:bg-white open:shadow-md open:border-pink-200">
+                            <summary class="flex justify-between items-center cursor-pointer font-bold text-sm sm:text-base text-zinc-900 list-none">
+                                <span>{{ $item['q'] }}</span>
+                                <span class="w-8 h-8 rounded-full bg-zinc-100 group-open:bg-pink-50 group-open:text-pink-600 flex items-center justify-center text-xs shrink-0 transition-all">
+                                    <i class="uil uil-plus group-open:hidden"></i>
+                                    <i class="uil uil-minus hidden group-open:block"></i>
+                                </span>
+                            </summary>
+                            <div class="pt-4 text-xs sm:text-sm text-zinc-600 leading-relaxed border-t border-zinc-100/80 mt-3 font-normal">
+                                {{ $item['a'] }}
+                            </div>
+                        </details>
+                    @endforeach
+                </div>
+            </div>
+        @endif
 
     </div>
 </div>

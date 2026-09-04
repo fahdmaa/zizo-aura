@@ -9,16 +9,36 @@
     }
     $mainImage = str_starts_with($allImages[0], 'http') ? $allImages[0] : url($allImages[0]);
     $cleanDesc = trim(strip_tags($product['description'] ?? ''));
-    $metaDesc = 'Achetez ' . $product['name'] . ' au meilleur prix au Maroc (' . $product['price'] . ' DH). Formule 100% originale, livraison express partout au Maroc et paiement à la livraison (COD). ' . \Illuminate\Support\Str::limit($cleanDesc, 110);
     $brandName = $product['brand'] ?? $product['category_label'] ?? 'Zizo Aura';
+    $catSlug = $product['category'] ?? '';
+    $pName = $product['name'] ?? '';
+    $price = $product['price'] ?? '0';
+
+    // High Intent Search Engine Title & Meta Description Generator for Morocco Market (#1 Ranking Target)
+    if ($catSlug === 'rituals' || str_contains(strtolower($brandName), 'rituals')) {
+        $seoTitle = (str_contains(strtolower($pName), 'coffret') ? $pName : 'Coffret ' . $pName) . ' — Rituals Maroc Prix ' . $price . ' DH | Zizo Aura';
+        $metaDesc = 'Achetez ' . (str_contains(strtolower($pName), 'coffret') ? $pName : 'le coffret ' . $pName) . ' Rituals officiel au Maroc (' . $price . ' DH). Coffret cadeau luxe avec mousse de douche & soins, livraison 24-48h et paiement à la livraison.';
+    } elseif ($catSlug === 'victorias-secret' || str_contains(strtolower($brandName), 'victoria')) {
+        $seoTitle = $pName . ' Victoria\'s Secret Maroc (' . $price . ' DH) — Brume & Coffret Original';
+        $metaDesc = 'Commandez ' . $pName . ' Victoria\'s Secret 100% originale au Maroc au prix de ' . $price . ' DH. Sillage longue tenue, livraison rapide partout au Maroc et paiement cash à la livraison.';
+    } elseif ($catSlug === 'sol-de-janeiro' || str_contains(strtolower($brandName), 'sol de janeiro')) {
+        $seoTitle = $pName . ' Sol de Janeiro Maroc (' . $price . ' DH) — Bum Bum & Cheirosa';
+        $metaDesc = 'Découvrez ' . $pName . ' Sol de Janeiro au meilleur prix au Maroc (' . $price . ' DH). Soin corps gourmand & brume parfumée originale, livraison 24-48h et paiement à la livraison (COD).';
+    } elseif ($catSlug === 'the-ordinary' || str_contains(strtolower($brandName), 'ordinary')) {
+        $seoTitle = $pName . ' The Ordinary Maroc (' . $price . ' DH) — Sérum Visage Original';
+        $metaDesc = 'Achetez ' . $pName . ' The Ordinary authentique au Maroc (' . $price . ' DH). Formule concentrée haute efficacité, livraison express partout au Maroc et paiement à la livraison.';
+    } else {
+        $seoTitle = $pName . ' Maroc (' . $price . ' DH) — Prix en Dirhams & Livraison Rapide | Zizo Aura';
+        $metaDesc = 'Achetez ' . $pName . ' au meilleur prix au Maroc (' . $price . ' DH). Produit 100% original, livraison 24-48h et paiement à la livraison.';
+    }
 @endphp
 
 @extends('layouts.app')
 
-@section('title', $product['name'] . ' — Prix Maroc & Livraison 24-48h | Zizo Aura')
+@section('title', $seoTitle)
 @section('meta_description', $metaDesc)
 @section('og_type', 'product')
-@section('og_title', $product['name'] . ' (' . $product['price'] . ' DH) — Zizo Aura Maroc')
+@section('og_title', $seoTitle)
 @section('og_description', $metaDesc)
 @section('og_image', $mainImage)
 @section('canonical', route('shop.product', $product['slug']))
@@ -122,6 +142,36 @@
                     "position": 4,
                     "name": "{{ addslashes($product['name']) }}",
                     "item": "{{ route('shop.product', $product['slug']) }}"
+                }
+            ]
+        },
+        {
+            "{{ '@' }}type": "FAQPage",
+            "{{ '@' }}id": "{{ route('shop.product', $product['slug']) }}#faq",
+            "mainEntity": [
+                {
+                    "{{ '@' }}type": "Question",
+                    "name": "Quel est le prix de {{ addslashes($product['name']) }} au Maroc ?",
+                    "acceptedAnswer": {
+                        "{{ '@' }}type": "Answer",
+                        "text": "Le prix de {{ addslashes($product['name']) }} est de {{ $product['price'] }} DH sur la boutique officielle Zizo Aura Maroc, avec des échantillons de luxe offerts dans chaque commande."
+                    }
+                },
+                {
+                    "{{ '@' }}type": "Question",
+                    "name": "Comment se passe la livraison et le paiement au Maroc ?",
+                    "acceptedAnswer": {
+                        "{{ '@' }}type": "Answer",
+                        "text": "La livraison est effectuée sous 24 à 48 heures dans toutes les villes du Maroc (Casablanca, Rabat, Marrakech, Tanger, Fès, Agadir, Oujda, Meknès...). Vous payez en espèces à la livraison (Cash on Delivery) après réception de votre colis."
+                    }
+                },
+                {
+                    "{{ '@' }}type": "Question",
+                    "name": "Le produit {{ addslashes($product['name']) }} est-il 100% original ?",
+                    "acceptedAnswer": {
+                        "{{ '@' }}type": "Answer",
+                        "text": "Oui, tous les produits {{ addslashes($brandName) }} proposés par Zizo Aura sont 100% originaux, authentiques et garantis neufs."
+                    }
                 }
             ]
         }
@@ -433,6 +483,32 @@
                         </summary>
                         <div class="pt-3 text-xs sm:text-sm text-zinc-600 leading-relaxed">
                             {{ $product['usage'] }}
+                        </div>
+                    </details>
+
+                    <!-- Livraison & Paiement au Maroc -->
+                    <details class="group py-4">
+                        <summary class="flex justify-between items-center cursor-pointer font-bold text-xs uppercase tracking-wider text-zinc-900 list-none">
+                            <span>Livraison Express &amp; Paiement au Maroc</span>
+                            <i class="uil uil-plus group-open:hidden text-zinc-500"></i>
+                            <i class="uil uil-minus hidden group-open:block text-zinc-500"></i>
+                        </summary>
+                        <div class="pt-3 text-xs sm:text-sm text-zinc-600 leading-relaxed space-y-2">
+                            <p>🚚 <strong>Expédition sous 24h à 48h</strong> partout au Maroc : Casablanca, Rabat, Marrakech, Tanger, Fès, Agadir, Oujda, Meknès, Kénitra et toutes les autres villes.</p>
+                            <p>💵 <strong>Paiement à la livraison (Cash on Delivery)</strong> : Vous ne payez qu'après réception de votre commande en mains propres.</p>
+                            <p>🎁 <strong>Échantillons de luxe offerts</strong> soigneusement glissés dans chaque colis.</p>
+                        </div>
+                    </details>
+
+                    <!-- Garantie Authenticité -->
+                    <details class="group py-4">
+                        <summary class="flex justify-between items-center cursor-pointer font-bold text-xs uppercase tracking-wider text-zinc-900 list-none">
+                            <span>Garantie 100% Original &amp; Authentique</span>
+                            <i class="uil uil-plus group-open:hidden text-zinc-500"></i>
+                            <i class="uil uil-minus hidden group-open:block text-zinc-500"></i>
+                        </summary>
+                        <div class="pt-3 text-xs sm:text-sm text-zinc-600 leading-relaxed">
+                            Tous nos produits {{ $brandName }} proviennent de circuits officiels certifiés. Nous garantissons une authenticité stricte, des formules intactes et des packagings sous blister neufs.
                         </div>
                     </details>
 
