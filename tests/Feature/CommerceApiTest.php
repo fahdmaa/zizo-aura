@@ -48,6 +48,16 @@ class CommerceApiTest extends TestCase
         $this->withSession(['admin_authenticated' => true])->getJson('/api/admin/dashboard')->assertOk();
     }
 
+    public function test_admin_can_login_with_configured_password(): void
+    {
+        $res = $this->post('/admin/login', [
+            'password' => 'zizoaura2025!',
+        ]);
+
+        $res->assertRedirect('/admin');
+        $this->assertTrue(session('admin_authenticated'));
+    }
+
     public function test_admin_auth_cookie_bypass_is_rejected(): void
     {
         // Forging admin_logged_in cookie without active session MUST be rejected

@@ -41,6 +41,10 @@
                 if (response.status === 204) {
                     return null;
                 }
+                if (response.status === 401) {
+                    window.location.href = '/admin/login';
+                    return null;
+                }
                 const data = await response.json().catch(() => ({}));
                 if (!response.ok) {
                     const message = data.message || (data.errors ? Object.values(data.errors).flat().join(' ') : 'Une erreur est survenue.');

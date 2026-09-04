@@ -36,7 +36,10 @@ class AuthController extends Controller
             $request->session()->put('admin_authenticated', true);
             $request->session()->save();
 
-            return redirect()->intended('/admin');
+            $token = Hash::make($adminPassword);
+            $authCookie = cookie('admin_auth_token', $token, 240, '/', null, null, true, false, 'lax');
+
+            return redirect()->to('/admin')->withCookie($authCookie);
         }
 
         return back()->withErrors(['password' => 'Mot de passe administrateur incorrect.']);
@@ -48,6 +51,6 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('admin.login');
+        return redirect()->route('admin.login')->withoutCookie('admin_auth_token');
     }
 }

@@ -17,9 +17,6 @@ $app = Application::configure(basePath: dirname(__DIR__))
             'admin/login',
             'api/*',
         ]);
-        $middleware->encryptCookies(except: [
-            'zizo_aura_session',
-        ]);
         $middleware->alias([
             'admin.auth' => \App\Http\Middleware\AdminAuth::class,
         ]);
