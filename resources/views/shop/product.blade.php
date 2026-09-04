@@ -35,11 +35,11 @@
 @section('schema')
 <script type="application/ld+json">
 {
-    "{{ '@context' }}": "https://schema.org",
-    "{{ '@graph' }}": [
+    "{{ '@' }}context": "https://schema.org",
+    "{{ '@' }}graph": [
         {
-            "{{ '@type' }}": "Product",
-            "{{ '@id' }}": "{{ route('shop.product', $product['slug']) }}#product",
+            "{{ '@' }}type": "Product",
+            "{{ '@' }}id": "{{ route('shop.product', $product['slug']) }}#product",
             "name": "{{ $product['name'] }}",
             "image": [
                 @foreach($allImages as $idx => $img)
@@ -49,12 +49,12 @@
             "description": "{{ addslashes($cleanDesc) }}",
             "sku": "ZA-{{ $product['id'] ?? $product['slug'] }}",
             "brand": {
-                "{{ '@type' }}": "Brand",
+                "{{ '@' }}type": "Brand",
                 "name": "{{ addslashes($brandName) }}"
             },
             "category": "{{ addslashes($product['category_label'] ?? 'Cosmétiques') }}",
             "offers": {
-                "{{ '@type' }}": "Offer",
+                "{{ '@' }}type": "Offer",
                 "url": "{{ route('shop.product', $product['slug']) }}",
                 "priceCurrency": "MAD",
                 "price": "{{ $product['price'] }}",
@@ -62,24 +62,24 @@
                 "itemCondition": "https://schema.org/NewCondition",
                 "availability": "{{ ($product['in_stock'] ?? true) ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock' }}",
                 "seller": {
-                    "{{ '@type' }}": "Organization",
+                    "{{ '@' }}type": "Organization",
                     "name": "Zizo Aura"
                 },
                 "shippingDetails": {
-                    "{{ '@type' }}": "OfferShippingDetails",
+                    "{{ '@' }}type": "OfferShippingDetails",
                     "shippingRate": {
-                        "{{ '@type' }}": "MonetaryAmount",
+                        "{{ '@' }}type": "MonetaryAmount",
                         "value": "35",
                         "currency": "MAD"
                     },
                     "shippingDestination": {
-                        "{{ '@type' }}": "DefinedRegion",
+                        "{{ '@' }}type": "DefinedRegion",
                         "addressCountry": "MA"
                     },
                     "deliveryTime": {
-                        "{{ '@type' }}": "ShippingDeliveryTime",
+                        "{{ '@' }}type": "ShippingDeliveryTime",
                         "transitTime": {
-                            "{{ '@type' }}": "QuantitativeValue",
+                            "{{ '@' }}type": "QuantitativeValue",
                             "minValue": 1,
                             "maxValue": 2,
                             "unitCode": "DAY"
@@ -88,7 +88,7 @@
                 }
             },
             "aggregateRating": {
-                "{{ '@type' }}": "AggregateRating",
+                "{{ '@' }}type": "AggregateRating",
                 "ratingValue": "{{ $product['rating'] ?? 4.9 }}",
                 "reviewCount": "{{ $product['review_count'] ?? 120 }}",
                 "bestRating": "5",
@@ -96,29 +96,29 @@
             }
         },
         {
-            "{{ '@type' }}": "BreadcrumbList",
-            "{{ '@id' }}": "{{ route('shop.product', $product['slug']) }}#breadcrumb",
+            "{{ '@' }}type": "BreadcrumbList",
+            "{{ '@' }}id": "{{ route('shop.product', $product['slug']) }}#breadcrumb",
             "itemListElement": [
                 {
-                    "{{ '@type' }}": "ListItem",
+                    "{{ '@' }}type": "ListItem",
                     "position": 1,
                     "name": "Accueil",
                     "item": "{{ url('/') }}"
                 },
                 {
-                    "{{ '@type' }}": "ListItem",
+                    "{{ '@' }}type": "ListItem",
                     "position": 2,
                     "name": "Boutique",
                     "item": "{{ route('shop.index') }}"
                 },
                 {
-                    "{{ '@type' }}": "ListItem",
+                    "{{ '@' }}type": "ListItem",
                     "position": 3,
                     "name": "{{ addslashes($product['category_label'] ?? 'Catalogue') }}",
                     "item": "{{ route('shop.index', ['category' => $product['category']]) }}"
                 },
                 {
-                    "{{ '@type' }}": "ListItem",
+                    "{{ '@' }}type": "ListItem",
                     "position": 4,
                     "name": "{{ addslashes($product['name']) }}",
                     "item": "{{ route('shop.product', $product['slug']) }}"

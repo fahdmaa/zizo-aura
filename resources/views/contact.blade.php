@@ -11,13 +11,13 @@
 @section('schema')
 <script type="application/ld+json">
 {
-    "{{ '@context' }}": "https://schema.org",
-    "{{ '@type' }}": "ContactPage",
+    "{{ '@' }}context": "https://schema.org",
+    "{{ '@' }}type": "ContactPage",
     "name": "Contact & Service Client Zizo Aura Maroc",
     "description": "Service client et assistance zizo aura Maroc.",
     "url": "{{ route('contact') }}",
     "mainEntity": {
-        "{{ '@type' }}": "Organization",
+        "{{ '@' }}type": "Organization",
         "name": "Zizo Aura Maroc",
         "telephone": "+212682787594",
         "email": "contact@zizoaura.store",

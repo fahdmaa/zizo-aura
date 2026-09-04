@@ -46,11 +46,11 @@
     <!-- Global JSON-LD Structured Data Schema.org (Google Morocco Rich Snippets) -->
     <script type="application/ld+json">
     {
-        "{{ '@context' }}": "https://schema.org",
-        "{{ '@graph' }}": [
+        "{{ '@' }}context": "https://schema.org",
+        "{{ '@' }}graph": [
             {
-                "{{ '@type' }}": "OnlineStore",
-                "{{ '@id' }}": "{{ url('/') }}#store",
+                "{{ '@' }}type": "OnlineStore",
+                "{{ '@' }}id": "{{ url('/') }}#store",
                 "name": "Zizo Aura",
                 "url": "{{ url('/') }}",
                 "logo": "{{ url('/images/logo.png') }}",
@@ -61,21 +61,21 @@
                 "currenciesAccepted": "MAD",
                 "paymentAccepted": "Cash on Delivery",
                 "areaServed": {
-                    "{{ '@type' }}": "Country",
+                    "{{ '@' }}type": "Country",
                     "name": "Morocco"
                 },
                 "address": {
-                    "{{ '@type' }}": "PostalAddress",
+                    "{{ '@' }}type": "PostalAddress",
                     "addressCountry": "MA"
                 }
             },
             {
-                "{{ '@type' }}": "WebSite",
-                "{{ '@id' }}": "{{ url('/') }}#website",
+                "{{ '@' }}type": "WebSite",
+                "{{ '@' }}id": "{{ url('/') }}#website",
                 "url": "{{ url('/') }}",
                 "name": "Zizo Aura",
                 "potentialAction": {
-                    "{{ '@type' }}": "SearchAction",
+                    "{{ '@' }}type": "SearchAction",
                     "target": "{{ url('/boutique') }}?q={search_term_string}",
                     "query-input": "required name=search_term_string"
                 }
