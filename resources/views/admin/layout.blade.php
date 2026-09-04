@@ -30,6 +30,10 @@
             --brand-pink-hover: #e01569;
             --brand-pink-soft: #fff0f5;
         }
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-bottom: 9rem;
+        }
         body {
             font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background-color: #faf9f6;
@@ -91,9 +95,9 @@
         }
     </style>
 </head>
-<body class="h-full antialiased overflow-x-hidden pb-32">
+<body class="min-h-full antialiased overflow-x-hidden bg-[#faf9f6]">
 
-<div class="min-h-full flex flex-col">
+<div class="min-h-screen flex flex-col">
 
     <!-- Top Simplified Brand Header -->
     <header class="sticky top-0 z-30 bg-[#faf9f6]/90 backdrop-blur-md border-b border-zinc-200/60 px-4 md:px-8 py-3.5 transition-all">
@@ -145,7 +149,7 @@
     </header>
 
     <!-- Main Content Body -->
-    <main class="flex-1 p-4 md:p-8 max-w-7xl w-full mx-auto">
+    <main class="flex-1 px-4 pt-4 pb-44 md:px-8 md:pt-8 md:pb-52 max-w-7xl w-full mx-auto">
         <!-- Root Container for Dynamic SPA Views -->
         <div id="admin-app-root">
             @yield('content')
