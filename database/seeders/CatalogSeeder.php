@@ -117,9 +117,9 @@ class CatalogSeeder extends Seeder
             [
                 'id' => 2,
                 'author_name' => 'Yasmine Benali',
-                'author_role' => 'Cliente vérifiée • Rituals Sakura Set',
+                'author_role' => 'Cliente vérifiée • The Ritual of Sakura',
                 'rating' => 5,
-                'comment' => 'L\'emballage origami Rituals Sakura est splendide, prêt à être offert ! La mousse de douche est tellement onctueuse et le parfum de fleur de cerisier tient toute la journée.',
+                'comment' => 'L\'emballage origami The Ritual of Sakura est splendide, prêt à être offert ! La mousse de douche est tellement onctueuse et le parfum de fleur de cerisier tient toute la journée.',
                 'avatar' => '/images/reviews/yasmine.jpg',
                 'badge' => 'Achat vérifié',
                 'ring_color' => 'amber',
@@ -159,9 +159,9 @@ class CatalogSeeder extends Seeder
             [
                 'id' => 5,
                 'author_name' => 'Nadia Fourati',
-                'author_role' => 'Cliente vérifiée • Rituals Ayurveda',
+                'author_role' => 'Cliente vérifiée • The Ritual of Ayurveda',
                 'rating' => 5,
-                'comment' => 'Rituals Ayurveda est mon rituel réconfortant préféré. L\'accord rose indienne et amande douce laisse la peau nourrie et satinée. Colis très bien sécurisé.',
+                'comment' => 'The Ritual of Ayurveda est mon rituel réconfortant préféré. L\'accord rose indienne et amande douce laisse la peau nourrie et satinée. Colis très bien sécurisé.',
                 'avatar' => '/images/reviews/nadia.jpg',
                 'badge' => 'Achat vérifié',
                 'ring_color' => 'emerald',
