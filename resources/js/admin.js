@@ -4267,6 +4267,20 @@
                 { key: 'indigo', label: 'Indigo Nuit', class: 'bg-indigo-500' },
             ];
 
+            const ratingOptions = [
+                { val: 5, stars: '★★★★★', label: '5 / 5 étoiles' },
+                { val: 4, stars: '★★★★☆', label: '4 / 5 étoiles' },
+                { val: 3, stars: '★★★☆☆', label: '3 / 5 étoiles' },
+                { val: 2, stars: '★★☆☆☆', label: '2 / 5 étoiles' },
+                { val: 1, stars: '★☆☆☆☆', label: '1 / 5 étoiles' },
+            ];
+
+            const currentRating = data.rating ? parseInt(data.rating, 10) : 5;
+            const currentRatingObj = ratingOptions.find(r => r.val === currentRating) || ratingOptions[0];
+
+            const currentRingKey = data.ring_color || 'pink';
+            const currentRingObj = ringOptions.find(r => r.key === currentRingKey) || ringOptions[0];
+
             const presetAvatars = [
                 { name: 'Sarah', src: '/images/reviews/sarah.jpg' },
                 { name: 'Yasmine', src: '/images/reviews/yasmine.jpg' },
@@ -4313,26 +4327,58 @@
                             <input type="text" name="author_role" value="${escapeHtml(data.author_role || '')}" placeholder="ex: Cliente vérifiée • Bare Vanilla Duo" class="input-luxury w-full" />
                         </div>
 
-                        <!-- Rating & Ring Color -->
+                        <!-- Custom Themed Rating & Ring Color Dropdowns -->
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                            <!-- Rating Custom Dropdown -->
                             <div>
                                 <label class="block font-bold text-zinc-700 mb-1">Note attribuée (1 à 5 étoiles) <span class="text-pink-600">*</span></label>
-                                <select name="rating" class="input-luxury w-full font-bold">
-                                    <option value="5" ${data.rating == 5 ? 'selected' : ''}>★★★★★ (5 / 5 étoiles)</option>
-                                    <option value="4" ${data.rating == 4 ? 'selected' : ''}>★★★★☆ (4 / 5 étoiles)</option>
-                                    <option value="3" ${data.rating == 3 ? 'selected' : ''}>★★★☆☆ (3 / 5 étoiles)</option>
-                                    <option value="2" ${data.rating == 2 ? 'selected' : ''}>★★☆☆☆ (2 / 5 étoiles)</option>
-                                    <option value="1" ${data.rating == 1 ? 'selected' : ''}>★☆☆☆☆ (1 / 5 étoiles)</option>
-                                </select>
+                                <input type="hidden" name="rating" id="rev-rating-input" value="${currentRating}" required />
+                                <div class="relative custom-form-dropdown" id="rev-rating-dropdown">
+                                    <button type="button" id="rev-rating-trigger" class="w-full px-4 py-3 bg-white border border-zinc-200 hover:border-pink-300 rounded-2xl text-xs font-semibold text-zinc-900 flex items-center justify-between cursor-pointer focus:outline-none focus:border-pink-500 focus:ring-4 focus:ring-pink-500/12 transition-all shadow-2xs">
+                                        <span id="rev-rating-label" class="font-bold text-zinc-900 truncate flex items-center gap-1.5">
+                                            <span class="text-amber-500 tracking-wider">${currentRatingObj.stars}</span>
+                                            <span class="text-zinc-500 text-[11px]">(${currentRatingObj.val}/5)</span>
+                                        </span>
+                                        <i class="ti ti-chevron-down text-zinc-400 transition-transform duration-200 chevron-icon"></i>
+                                    </button>
+                                    <div id="rev-rating-panel" class="custom-dropdown-panel absolute top-full left-0 right-0 mt-2 bg-white/95 backdrop-blur-md rounded-2xl shadow-[0_15px_35px_rgba(0,0,0,0.14)] border border-zinc-100 p-1.5 z-50 hidden">
+                                        ${ratingOptions.map(ro => `
+                                            <button type="button" class="rev-rating-opt w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${currentRating === ro.val ? 'bg-pink-50 text-pink-600' : 'text-zinc-700 hover:bg-zinc-50 hover:text-black'}" data-val="${ro.val}" data-stars="${ro.stars}">
+                                                <span class="truncate flex items-center gap-1.5">
+                                                    <span class="text-amber-500 tracking-wider">${ro.stars}</span>
+                                                    <span class="text-zinc-500 text-[11px]">(${ro.val}/5 étoiles)</span>
+                                                </span>
+                                                <i class="ti ti-check text-xs ${currentRating === ro.val ? '' : 'hidden'}"></i>
+                                            </button>
+                                        `).join('')}
+                                    </div>
+                                </div>
                             </div>
 
+                            <!-- Ring Color Custom Dropdown -->
                             <div>
                                 <label class="block font-bold text-zinc-700 mb-1">Couleur de l'anneau avatar</label>
-                                <select name="ring_color" class="input-luxury w-full">
-                                    ${ringOptions.map(ro => `
-                                        <option value="${ro.key}" ${data.ring_color === ro.key ? 'selected' : ''}>${ro.label}</option>
-                                    `).join('')}
-                                </select>
+                                <input type="hidden" name="ring_color" id="rev-ring-input" value="${currentRingKey}" />
+                                <div class="relative custom-form-dropdown" id="rev-ring-dropdown">
+                                    <button type="button" id="rev-ring-trigger" class="w-full px-4 py-3 bg-white border border-zinc-200 hover:border-pink-300 rounded-2xl text-xs font-semibold text-zinc-900 flex items-center justify-between cursor-pointer focus:outline-none focus:border-pink-500 focus:ring-4 focus:ring-pink-500/12 transition-all shadow-2xs">
+                                        <span id="rev-ring-label" class="font-bold text-zinc-900 truncate flex items-center gap-2">
+                                            <span class="w-3 h-3 rounded-full ${currentRingObj.class} ring-2 ring-zinc-200 shrink-0"></span>
+                                            <span class="truncate">${currentRingObj.label}</span>
+                                        </span>
+                                        <i class="ti ti-chevron-down text-zinc-400 transition-transform duration-200 chevron-icon"></i>
+                                    </button>
+                                    <div id="rev-ring-panel" class="custom-dropdown-panel absolute top-full left-0 right-0 mt-2 bg-white/95 backdrop-blur-md rounded-2xl shadow-[0_15px_35px_rgba(0,0,0,0.14)] border border-zinc-100 p-1.5 z-50 hidden max-h-52 overflow-y-auto custom-scrollbar">
+                                        ${ringOptions.map(ro => `
+                                            <button type="button" class="rev-ring-opt w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${currentRingKey === ro.key ? 'bg-pink-50 text-pink-600' : 'text-zinc-700 hover:bg-zinc-50 hover:text-black'}" data-key="${ro.key}" data-label="${ro.label}" data-class="${ro.class}">
+                                                <span class="truncate flex items-center gap-2">
+                                                    <span class="w-3 h-3 rounded-full ${ro.class} ring-2 ring-zinc-200 shrink-0"></span>
+                                                    <span class="truncate">${ro.label}</span>
+                                                </span>
+                                                <i class="ti ti-check text-xs ${currentRingKey === ro.key ? '' : 'hidden'}"></i>
+                                            </button>
+                                        `).join('')}
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -4413,6 +4459,100 @@
             modalSystem.openModal(html, {
                 maxWidth: 'max-w-lg',
                 onMount: (box) => {
+                    // Rating custom dropdown wiring
+                    const ratingTrigger = box.querySelector('#rev-rating-trigger');
+                    const ratingPanel = box.querySelector('#rev-rating-panel');
+                    const ratingLabel = box.querySelector('#rev-rating-label');
+                    const ratingInput = box.querySelector('#rev-rating-input');
+                    const ratingChevron = ratingTrigger?.querySelector('.chevron-icon');
+
+                    ratingTrigger?.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        box.querySelectorAll('.custom-dropdown-panel').forEach(p => {
+                            if (p !== ratingPanel) p.classList.add('hidden');
+                        });
+                        box.querySelectorAll('.custom-form-dropdown .chevron-icon').forEach(c => {
+                            if (c !== ratingChevron) c.classList.remove('rotate-180');
+                        });
+
+                        const isHidden = ratingPanel.classList.toggle('hidden');
+                        ratingChevron?.classList.toggle('rotate-180', !isHidden);
+                    });
+
+                    box.querySelectorAll('.rev-rating-opt').forEach(opt => {
+                        opt.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            const val = parseInt(opt.dataset.val, 10);
+                            const stars = opt.dataset.stars;
+                            if (ratingInput) ratingInput.value = val;
+                            if (ratingLabel) {
+                                ratingLabel.innerHTML = `
+                                    <span class="text-amber-500 tracking-wider">${stars}</span>
+                                    <span class="text-zinc-500 text-[11px]">(${val}/5)</span>
+                                `;
+                            }
+
+                            box.querySelectorAll('.rev-rating-opt').forEach(o => {
+                                const isMatch = parseInt(o.dataset.val, 10) === val;
+                                o.classList.toggle('bg-pink-50', isMatch);
+                                o.classList.toggle('text-pink-600', isMatch);
+                                o.classList.toggle('text-zinc-700', !isMatch);
+                                const check = o.querySelector('.ti-check');
+                                if (check) check.classList.toggle('hidden', !isMatch);
+                            });
+
+                            ratingPanel.classList.add('hidden');
+                            ratingChevron?.classList.remove('rotate-180');
+                        });
+                    });
+
+                    // Ring color custom dropdown wiring
+                    const ringTrigger = box.querySelector('#rev-ring-trigger');
+                    const ringPanel = box.querySelector('#rev-ring-panel');
+                    const ringLabel = box.querySelector('#rev-ring-label');
+                    const ringInput = box.querySelector('#rev-ring-input');
+                    const ringChevron = ringTrigger?.querySelector('.chevron-icon');
+
+                    ringTrigger?.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        box.querySelectorAll('.custom-dropdown-panel').forEach(p => {
+                            if (p !== ringPanel) p.classList.add('hidden');
+                        });
+                        box.querySelectorAll('.custom-form-dropdown .chevron-icon').forEach(c => {
+                            if (c !== ringChevron) c.classList.remove('rotate-180');
+                        });
+
+                        const isHidden = ringPanel.classList.toggle('hidden');
+                        ringChevron?.classList.toggle('rotate-180', !isHidden);
+                    });
+
+                    box.querySelectorAll('.rev-ring-opt').forEach(opt => {
+                        opt.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            const key = opt.dataset.key;
+                            const label = opt.dataset.label;
+                            const colorClass = opt.dataset.class;
+                            if (ringInput) ringInput.value = key;
+                            if (ringLabel) {
+                                ringLabel.innerHTML = `
+                                    <span class="w-3 h-3 rounded-full ${colorClass} ring-2 ring-zinc-200 shrink-0"></span>
+                                    <span class="truncate">${escapeHtml(label)}</span>
+                                `;
+                            }
+
+                            box.querySelectorAll('.rev-ring-opt').forEach(o => {
+                                const isMatch = o.dataset.key === key;
+                                o.classList.toggle('bg-pink-50', isMatch);
+                                o.classList.toggle('text-pink-600', isMatch);
+                                o.classList.toggle('text-zinc-700', !isMatch);
+                                const check = o.querySelector('.ti-check');
+                                if (check) check.classList.toggle('hidden', !isMatch);
+                            });
+
+                            ringPanel.classList.add('hidden');
+                            ringChevron?.classList.remove('rotate-180');
+                        });
+                    });
                     const avatarInput = box.querySelector('#rev-avatar-input');
                     const fileInput = box.querySelector('#rev-file-input');
                     const uploadZone = box.querySelector('#rev-upload-zone');
