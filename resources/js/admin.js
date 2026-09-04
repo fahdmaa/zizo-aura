@@ -1215,7 +1215,7 @@
                                                 ` : p.is_active ? `
                                                     <span class="inline-flex px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-bold">Actif</span>
                                                 ` : `
-                                                    <span class="inline-flex px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 border border-amber-200 text-[10px] font-bold">Inactif (Précommande)</span>
+                                                    <span class="inline-flex px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 border border-amber-200 text-[10px] font-bold">Inactif</span>
                                                 `}
                                             </td>
                                             <td class="px-6 py-4 text-right">
@@ -1225,20 +1225,19 @@
                                                             <i class="ti ti-refresh mr-1"></i> Restaurer
                                                         </button>
                                                     ` : `
-                                                        <!-- Option 1: Toggle Status (Actif / Inactif) -->
+                                                        <!-- Toggle Status (Actif / Inactif) -->
                                                         <button type="button"
                                                                 data-action="toggle-status"
                                                                 data-id="${p.id}"
                                                                 data-name="${p.name}"
                                                                 data-active="${p.is_active ? '1' : '0'}"
-                                                                class="px-2.5 py-1.5 rounded-xl font-bold text-xs transition cursor-pointer flex items-center gap-1.5 ${
+                                                                class="p-2 rounded-xl transition cursor-pointer ${
                                                                     p.is_active
-                                                                        ? 'bg-emerald-50 hover:bg-amber-50 text-emerald-700 hover:text-amber-700 border border-emerald-200 hover:border-amber-300'
-                                                                        : 'bg-amber-50 hover:bg-emerald-50 text-amber-700 hover:text-emerald-700 border border-amber-200 hover:border-emerald-300'
+                                                                        ? 'bg-emerald-50 hover:bg-emerald-600 text-emerald-700 hover:text-white'
+                                                                        : 'bg-amber-50 hover:bg-amber-600 text-amber-700 hover:text-white'
                                                                 }"
-                                                                title="${p.is_active ? 'Actif : Cliquer pour passer en Inactif (Mode Précommande)' : 'Inactif : Cliquer pour passer en Actif (Achat direct)'}">
-                                                            <i class="ti ${p.is_active ? 'ti-toggle-right text-base text-emerald-600' : 'ti-toggle-left text-base text-amber-600'}"></i>
-                                                            <span class="hidden xl:inline">${p.is_active ? 'Actif' : 'Inactif'}</span>
+                                                                title="${p.is_active ? 'Actif : Cliquer pour désactiver' : 'Inactif : Cliquer pour activer'}">
+                                                            <i class="ti ${p.is_active ? 'ti-toggle-right text-base' : 'ti-toggle-left text-base'}"></i>
                                                         </button>
 
                                                         <!-- Edit Button -->
@@ -1246,7 +1245,7 @@
                                                             <i class="ti ti-edit text-sm"></i>
                                                         </button>
 
-                                                        <!-- Option 2: Radical Delete (Hard Delete from Website) -->
+                                                        <!-- Radical Delete Button -->
                                                         <button type="button" data-action="force-delete" data-id="${p.id}" data-name="${p.name}" class="p-2 rounded-xl bg-red-50 hover:bg-red-600 hover:text-white text-red-600 transition cursor-pointer" title="Supprimer radicalement le produit du site">
                                                             <i class="ti ti-trash text-sm"></i>
                                                         </button>
@@ -1292,9 +1291,9 @@
                         try {
                             const res = await api.post(`/api/admin/products/${id}/toggle-status`);
                             if (res.is_active) {
-                                toast.show(`"${name}" est maintenant ACTIF (Achat direct disponible sur le site).`);
+                                toast.show(`"${name}" est maintenant ACTIF.`);
                             } else {
-                                toast.show(`"${name}" est maintenant INACTIF (Mode Précommande activé sur le site).`);
+                                toast.show(`"${name}" est maintenant INACTIF.`);
                             }
                             await this.loadProductsList();
                         } catch (err) {
