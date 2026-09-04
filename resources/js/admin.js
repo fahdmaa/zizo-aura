@@ -1158,7 +1158,7 @@
                                             <td class="px-6 py-4">
                                                 <div class="flex items-center gap-3.5">
                                                     <div class="w-12 h-12 rounded-xl bg-zinc-100 border border-zinc-200/80 p-1 shrink-0 overflow-hidden flex items-center justify-center">
-                                                        <img src="${p.image || '/images/sdj_bum_bum_set.jpg'}" alt="${p.name}" class="w-full h-full object-contain" onerror="this.src='/images/sdj_bum_bum_set.jpg'" />
+                                                        <img src="${p.image || '/images/sdj_bum_bum_set.png'}" alt="${p.name}" class="w-full h-full object-contain" onerror="this.src='/images/sdj_bum_bum_set.png'" />
                                                     </div>
                                                     <div class="min-w-0">
                                                         <div class="font-bold text-zinc-900 text-xs truncate max-w-xs flex items-center gap-1.5">
@@ -1503,7 +1503,7 @@
                                 <!-- Visual Preview Box (when image exists/uploaded) -->
                                 <div id="pe-main-preview-card" class="${product.image ? '' : 'hidden'} bg-zinc-50/70 border border-zinc-200/80 rounded-3xl p-4 flex flex-col sm:flex-row items-center gap-4 transition-all">
                                     <div class="relative w-24 h-24 rounded-2xl bg-white border border-zinc-200 shadow-2xs overflow-hidden shrink-0 flex items-center justify-center p-1.5 group">
-                                        <img id="pe-main-preview-img" src="${product.image || '/images/sdj_bum_bum_set.jpg'}" alt="Preview" class="w-full h-full object-contain transition-transform group-hover:scale-105" />
+                                        <img id="pe-main-preview-img" src="${product.image || '/images/sdj_bum_bum_set.png'}" alt="Preview" class="w-full h-full object-contain transition-transform group-hover:scale-105" />
                                     </div>
                                     <div class="flex-1 text-center sm:text-left space-y-1 min-w-0">
                                         <div class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-bold">
@@ -2794,7 +2794,7 @@
                                     <tr class="hover:bg-pink-50/20 transition-colors" id="sale-row-${p.id}">
                                         <td class="px-4 py-3">
                                             <div class="flex items-center gap-2.5">
-                                                <img src="${p.image || '/images/sdj_bum_bum_set.jpg'}" alt="" class="w-8 h-8 rounded-lg object-contain bg-zinc-100 border border-zinc-200" />
+                                                <img src="${p.image || '/images/sdj_bum_bum_set.png'}" alt="" class="w-8 h-8 rounded-lg object-contain bg-zinc-100 border border-zinc-200" />
                                                 <span class="font-bold text-zinc-900">${p.name}</span>
                                             </div>
                                         </td>
@@ -3270,7 +3270,7 @@
                                     ${(order.items || []).map(item => `
                                         <div class="p-3.5 flex items-center gap-3">
                                             <div class="w-12 h-12 rounded-xl bg-zinc-50 border border-zinc-100 overflow-hidden shrink-0 flex items-center justify-center p-1">
-                                                <img src="${item.product_image || '/images/sdj_bum_bum_set.jpg'}" alt="${item.product_name}" class="w-full h-full object-contain" onerror="this.src='/images/sdj_bum_bum_set.jpg'" />
+                                                <img src="${item.product_image || '/images/sdj_bum_bum_set.png'}" alt="${item.product_name}" class="w-full h-full object-contain" onerror="this.src='/images/sdj_bum_bum_set.png'" />
                                             </div>
                                             <div class="flex-1 min-w-0">
                                                 <div class="font-bold text-zinc-900 truncate">${item.product_name}</div>

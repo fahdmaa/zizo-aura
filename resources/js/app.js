@@ -253,7 +253,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 html += `
                     <div class="py-3.5 flex items-center gap-3.5 group">
                         <a href="${productUrl}" class="w-16 h-16 rounded-xl bg-[#f8f9fa] border border-zinc-100 p-1 flex items-center justify-center shrink-0 overflow-hidden">
-                            <img src="${item.image || '/images/sdj_bum_bum_set.jpg'}" alt="${item.name}" class="w-full h-full object-contain group-hover:scale-105 transition-transform" />
+                            <img src="${item.image || '/images/sdj_bum_bum_set.png'}" alt="${item.name}" class="w-full h-full object-contain group-hover:scale-105 transition-transform" />
                         </a>
                         <div class="flex-1 min-w-0">
                             <a href="${productUrl}" class="text-xs font-bold text-zinc-900 hover:text-pink-600 transition-colors line-clamp-1 block">
@@ -451,7 +451,7 @@ document.addEventListener('DOMContentLoaded', () => {
             cart.push({
                 name,
                 price: numericPrice,
-                image: image || '/images/sdj_bum_bum_set.jpg',
+                image: image || '/images/sdj_bum_bum_set.png',
                 slug: slug || '',
                 flavor: flavor || '',
                 size: size || '',

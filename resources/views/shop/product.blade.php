@@ -26,7 +26,7 @@
     }
     $allImages = array_values(array_unique(array_filter(array_merge([$product['image']], (array) $rawGallery))));
     if (empty($allImages)) {
-        $allImages = [$product['image'] ?: '/images/sdj_bum_bum_set.jpg'];
+        $allImages = [$product['image'] ?: '/images/sdj_bum_bum_set.png'];
     }
 @endphp
 

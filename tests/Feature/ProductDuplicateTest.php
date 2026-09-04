@@ -30,7 +30,7 @@ class ProductDuplicateTest extends TestCase
             'slug' => 'brazilian-bum-bum-cream',
             'price' => 350,
             'discounted_price' => 280,
-            'image' => '/images/bum_bum_cream.jpg',
+            'image' => '/images/bum_bum_cream.png',
             'description' => 'Crème brésilienne iconique',
             'in_stock' => true,
             'is_active' => true,
