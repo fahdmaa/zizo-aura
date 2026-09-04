@@ -104,7 +104,8 @@ class Product extends Model
 
     public function scopeInStock($query)
     {
-        return $query->where('in_stock', true);
+        return $query->where('in_stock', true)
+            ->where(fn ($q) => $q->whereNull('stock_quantity')->orWhere('stock_quantity', '>', 0));
     }
 
     /** The stable shape consumed by the public storefront and its API. */

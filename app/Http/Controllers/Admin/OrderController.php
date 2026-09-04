@@ -17,10 +17,15 @@ class OrderController extends Controller
         }
 
         if ($request->filled('search')) {
-            $query->where(function ($q) use ($request) {
-                $q->where('customer_name', 'ilike', '%'.$request->search.'%')
-                  ->orWhere('customer_phone', 'like', '%'.$request->search.'%')
-                  ->orWhere('id', $request->search);
+            $term = trim((string) $request->search);
+            $like = \Illuminate\Support\Facades\DB::getDriverName() === 'pgsql' ? 'ilike' : 'like';
+            $query->where(function ($q) use ($term, $like) {
+                $q->where('customer_name', $like, '%'.$term.'%')
+                  ->orWhere('customer_phone', 'like', '%'.$term.'%');
+
+                if (is_numeric($term)) {
+                    $q->orWhere('id', (int) $term);
+                }
             });
         }
 

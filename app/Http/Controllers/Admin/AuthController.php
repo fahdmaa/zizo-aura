@@ -10,7 +10,7 @@ class AuthController extends Controller
 {
     public function showLogin(Request $request)
     {
-        if ($request->session()->get('admin_authenticated') || $request->cookie('admin_logged_in') === '1') {
+        if ($request->session()->get('admin_authenticated')) {
             return redirect()->to('/admin');
         }
 
@@ -29,15 +29,14 @@ class AuthController extends Controller
         $isHash = password_get_info($adminPassword)['algo'] !== null;
         $isValid = $isHash
             ? (Hash::check($inputPassword, $adminPassword) || Hash::check(trim($inputPassword), $adminPassword))
-            : (hash_equals($adminPassword, $inputPassword) || hash_equals(trim($adminPassword), trim($inputPassword)) || hash_equals('zizoaura2025!', trim($inputPassword)));
+            : (hash_equals($adminPassword, $inputPassword) || hash_equals(trim($adminPassword), trim($inputPassword)));
 
         if ($isValid) {
+            $request->session()->regenerate();
             $request->session()->put('admin_authenticated', true);
             $request->session()->save();
 
-            $adminCookie = cookie('admin_logged_in', '1', 60 * 24, '/', null, true, true, false, 'lax');
-
-            return redirect()->to('/admin')->withCookie($adminCookie);
+            return redirect()->intended('/admin');
         }
 
         return back()->withErrors(['password' => 'Mot de passe administrateur incorrect.']);
@@ -49,8 +48,6 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        $forgetCookie = cookie()->forget('admin_logged_in', '/', null);
-
-        return redirect()->route('admin.login')->withCookie($forgetCookie);
+        return redirect()->route('admin.login');
     }
 }

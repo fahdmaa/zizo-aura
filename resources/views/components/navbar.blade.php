@@ -198,9 +198,9 @@
                 <div class="p-3 bg-pink-50 rounded-2xl border border-pink-100 text-center">
                     <p class="text-xs font-black text-pink-600 uppercase tracking-wider flex items-center justify-center gap-1.5">
                         <i class="ti ti-truck-delivery text-base"></i>
-                        <span>Livraison Offerte dès 550 DH</span>
+                        <span>Livraison Express Partout au Maroc</span>
                     </p>
-                    <p class="text-[10px] text-zinc-500 font-semibold mt-0.5">Partout au Maroc sous 24/48h</p>
+                    <p class="text-[10px] text-zinc-500 font-semibold mt-0.5">Expédition rapide sous 24/48h &bull; Paiement à la livraison</p>
                 </div>
 
                 <div class="flex items-center justify-center gap-4 text-zinc-600 pt-1">

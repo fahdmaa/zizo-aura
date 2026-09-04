@@ -63,7 +63,7 @@
                 </a>
 
                 <p class="text-center text-[10px] text-zinc-400 font-medium">
-                    *Livraison offerte dès 550 DH &bull; Expédié sous 24h
+                    Expédié sous 24h &bull; Paiement à la livraison partout au Maroc
                 </p>
             </div>
         </div>

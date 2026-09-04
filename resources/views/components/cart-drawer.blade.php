@@ -19,21 +19,10 @@
             </button>
         </div>
 
-        <!-- Free Delivery Progress Bar & Discount Code Card -->
-        <div class="px-5 py-3.5 bg-[#f8f9fa] border-b border-zinc-100 space-y-3">
-            <!-- Free Delivery Progress -->
-            <div>
-                <div class="flex items-center justify-between text-xs font-bold mb-1.5" id="shipping-progress-text">
-                    <span id="shipping-status-label" class="text-zinc-700 font-extrabold">Livraison offerte dès 550 DH</span>
-                    <span id="shipping-remaining-amount" class="text-pink-600 font-extrabold">Plus que 550 DH</span>
-                </div>
-                <div class="w-full bg-zinc-200 rounded-full h-1.5 overflow-hidden">
-                    <div id="shipping-progress-bar" class="bg-gradient-to-r from-pink-500 to-rose-500 h-1.5 rounded-full transition-all duration-500 w-0"></div>
-                </div>
-            </div>
-
+        <!-- Discount / Promo Code Card -->
+        <div class="px-5 py-3.5 bg-[#f8f9fa] border-b border-zinc-100">
             <!-- Discount / Promo Code Form in Same Card -->
-            <div id="cart-coupon-card-section" class="pt-2.5 border-t border-zinc-200/60">
+            <div id="cart-coupon-card-section">
                 <!-- Input Form when no coupon is applied -->
                 <div id="coupon-input-wrapper" class="flex items-center gap-2">
                     <input type="text"

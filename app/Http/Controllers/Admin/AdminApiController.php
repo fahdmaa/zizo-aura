@@ -42,7 +42,10 @@ class AdminApiController extends Controller
         ])->with(['category:id,name,slug'])->withTrashed();
 
         if ($request->filled('category_id')) $query->where('category_id', $request->integer('category_id'));
-        if ($request->filled('search')) $query->where('name', 'ilike', '%'.$request->string('search').'%');
+        if ($request->filled('search')) {
+            $like = DB::getDriverName() === 'pgsql' ? 'ilike' : 'like';
+            $query->where('name', $like, '%'.$request->string('search').'%');
+        }
         if ($request->input('status') === 'deleted') $query->onlyTrashed();
         if ($request->input('status') === 'active') $query->whereNull('deleted_at')->where('is_active', true);
         if ($request->input('status') === 'inactive') $query->whereNull('deleted_at')->where('is_active', false);
@@ -56,7 +59,7 @@ class AdminApiController extends Controller
     {
         $product = DB::transaction(function () use ($request) {
             $data = $this->productData($request);
-            $data['slug'] = ($data['slug'] ?? null) ?: Str::slug($data['name']);
+            $data['slug'] = ! empty($data['slug']) ? Str::slug($data['slug']) : $this->generateUniqueProductSlug($data['name']);
             $data['image'] = \App\Services\ImageOptimizer::optimizeBase64($data['image']);
             if (isset($data['gallery'])) {
                 $data['gallery'] = \App\Services\ImageOptimizer::optimizeGallery($data['gallery']);
@@ -72,7 +75,7 @@ class AdminApiController extends Controller
     {
         DB::transaction(function () use ($request, $product) {
             $data = $this->productData($request, $product->id);
-            $data['slug'] = ($data['slug'] ?? null) ?: Str::slug($data['name']);
+            $data['slug'] = ! empty($data['slug']) ? Str::slug($data['slug']) : $this->generateUniqueProductSlug($data['name'], $product->id);
             if (isset($data['image'])) {
                 $data['image'] = \App\Services\ImageOptimizer::optimizeBase64($data['image']);
             }
@@ -171,17 +174,20 @@ class AdminApiController extends Controller
     public function categories(): JsonResponse { return response()->json(Category::withCount('products')->orderBy('sort_order')->get()); }
     public function storeCategory(Request $request): JsonResponse
     {
-        $data = $this->categoryData($request); $data['slug'] = ($data['slug'] ?? null) ?: Str::slug($data['name']);
+        $data = $this->categoryData($request);
+        $data['slug'] = ! empty($data['slug']) ? Str::slug($data['slug']) : $this->generateUniqueCategorySlug($data['name']);
         return response()->json(Category::create($data), 201);
     }
     public function updateCategory(Request $request, Category $category): JsonResponse
     {
-        $data = $this->categoryData($request, $category->id); $data['slug'] = ($data['slug'] ?? null) ?: Str::slug($data['name']); $category->update($data);
+        $data = $this->categoryData($request, $category->id);
+        $data['slug'] = ! empty($data['slug']) ? Str::slug($data['slug']) : $this->generateUniqueCategorySlug($data['name'], $category->id);
+        $category->update($data);
         return response()->json($category->fresh());
     }
     public function deleteCategory(Category $category): JsonResponse
     {
-        abort_if($category->products()->exists(), 422, 'Impossible de supprimer une catégorie contenant des produits.');
+        abort_if($category->products()->withTrashed()->exists(), 422, 'Impossible de supprimer une catégorie contenant des produits.');
         $category->delete(); return response()->json([], 204);
     }
 
@@ -194,8 +200,21 @@ class AdminApiController extends Controller
     public function orders(Request $request): JsonResponse
     {
         $query = Order::with('items')->latest();
-        if ($request->filled('status')) $query->where('status', $request->string('status'));
-        if ($request->filled('search')) $query->where(fn ($q) => $q->where('customer_name', 'ilike', '%'.$request->string('search').'%')->orWhere('customer_phone', 'like', '%'.$request->string('search').'%')->orWhere('id', $request->string('search')));
+        if ($request->filled('status')) {
+            $query->where('status', $request->string('status'));
+        }
+        if ($request->filled('search')) {
+            $term = trim((string) $request->string('search'));
+            $like = DB::getDriverName() === 'pgsql' ? 'ilike' : 'like';
+            $query->where(function ($q) use ($term, $like) {
+                $q->where('customer_name', $like, '%'.$term.'%')
+                  ->orWhere('customer_phone', 'like', '%'.$term.'%');
+
+                if (is_numeric($term)) {
+                    $q->orWhere('id', (int) $term);
+                }
+            });
+        }
         return response()->json($query->paginate($request->integer('per_page', 20))->withQueryString());
     }
     public function order(Order $order): JsonResponse { return response()->json($order->load('items.product')); }
@@ -236,10 +255,11 @@ class AdminApiController extends Controller
 
         if ($request->filled('search')) {
             $search = $request->string('search');
-            $query->where(function ($q) use ($search) {
-                $q->where('author_name', 'ilike', "%{$search}%")
-                  ->orWhere('author_role', 'ilike', "%{$search}%")
-                  ->orWhere('comment', 'ilike', "%{$search}%");
+            $like = DB::getDriverName() === 'pgsql' ? 'ilike' : 'like';
+            $query->where(function ($q) use ($search, $like) {
+                $q->where('author_name', $like, "%{$search}%")
+                  ->orWhere('author_role', $like, "%{$search}%")
+                  ->orWhere('comment', $like, "%{$search}%");
             });
         }
 
@@ -322,6 +342,52 @@ class AdminApiController extends Controller
         if (array_key_exists('sizes', $data)) { $product->sizes()->delete(); foreach ($data['sizes'] ?? [] as $i => $size) $product->sizes()->create(['label' => $size['label'], 'price' => $size['price'] ?? null, 'in_stock' => $size['in_stock'] ?? true, 'sort_order' => $i]); }
         if (array_key_exists('flavors', $data)) { $product->flavors()->delete(); foreach ($data['flavors'] ?? [] as $i => $flavor) $product->flavors()->create(['label' => $flavor['label'], 'color_hex' => $flavor['color_hex'] ?? null, 'in_stock' => $flavor['in_stock'] ?? true, 'sort_order' => $i]); }
     }
-    private function categoryData(Request $request, ?int $id = null): array { return $request->validate(['name' => 'required|string|max:255', 'slug' => ["nullable", 'string', 'max:255', "unique:categories,slug,{$id}"], 'image' => 'nullable|string', 'description' => 'nullable|string', 'is_active' => 'boolean', 'sort_order' => 'integer']); }
-    private function couponData(Request $request, ?int $id = null): array { return $request->validate(['code' => ["required", 'string', 'max:50', "unique:coupons,code,{$id}"], 'type' => 'required|in:percent,fixed', 'value' => 'required|numeric|min:0.01', 'min_order_amount' => 'nullable|numeric|min:0', 'max_uses' => 'nullable|integer|min:1', 'is_active' => 'boolean', 'expires_at' => 'nullable|date']); }
+    private function generateUniqueProductSlug(string $name, ?int $ignoreId = null): string
+    {
+        $baseSlug = Str::slug($name) ?: 'produit';
+        $slug = $baseSlug;
+        $i = 1;
+        while (Product::withTrashed()->where('slug', $slug)->when($ignoreId, fn ($q) => $q->where('id', '!=', $ignoreId))->exists()) {
+            $slug = "{$baseSlug}-{$i}";
+            $i++;
+        }
+        return $slug;
+    }
+
+    private function generateUniqueCategorySlug(string $name, ?int $ignoreId = null): string
+    {
+        $baseSlug = Str::slug($name) ?: 'categorie';
+        $slug = $baseSlug;
+        $i = 1;
+        while (Category::where('slug', $slug)->when($ignoreId, fn ($q) => $q->where('id', '!=', $ignoreId))->exists()) {
+            $slug = "{$baseSlug}-{$i}";
+            $i++;
+        }
+        return $slug;
+    }
+
+    private function categoryData(Request $request, ?int $id = null): array
+    {
+        return $request->validate([
+            'name' => 'required|string|max:255',
+            'slug' => ["nullable", 'string', 'max:255', "unique:categories,slug,{$id}"],
+            'image' => 'nullable|string',
+            'description' => 'nullable|string',
+            'is_active' => 'boolean',
+            'sort_order' => 'integer',
+        ]);
+    }
+
+    private function couponData(Request $request, ?int $id = null): array
+    {
+        return $request->validate([
+            'code' => ["required", 'string', 'max:50', "unique:coupons,code,{$id}"],
+            'type' => 'required|in:percent,fixed',
+            'value' => 'required|numeric|min:0.01',
+            'min_order_amount' => 'nullable|numeric|min:0',
+            'max_uses' => 'nullable|integer|min:1',
+            'is_active' => 'boolean',
+            'expires_at' => 'nullable|date',
+        ]);
+    }
 }

@@ -13,8 +13,8 @@ Welcome to **zizo aura** (`🇪🇺🇫🇷🇲🇦`), a luxury beauty and bodyc
 
 ### 2. Localization & Currency
 - **Language:** **French (`FR`)** across the entire website, buttons, modals, toasts, error states, and product descriptions.
-- **Currency:** **Moroccan Dirhams (`DH`)**, formatted as `350 DH`, `490 DH`, `550 DH`.
-- **Delivery Threshold:** Free delivery starting at **`550 DH`** (`Livraison offerte dès 550 DH de commande partout au Maroc 🇲🇦`).
+- **Currency:** **Moroccan Dirhams (`DH`)**, formatted as `350 DH`, `490 DH`, `590 DH`.
+- **Delivery:** Express delivery partout au Maroc 🇲🇦 (`35 DH` flat rate • 24/48h • Paiement à la livraison).
 
 ### 3. Aesthetics & Visual Hierarchy
 - **Brand Name:** `zizo aura` (lowercase in logo).
@@ -73,7 +73,7 @@ sephora-laravel/
 │       ├── contact.blade.php      # Contact page with custom subject dropdown
 │       ├── layouts/app.blade.php  # Master layout with navbar, footer, toast & promo modal
 │       ├── components/
-│       │   ├── navbar.blade.php            # Top marquee ticker (550 DH) + expandable search
+│       │   ├── navbar.blade.php            # Top brand navigation + expandable search
 │       │   ├── footer.blade.php            # Footer & social (@zizo_aura_)
 │       │   ├── hero-hismile.blade.php      # Hero section
 │       │   ├── products-marquee.blade.php  # Best discount offers marquee

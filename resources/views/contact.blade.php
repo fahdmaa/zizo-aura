@@ -203,14 +203,14 @@
                     </div>
                 </div>
 
-                <!-- Free Delivery Card -->
+                <!-- Express Delivery Card -->
                 <div class="p-6 bg-white rounded-2xl border border-zinc-100 shadow-sm flex items-start gap-4 transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] hover:shadow-[0_12px_28px_rgba(255,27,122,0.12)] hover:border-pink-200 group">
                     <div class="w-12 h-12 rounded-2xl bg-pink-50 text-pink-600 flex items-center justify-center shrink-0 group-hover:bg-pink-100 group-hover:scale-110 transition-all">
                         <i class="ti ti-truck-delivery text-2xl"></i>
                     </div>
                     <div>
-                        <h3 class="text-sm font-bold text-zinc-900 mb-1 group-hover:text-pink-600 transition-colors">Livraison offerte dès 550 DH</h3>
-                        <p class="text-xs text-zinc-500 leading-relaxed">Expédition express suivie sous 24h avec échantillons offerts dans chaque commande.</p>
+                        <h3 class="text-sm font-bold text-zinc-900 mb-1 group-hover:text-pink-600 transition-colors">Livraison Partout au Maroc</h3>
+                        <p class="text-xs text-zinc-500 leading-relaxed">Expédition express suivie sous 24h/48h avec échantillons offerts dans chaque commande.</p>
                     </div>
                 </div>
 

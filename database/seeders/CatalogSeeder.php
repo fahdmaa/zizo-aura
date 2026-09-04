@@ -73,6 +73,30 @@ class CatalogSeeder extends Seeder
                 'created_at' => $now,
                 'updated_at' => $now,
             ],
+            [
+                'code' => 'RIO35',
+                'type' => 'percent',
+                'value' => 35.00,
+                'min_order_amount' => 300.00,
+                'max_uses' => 1000,
+                'used_count' => 0,
+                'is_active' => true,
+                'expires_at' => null,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ],
+            [
+                'code' => 'ZIZO10',
+                'type' => 'percent',
+                'value' => 10.00,
+                'min_order_amount' => 0.00,
+                'max_uses' => 1000,
+                'used_count' => 0,
+                'is_active' => true,
+                'expires_at' => null,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ],
         ], ['code'], ['type', 'value', 'min_order_amount', 'max_uses', 'is_active', 'updated_at']);
     }
 }

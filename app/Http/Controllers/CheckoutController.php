@@ -27,7 +27,10 @@ class CheckoutController extends Controller
 
         $order = DB::transaction(function () use ($request, $data) {
             $cartKey = $request->session()->get('cart_id');
-            $items = CartItem::where('session_id', $cartKey)->get();
+            if (empty($cartKey)) {
+                throw ValidationException::withMessages(['cart' => 'Votre panier est vide.']);
+            }
+            $items = CartItem::where('session_id', $cartKey)->lockForUpdate()->get();
             if ($items->isEmpty()) {
                 throw ValidationException::withMessages(['cart' => 'Votre panier est vide.']);
             }
@@ -53,7 +56,7 @@ class CheckoutController extends Controller
             }
 
             $discount = $coupon?->calculateDiscount($subtotal) ?? 0.0;
-            $shipping = $subtotal < 500 ? 35.0 : 0.0;
+            $shipping = 35.0;
             $order = Order::create(array_merge($data, [
                 'subtotal' => $subtotal,
                 'shipping_cost' => $shipping,

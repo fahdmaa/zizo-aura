@@ -90,7 +90,7 @@ class CartController extends Controller
             ->get();
         $subtotal = round($items->sum(fn (CartItem $item) => (float) $item->unit_price * $item->quantity), 2);
         $discount = $coupon?->calculateDiscount($subtotal) ?? 0.0;
-        $shipping = $subtotal > 0 && $subtotal < 500 ? 35.0 : 0.0;
+        $shipping = $subtotal > 0 ? 35.0 : 0.0;
 
         return [
             'items' => $items->map(fn (CartItem $item) => [

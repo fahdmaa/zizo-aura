@@ -20,7 +20,8 @@ class ProductController extends Controller
         }
 
         if ($request->filled('search')) {
-            $query->where('name', 'ilike', '%' . $request->search . '%');
+            $like = DB::getDriverName() === 'pgsql' ? 'ilike' : 'like';
+            $query->where('name', $like, '%' . $request->search . '%');
         }
 
         if ($request->filled('status')) {
@@ -48,7 +49,11 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $data = $this->validated($request);
-        $data['slug'] = $data['slug'] ?: Str::slug($data['name']);
+        $data['slug'] = ! empty($data['slug']) ? Str::slug($data['slug']) : $this->generateUniqueSlug($data['name']);
+        $data['image'] = \App\Services\ImageOptimizer::optimizeBase64($data['image']);
+        if (isset($data['gallery'])) {
+            $data['gallery'] = \App\Services\ImageOptimizer::optimizeGallery($data['gallery']);
+        }
 
         DB::transaction(function () use ($data, $request) {
             $product = Product::create($data);
@@ -70,7 +75,14 @@ class ProductController extends Controller
     public function update(Request $request, Product $product)
     {
         $data = $this->validated($request, $product->id);
-        $data['slug'] = $data['slug'] ?: Str::slug($data['name']);
+        $data['slug'] = ! empty($data['slug']) ? Str::slug($data['slug']) : $this->generateUniqueSlug($data['name'], $product->id);
+        if (isset($data['image'])) {
+            $data['image'] = \App\Services\ImageOptimizer::optimizeBase64($data['image']);
+        }
+        if (isset($data['gallery'])) {
+            $data['gallery'] = \App\Services\ImageOptimizer::optimizeGallery($data['gallery']);
+        }
+
         DB::transaction(function () use ($data, $request, $product) {
             $product->update($data);
             $this->syncVariants($product, $request);
@@ -177,6 +189,18 @@ class ProductController extends Controller
 
     // ── Private helpers ───────────────────────────────────────────────────────
 
+    private function generateUniqueSlug(string $name, ?int $ignoreId = null): string
+    {
+        $baseSlug = Str::slug($name) ?: 'produit';
+        $slug = $baseSlug;
+        $i = 1;
+        while (Product::withTrashed()->where('slug', $slug)->when($ignoreId, fn ($q) => $q->where('id', '!=', $ignoreId))->exists()) {
+            $slug = "{$baseSlug}-{$i}";
+            $i++;
+        }
+        return $slug;
+    }
+
     private function validated(Request $request, ?int $ignoreId = null): array
     {
         return $request->validate([
@@ -190,9 +214,9 @@ class ProductController extends Controller
             'usage'            => 'nullable|string',
             'price'            => 'required|numeric|min:0',
             'discounted_price' => 'nullable|numeric|min:0|lt:price',
-            'image'            => 'required|string|max:500',
+            'image'            => 'required|string',
             'gallery'          => 'nullable|array',
-            'gallery.*'        => 'string|max:500',
+            'gallery.*'        => 'string',
             'badge'            => 'nullable|string|max:100',
             'badge_color'      => 'nullable|string|max:100',
             'rating'           => 'nullable|numeric|min:0|max:5',

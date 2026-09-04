@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // =========================================================================
     const CART_STORAGE_KEY = 'zizo_aura_shopping_cart';
     const COUPON_STORAGE_KEY = 'zizo_aura_applied_coupon';
-    const FREE_SHIPPING_THRESHOLD = 550; // DH
+    const STANDARD_SHIPPING_FEE = 35; // DH partout au Maroc
 
     const getCart = () => {
         try {
@@ -67,9 +67,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const cartDrawerDiscountRow = document.getElementById('cart-drawer-discount-row');
     const cartDrawerDiscountLabel = document.getElementById('cart-drawer-discount-label');
     const cartDrawerDiscountAmount = document.getElementById('cart-drawer-discount-amount');
-    const shippingProgressBar = document.getElementById('shipping-progress-bar');
-    const shippingStatusLabel = document.getElementById('shipping-status-label');
-    const shippingRemainingAmount = document.getElementById('shipping-remaining-amount');
     const cartWhatsappBtn = document.getElementById('cart-whatsapp-btn');
     const navbarCartBtn = document.getElementById('navbar-cart-btn');
     const cartContinueShoppingBtn = document.getElementById('cart-continue-shopping-btn');
@@ -161,27 +158,6 @@ document.addEventListener('DOMContentLoaded', () => {
             cartDrawerCount.textContent = totalItemsCount;
         }
 
-        // Update shipping progress bar (Clean text without emojis/icons)
-        if (shippingProgressBar && shippingStatusLabel && shippingRemainingAmount) {
-            if (subtotal >= FREE_SHIPPING_THRESHOLD) {
-                shippingProgressBar.style.width = '100%';
-                shippingProgressBar.classList.remove('from-pink-500', 'to-rose-500');
-                shippingProgressBar.classList.add('bg-emerald-500');
-                shippingStatusLabel.textContent = 'Livraison offerte';
-                shippingRemainingAmount.textContent = 'Offerte';
-                shippingRemainingAmount.className = 'text-emerald-600 font-extrabold';
-            } else {
-                const percent = Math.min(100, Math.round((subtotal / FREE_SHIPPING_THRESHOLD) * 100));
-                const remaining = FREE_SHIPPING_THRESHOLD - subtotal;
-                shippingProgressBar.style.width = `${percent}%`;
-                shippingProgressBar.classList.add('from-pink-500', 'to-rose-500');
-                shippingProgressBar.classList.remove('bg-emerald-500');
-                shippingStatusLabel.textContent = 'Livraison offerte dès 550 DH';
-                shippingRemainingAmount.textContent = `Plus que ${remaining} DH`;
-                shippingRemainingAmount.className = 'text-pink-600 font-extrabold';
-            }
-        }
-
         // Update Coupon Card Display
         if (appliedCoupon && subtotal > 0) {
             if (couponInputWrapper) couponInputWrapper.classList.add('hidden');
@@ -201,15 +177,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (cartDrawerDiscountRow) cartDrawerDiscountRow.classList.add('hidden');
         }
 
-        // Calculate shipping fee
-        let shippingFee = 0;
-        if (subtotal === 0) {
-            shippingFee = 0;
-        } else if (subtotal >= FREE_SHIPPING_THRESHOLD) {
-            shippingFee = 0;
-        } else {
-            shippingFee = 35;
-        }
+        // Calculate shipping fee (Flat rate 35 DH when cart has items, 0 DH when empty)
+        const shippingFee = subtotal === 0 ? 0 : STANDARD_SHIPPING_FEE;
 
         // Calculate final total (Subtotal - Discount + Shipping)
         const finalTotal = subtotal === 0 ? 0 : Math.max(0, subtotal - discountAmount + shippingFee);
@@ -221,11 +190,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (subtotal === 0) {
                 cartDrawerShipping.textContent = '0 DH';
                 cartDrawerShipping.className = 'font-bold text-zinc-400';
-            } else if (subtotal >= FREE_SHIPPING_THRESHOLD) {
-                cartDrawerShipping.textContent = 'Offerte (0 DH)';
-                cartDrawerShipping.className = 'font-bold text-emerald-600';
             } else {
-                cartDrawerShipping.textContent = '35 DH';
+                cartDrawerShipping.textContent = `${STANDARD_SHIPPING_FEE} DH`;
                 cartDrawerShipping.className = 'font-bold text-zinc-900';
             }
         }
@@ -242,7 +208,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const variant = [item.flavor, item.size].filter(Boolean).join(' • ');
                     msg += `${i + 1}. *${item.name}* ${variant ? '(' + variant + ')' : ''} x${item.quantity} = ${item.price * item.quantity} DH\n`;
                 });
-                const shippingCostText = subtotal >= FREE_SHIPPING_THRESHOLD ? 'Offerte (0 DH)' : '35 DH';
+                const shippingCostText = `${STANDARD_SHIPPING_FEE} DH`;
                 msg += `\n*Sous-total :* ${subtotal} DH\n`;
                 if (appliedCoupon && discountAmount > 0) {
                     msg += `*Code promo (${appliedCoupon.code}) :* -${discountAmount} DH\n`;
