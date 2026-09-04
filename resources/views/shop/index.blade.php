@@ -1,6 +1,66 @@
+@php
+    $currentCategory = collect($categories)->firstWhere('slug', $selectedCategory);
+    $categoryTitle = $currentCategory && $selectedCategory !== 'all' ? $currentCategory['name'] : null;
+    $seoTitle = $categoryTitle 
+        ? $categoryTitle . ' Maroc — Prix en DH & Livraison 24-48h | zizo aura'
+        : 'Boutique Cosmétiques & Parfums Maroc — Sol de Janeiro, Victoria\'s Secret | zizo aura';
+    $seoDescription = $categoryTitle
+        ? 'Achetez vos produits ' . $categoryTitle . ' authentiques au Maroc. Prix en Dirhams (DH), paiement à la livraison (Cash on Delivery) et livraison express 24-48h partout au Maroc.'
+        : 'Découvrez la boutique en ligne zizo aura Maroc : brumes Victoria\'s Secret, crèmes Sol de Janeiro, sérums The Ordinary. 100% originaux, prix en DH et paiement à la livraison.';
+    $canonicalUrl = $selectedCategory && $selectedCategory !== 'all'
+        ? route('shop.category', $selectedCategory)
+        : route('shop.index');
+@endphp
+
 @extends('layouts.app')
 
-@section('title', 'Boutique Officielle — zizo aura')
+@section('title', $seoTitle)
+@section('meta_description', $seoDescription)
+@section('canonical', $canonicalUrl)
+@section('og_type', 'website')
+@section('og_title', $seoTitle)
+@section('og_description', $seoDescription)
+@section('og_url', $canonicalUrl)
+@if(!empty($products) && isset($products[0]['image']))
+@section('og_image', url($products[0]['image']))
+@endif
+
+@section('schema')
+<script type="application/ld+json">
+{
+    "{{ '@context' }}": "https://schema.org",
+    "{{ '@type' }}": "CollectionPage",
+    "name": "{{ $seoTitle }}",
+    "description": "{{ $seoDescription }}",
+    "url": "{{ $canonicalUrl }}",
+    "breadcrumb": {
+        "{{ '@type' }}": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "{{ '@type' }}": "ListItem",
+                "position": 1,
+                "name": "Accueil",
+                "item": "{{ url('/') }}"
+            },
+            {
+                "{{ '@type' }}": "ListItem",
+                "position": 2,
+                "name": "Boutique",
+                "item": "{{ route('shop.index') }}"
+            }
+            @if($categoryTitle)
+            ,{
+                "{{ '@type' }}": "ListItem",
+                "position": 3,
+                "name": "{{ $categoryTitle }}",
+                "item": "{{ $canonicalUrl }}"
+            }
+            @endif
+        ]
+    }
+}
+</script>
+@endsection
 
 @section('content')
 <div class="w-full bg-white py-8 sm:py-12">

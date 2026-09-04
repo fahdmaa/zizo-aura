@@ -14,9 +14,11 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CouponController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\AdminApiController;
+use App\Http\Controllers\SitemapController;
 
 Route::get('/', [BrandController::class, 'show'])->name('home');
 Route::get('/marques/de-a-a-z/sol-de-janeiro-janei', [BrandController::class, 'show'])->name('brand.show');
+Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
 // Boutique / Shop Routes
 Route::get('/boutique', [ShopController::class, 'index'])->name('shop.index');

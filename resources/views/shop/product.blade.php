@@ -1,13 +1,141 @@
+@php
+    $rawGallery = $product['gallery'] ?? [];
+    if (is_string($rawGallery)) {
+        $rawGallery = json_decode($rawGallery, true) ?: [];
+    }
+    $allImages = array_values(array_unique(array_filter(array_merge([$product['image']], (array) $rawGallery))));
+    if (empty($allImages)) {
+        $allImages = [$product['image'] ?: '/images/sdj_bum_bum_set.png'];
+    }
+    $mainImage = str_starts_with($allImages[0], 'http') ? $allImages[0] : url($allImages[0]);
+    $cleanDesc = trim(strip_tags($product['description'] ?? ''));
+    $metaDesc = 'Achetez ' . $product['name'] . ' au meilleur prix au Maroc (' . $product['price'] . ' DH). Formule 100% originale, livraison express partout au Maroc et paiement à la livraison (COD). ' . \Illuminate\Support\Str::limit($cleanDesc, 110);
+    $brandName = $product['brand'] ?? $product['category_label'] ?? 'Zizo Aura';
+@endphp
+
 @extends('layouts.app')
 
-@section('title', $product['name'] . ' — zizo aura')
+@section('title', $product['name'] . ' — Prix Maroc & Livraison 24-48h | Zizo Aura')
+@section('meta_description', $metaDesc)
+@section('og_type', 'product')
+@section('og_title', $product['name'] . ' (' . $product['price'] . ' DH) — Zizo Aura Maroc')
+@section('og_description', $metaDesc)
+@section('og_image', $mainImage)
+@section('canonical', route('shop.product', $product['slug']))
+
+@section('extra_head')
+    <meta property="og:price:amount" content="{{ $product['price'] }}">
+    <meta property="og:price:currency" content="MAD">
+    <meta property="product:price:amount" content="{{ $product['price'] }}">
+    <meta property="product:price:currency" content="MAD">
+    <meta property="product:availability" content="{{ ($product['in_stock'] ?? true) ? 'in stock' : 'out of stock' }}">
+    <meta property="product:brand" content="{{ $brandName }}">
+@endsection
+
+@section('schema')
+<script type="application/ld+json">
+{
+    "{{ '@context' }}": "https://schema.org",
+    "{{ '@graph' }}": [
+        {
+            "{{ '@type' }}": "Product",
+            "{{ '@id' }}": "{{ route('shop.product', $product['slug']) }}#product",
+            "name": "{{ $product['name'] }}",
+            "image": [
+                @foreach($allImages as $idx => $img)
+                    "{{ str_starts_with($img, 'http') ? $img : url($img) }}"{{ $loop->last ? '' : ',' }}
+                @endforeach
+            ],
+            "description": "{{ addslashes($cleanDesc) }}",
+            "sku": "ZA-{{ $product['id'] ?? $product['slug'] }}",
+            "brand": {
+                "{{ '@type' }}": "Brand",
+                "name": "{{ addslashes($brandName) }}"
+            },
+            "category": "{{ addslashes($product['category_label'] ?? 'Cosmétiques') }}",
+            "offers": {
+                "{{ '@type' }}": "Offer",
+                "url": "{{ route('shop.product', $product['slug']) }}",
+                "priceCurrency": "MAD",
+                "price": "{{ $product['price'] }}",
+                "priceValidUntil": "{{ date('Y-12-31') }}",
+                "itemCondition": "https://schema.org/NewCondition",
+                "availability": "{{ ($product['in_stock'] ?? true) ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock' }}",
+                "seller": {
+                    "{{ '@type' }}": "Organization",
+                    "name": "Zizo Aura"
+                },
+                "shippingDetails": {
+                    "{{ '@type' }}": "OfferShippingDetails",
+                    "shippingRate": {
+                        "{{ '@type' }}": "MonetaryAmount",
+                        "value": "35",
+                        "currency": "MAD"
+                    },
+                    "shippingDestination": {
+                        "{{ '@type' }}": "DefinedRegion",
+                        "addressCountry": "MA"
+                    },
+                    "deliveryTime": {
+                        "{{ '@type' }}": "ShippingDeliveryTime",
+                        "transitTime": {
+                            "{{ '@type' }}": "QuantitativeValue",
+                            "minValue": 1,
+                            "maxValue": 2,
+                            "unitCode": "DAY"
+                        }
+                    }
+                }
+            },
+            "aggregateRating": {
+                "{{ '@type' }}": "AggregateRating",
+                "ratingValue": "{{ $product['rating'] ?? 4.9 }}",
+                "reviewCount": "{{ $product['review_count'] ?? 120 }}",
+                "bestRating": "5",
+                "worstRating": "1"
+            }
+        },
+        {
+            "{{ '@type' }}": "BreadcrumbList",
+            "{{ '@id' }}": "{{ route('shop.product', $product['slug']) }}#breadcrumb",
+            "itemListElement": [
+                {
+                    "{{ '@type' }}": "ListItem",
+                    "position": 1,
+                    "name": "Accueil",
+                    "item": "{{ url('/') }}"
+                },
+                {
+                    "{{ '@type' }}": "ListItem",
+                    "position": 2,
+                    "name": "Boutique",
+                    "item": "{{ route('shop.index') }}"
+                },
+                {
+                    "{{ '@type' }}": "ListItem",
+                    "position": 3,
+                    "name": "{{ addslashes($product['category_label'] ?? 'Catalogue') }}",
+                    "item": "{{ route('shop.index', ['category' => $product['category']]) }}"
+                },
+                {
+                    "{{ '@type' }}": "ListItem",
+                    "position": 4,
+                    "name": "{{ addslashes($product['name']) }}",
+                    "item": "{{ route('shop.product', $product['slug']) }}"
+                }
+            ]
+        }
+    ]
+}
+</script>
+@endsection
 
 @section('content')
 <div class="w-full bg-white py-6 sm:py-10">
     <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
         
         <!-- Breadcrumbs -->
-        <nav class="flex items-center gap-2 text-xs font-semibold text-zinc-400 mb-8 overflow-x-auto whitespace-nowrap">
+        <nav class="flex items-center gap-2 text-xs font-semibold text-zinc-400 mb-8 overflow-x-auto whitespace-nowrap" aria-label="Fil d'Ariane">
             <a href="{{ route('home') }}" class="hover:text-black transition-colors">Accueil</a>
             <i class="uil uil-angle-right text-[10px]"></i>
             <a href="{{ route('shop.index') }}" class="hover:text-black transition-colors">Boutique</a>
@@ -18,17 +146,6 @@
             <i class="uil uil-angle-right text-[10px]"></i>
             <span class="text-zinc-900 font-bold truncate max-w-[200px] sm:max-w-none">{{ $product['name'] }}</span>
         </nav>
-
-@php
-    $rawGallery = $product['gallery'] ?? [];
-    if (is_string($rawGallery)) {
-        $rawGallery = json_decode($rawGallery, true) ?: [];
-    }
-    $allImages = array_values(array_unique(array_filter(array_merge([$product['image']], (array) $rawGallery))));
-    if (empty($allImages)) {
-        $allImages = [$product['image'] ?: '/images/sdj_bum_bum_set.png'];
-    }
-@endphp
 
         <!-- Product Main Showcase Grid -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start mb-20">

@@ -1,6 +1,31 @@
 @extends('layouts.app')
 
-@section('title', 'Contactez-nous — zizo aura')
+@section('title', 'Service Client & Contact Maroc — Support WhatsApp & Email | zizo aura')
+@section('meta_description', "Besoin d'aide pour votre commande ou un conseil beauté au Maroc ? Contactez l'équipe zizo aura par WhatsApp (+212 682 787 594) ou formulaire. Réponse sous 24h.")
+@section('canonical', route('contact'))
+@section('og_type', 'website')
+@section('og_title', 'Service Client & Contact — zizo aura Maroc')
+@section('og_description', "Contactez le support client zizo aura au Maroc. Assistance commandes, conseils brumes et soins Sol de Janeiro & Victoria's Secret.")
+@section('og_url', route('contact'))
+
+@section('schema')
+<script type="application/ld+json">
+{
+    "{{ '@context' }}": "https://schema.org",
+    "{{ '@type' }}": "ContactPage",
+    "name": "Contact & Service Client Zizo Aura Maroc",
+    "description": "Service client et assistance zizo aura Maroc.",
+    "url": "{{ route('contact') }}",
+    "mainEntity": {
+        "{{ '@type' }}": "Organization",
+        "name": "Zizo Aura Maroc",
+        "telephone": "+212682787594",
+        "email": "contact@zizoaura.store",
+        "areaServed": "Morocco"
+    }
+}
+</script>
+@endsection
 
 @section('content')
 <div class="w-full bg-white py-12 sm:py-20">

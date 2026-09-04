@@ -160,8 +160,8 @@
         openModal(htmlContent, { maxWidth = 'max-w-xl', onMount = null } = {}) {
             this.init();
             this.container.innerHTML = `
-                <div id="admin-modal-backdrop" class="fixed inset-0 z-40 bg-zinc-950/60 backdrop-blur-xs flex items-center justify-center p-4 transition-opacity duration-200 opacity-0">
-                    <div id="admin-modal-box" class="w-full ${maxWidth} bg-white rounded-3xl shadow-2xl border border-zinc-100 overflow-hidden transform scale-95 transition-all duration-200 max-h-[92vh] flex flex-col">
+                <div id="admin-modal-backdrop" class="fixed inset-0 z-50 bg-zinc-950/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 transition-opacity duration-200 opacity-0 overflow-y-auto">
+                    <div id="admin-modal-box" class="w-full ${maxWidth} bg-white rounded-3xl shadow-2xl border border-zinc-100 overflow-hidden transform scale-95 transition-all duration-200 max-h-[92vh] flex flex-col my-auto">
                         ${htmlContent}
                     </div>
                 </div>
@@ -4277,8 +4277,9 @@
             ];
 
             const html = `
-                <div class="p-6 md:p-7">
-                    <div class="flex items-center justify-between pb-4 mb-4 border-b border-zinc-100">
+                <div class="p-6 md:p-7 flex flex-col h-full overflow-hidden max-h-[88vh]">
+                    <!-- Header -->
+                    <div class="flex items-center justify-between pb-4 mb-3 border-b border-zinc-100 shrink-0">
                         <div class="flex items-center gap-3">
                             <div class="w-9 h-9 rounded-xl bg-pink-50 text-pink-600 flex items-center justify-center text-lg">
                                 <i class="ti ${isEditing ? 'ti-edit' : 'ti-star'}"></i>
@@ -4288,13 +4289,14 @@
                                 <p class="text-[11px] text-zinc-400">Ce témoignage sera visible sur le carrousel d'avis de la vitrine</p>
                             </div>
                         </div>
-                        <button type="button" data-close-modal class="text-zinc-400 hover:text-zinc-700 cursor-pointer">
+                        <button type="button" data-close-modal class="text-zinc-400 hover:text-zinc-700 cursor-pointer p-1">
                             <i class="ti ti-x text-base"></i>
                         </button>
                     </div>
 
-                    <form id="review-modal-form" class="space-y-4 text-xs">
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <!-- Scrollable Form Body -->
+                    <form id="review-modal-form" class="flex-1 overflow-y-auto pr-1.5 space-y-4 text-xs custom-scrollbar">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                             <div>
                                 <label class="block font-bold text-zinc-700 mb-1">Nom de la cliente <span class="text-pink-600">*</span></label>
                                 <input type="text" name="author_name" value="${escapeHtml(data.author_name || '')}" required placeholder="ex: Sarah Laurent" class="input-luxury w-full" />
@@ -4312,7 +4314,7 @@
                         </div>
 
                         <!-- Rating & Ring Color -->
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                             <div>
                                 <label class="block font-bold text-zinc-700 mb-1">Note attribuée (1 à 5 étoiles) <span class="text-pink-600">*</span></label>
                                 <select name="rating" class="input-luxury w-full font-bold">
@@ -4340,14 +4342,14 @@
                             <input type="hidden" name="avatar" id="rev-avatar-input" value="${data.avatar || ''}" />
                             <input type="file" id="rev-file-input" accept="image/*" class="hidden" />
 
-                            <div class="space-y-3">
+                            <div class="space-y-2.5">
                                 <!-- Preset Avatars Selection -->
-                                <div class="bg-zinc-50 p-3 rounded-2xl border border-zinc-200">
-                                    <p class="text-[10px] font-bold text-zinc-500 uppercase tracking-wider mb-2">Choisir parmi les avatars prédéfinis :</p>
+                                <div class="bg-zinc-50 p-2.5 rounded-2xl border border-zinc-200">
+                                    <p class="text-[10px] font-bold text-zinc-500 uppercase tracking-wider mb-1.5">Choisir parmi les avatars prédéfinis :</p>
                                     <div class="flex items-center gap-2 overflow-x-auto pb-1">
                                         ${presetAvatars.map(p => `
                                             <button type="button" class="preset-avatar-btn flex flex-col items-center gap-1 p-1 rounded-xl border border-zinc-200 hover:border-pink-500 bg-white cursor-pointer transition shrink-0 ${data.avatar === p.src ? 'ring-2 ring-pink-500 border-pink-500' : ''}" data-avatar-src="${p.src}">
-                                                <img src="${p.src}" alt="${p.name}" class="w-9 h-9 rounded-full object-cover" />
+                                                <img src="${p.src}" alt="${p.name}" class="w-8 h-8 rounded-full object-cover" />
                                                 <span class="text-[9px] font-bold text-zinc-700">${p.name}</span>
                                             </button>
                                         `).join('')}
@@ -4355,15 +4357,15 @@
                                 </div>
 
                                 <!-- Custom File Upload Zone -->
-                                <div id="rev-upload-zone" class="border-2 border-dashed border-zinc-200 hover:border-pink-500 rounded-2xl p-3 text-center cursor-pointer transition-all bg-zinc-50/50 hover:bg-pink-50/30 group">
-                                    <i class="ti ti-photo-up text-lg text-pink-600 mb-0.5 block group-hover:scale-110 transition-transform"></i>
+                                <div id="rev-upload-zone" class="border-2 border-dashed border-zinc-200 hover:border-pink-500 rounded-2xl p-2.5 text-center cursor-pointer transition-all bg-zinc-50/50 hover:bg-pink-50/30 group">
+                                    <i class="ti ti-photo-up text-base text-pink-600 mb-0.5 block group-hover:scale-110 transition-transform"></i>
                                     <span class="text-xs font-bold text-zinc-800">Ou importer une photo personnalisée</span>
                                     <p class="text-[10px] text-zinc-400">JPG, PNG, WEBP compressé automatiquement</p>
                                 </div>
 
                                 <!-- Current Avatar Preview -->
                                 <div id="rev-preview-card" class="${data.avatar ? '' : 'hidden'} bg-zinc-50/70 border border-zinc-200 rounded-2xl p-2.5 flex items-center gap-3">
-                                    <div class="w-11 h-11 rounded-full bg-white border border-zinc-200 overflow-hidden shrink-0 flex items-center justify-center">
+                                    <div class="w-10 h-10 rounded-full bg-white border border-zinc-200 overflow-hidden shrink-0 flex items-center justify-center">
                                         <img id="rev-preview-img" src="${data.avatar || ''}" alt="Preview" class="w-full h-full object-cover" onerror="this.src='https://ui-avatars.com/api/?name=User&background=ff1b7a&color=fff'" />
                                     </div>
                                     <div class="flex-1 min-w-0">
@@ -4381,30 +4383,30 @@
                         </div>
 
                         <!-- Sort Order & Visibility Checkbox -->
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-1">
                             <div>
                                 <label class="block font-bold text-zinc-700 mb-1">Position / Ordre d'affichage</label>
                                 <input type="number" name="sort_order" value="${data.sort_order || 0}" class="input-luxury w-full" />
                             </div>
                             <div class="flex items-center">
-                                <label class="flex items-center gap-2.5 p-3 bg-zinc-50 rounded-2xl border border-zinc-200 cursor-pointer w-full mt-4 hover:bg-pink-50/30 transition">
+                                <label class="flex items-center gap-2.5 p-2.5 bg-zinc-50 rounded-2xl border border-zinc-200 cursor-pointer w-full mt-4 hover:bg-pink-50/30 transition">
                                     <input type="checkbox" name="is_visible" ${data.is_visible ? 'checked' : ''} class="w-4 h-4 rounded accent-pink-600 cursor-pointer" />
                                     <span class="font-bold text-zinc-800 text-xs">Visible sur le storefront</span>
                                 </label>
                             </div>
                         </div>
-
-                        <!-- Footer Actions -->
-                        <div class="flex items-center justify-end gap-3 pt-4 border-t border-zinc-100 mt-5">
-                            <button type="button" data-close-modal class="btn-pill-secondary btn-pill-sm cursor-pointer">
-                                Annuler
-                            </button>
-                            <button type="submit" id="rev-submit-btn" class="btn-pill-primary btn-pill-sm cursor-pointer">
-                                <i class="ti ti-check"></i>
-                                <span>${isEditing ? 'Enregistrer les modifications' : 'Créer l\'avis'}</span>
-                            </button>
-                        </div>
                     </form>
+
+                    <!-- Footer Actions (Sticky outside scrollable form) -->
+                    <div class="flex items-center justify-end gap-3 pt-4 border-t border-zinc-100 mt-3 shrink-0 bg-white">
+                        <button type="button" data-close-modal class="btn-pill-secondary btn-pill-sm cursor-pointer">
+                            Annuler
+                        </button>
+                        <button type="submit" form="review-modal-form" id="rev-submit-btn" class="btn-pill-primary btn-pill-sm cursor-pointer">
+                            <i class="ti ti-check"></i>
+                            <span>${isEditing ? 'Enregistrer les modifications' : 'Créer l\'avis'}</span>
+                        </button>
+                    </div>
                 </div>
             `;
 
