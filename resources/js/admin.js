@@ -345,6 +345,16 @@
         }).format(val) + ' DH';
     };
 
+    const escapeHtml = (str) => {
+        if (str === null || str === undefined) return '';
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    };
+
     const formatDate = (dateStr) => {
         if (!dateStr) return '—';
         try {
