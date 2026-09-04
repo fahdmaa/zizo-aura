@@ -217,13 +217,13 @@
 
             <!-- 5. Commandes -->
             <a href="#orders" data-view="orders" class="admin-dock-tab relative flex-1 min-w-0 flex flex-col items-center justify-center py-1 px-0.5 sm:px-1 rounded-2xl group cursor-pointer text-zinc-600 hover:text-zinc-900 select-none">
-                <div class="tab-icon relative text-zinc-700">
+                <div class="tab-icon relative text-zinc-700 flex items-center justify-center">
                     <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
                         <line x1="3" y1="6" x2="21" y2="6"></line>
                         <path d="M16 10a4 4 0 0 1-8 0"></path>
                     </svg>
-                    <span id="dock-pending-badge" class="hidden absolute -top-1 -right-2 px-1.5 py-0.2 rounded-full bg-amber-500 text-white font-black text-[9px] shadow-xs">0</span>
+                    <span id="dock-pending-badge" class="hidden absolute -top-1.5 -right-2.5 min-w-[17px] h-[17px] px-1 rounded-full bg-red-600 text-white font-black text-[9px] leading-none flex items-center justify-center shadow-xs ring-2 ring-white">0</span>
                 </div>
                 <span class="tab-label text-[9.5px] sm:text-[11px] font-medium tracking-tight mt-1 transition-colors duration-200 truncate max-w-full">Commandes</span>
             </a>
