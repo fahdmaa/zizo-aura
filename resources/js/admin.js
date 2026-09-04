@@ -3706,6 +3706,14 @@
         // VIEW 7: REVIEWS MANAGEMENT (AVIS CLIENTS)
         // ═════════════════════════════════════════════════════════════════════
         async renderReviews() {
+            const filter = appState.reviewsFilter;
+            const reviewStatusLabels = {
+                '': 'Tous les avis',
+                'visible': 'Visibles en vitrine',
+                'hidden': 'Masqués du site'
+            };
+            const reviewStatusLabel = reviewStatusLabels[filter.status] || 'Tous les avis';
+
             this.root.innerHTML = `
                 <div class="space-y-6 animate-fadeIn">
                     <!-- Header -->
@@ -3755,25 +3763,41 @@
                         </div>
                     </div>
 
-                    <!-- Filter Toolbar -->
-                    <div class="bg-white rounded-3xl p-4 border border-zinc-100 shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
-                        <!-- Search Box -->
-                        <div class="relative w-full md:w-80">
-                            <i class="ti ti-search absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400 text-sm"></i>
-                            <input type="text" id="review-search-input" value="${appState.reviewsFilter.search || ''}" placeholder="Rechercher par cliente, produit ou texte..." class="input-luxury w-full pl-9 pr-4 text-xs py-2" />
+                    <!-- Search & Status Filter -->
+                    <div class="bg-white rounded-3xl p-4 border border-zinc-100 shadow-sm flex flex-col md:flex-row items-center gap-3">
+                        <div class="admin-search-container ${filter.search ? 'is-expanded' : ''} flex-1 w-full">
+                            <i class="ti ti-search admin-search-icon"></i>
+                            <input type="text" id="review-search-input" value="${filter.search || ''}" placeholder="Rechercher par cliente, produit ou texte..." class="admin-search-input" autocomplete="off" />
+                            <button type="button" id="review-search-clear" class="admin-search-clear-btn ${filter.search ? '' : 'hidden'}" title="Effacer la recherche">
+                                <i class="ti ti-x text-xs"></i>
+                            </button>
                         </div>
+                        <div class="flex items-center gap-2.5 w-full md:w-auto shrink-0 flex-wrap sm:flex-nowrap">
+                            <!-- Review Status Custom Dropdown -->
+                            <div class="relative custom-admin-dropdown" id="review-status-dropdown-wrap">
+                                <button type="button" class="btn-pill-secondary btn-pill-sm cursor-pointer flex items-center justify-between gap-2.5 select-none" id="review-status-trigger">
+                                    <span class="text-zinc-900 font-bold">${reviewStatusLabel}</span>
+                                    <i class="ti ti-chevron-down text-xs text-zinc-400 transition-transform duration-200 chevron-icon"></i>
+                                </button>
+                                <div class="custom-dropdown-panel absolute right-0 top-full mt-2 min-w-[190px] bg-white/95 backdrop-blur-md rounded-2xl shadow-[0_20px_45px_rgba(0,0,0,0.14)] border border-zinc-100 p-1.5 z-50 hidden">
+                                    ${[
+                                        ['', 'Tous les avis'],
+                                        ['visible', 'Visibles en vitrine'],
+                                        ['hidden', 'Masqués du site']
+                                    ].map(([val, lbl]) => `
+                                        <button type="button" class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${filter.status === val ? 'bg-pink-50 text-pink-600' : 'text-zinc-700 hover:bg-zinc-50 hover:text-black'}" data-review-status-val="${val}">
+                                            <span>${lbl}</span>
+                                            ${filter.status === val ? '<i class="ti ti-check text-xs"></i>' : ''}
+                                        </button>
+                                    `).join('')}
+                                </div>
+                            </div>
 
-                        <!-- Status Filter Tabs -->
-                        <div class="flex items-center gap-1.5 bg-zinc-100/80 p-1 rounded-2xl w-full md:w-auto overflow-x-auto">
-                            <button type="button" data-review-status="" class="review-status-tab px-3.5 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${!appState.reviewsFilter.status ? 'bg-white text-zinc-900 shadow-xs' : 'text-zinc-500 hover:text-zinc-900'}">
-                                Tous
-                            </button>
-                            <button type="button" data-review-status="visible" class="review-status-tab px-3.5 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${appState.reviewsFilter.status === 'visible' ? 'bg-white text-zinc-900 shadow-xs' : 'text-zinc-500 hover:text-zinc-900'}">
-                                Visibles
-                            </button>
-                            <button type="button" data-review-status="hidden" class="review-status-tab px-3.5 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${appState.reviewsFilter.status === 'hidden' ? 'bg-white text-zinc-900 shadow-xs' : 'text-zinc-500 hover:text-zinc-900'}">
-                                Masqués
-                            </button>
+                            ${(filter.search || filter.status) ? `
+                                <button type="button" id="review-reset-filters" class="btn-circle-action w-9 h-9 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-600 text-xs transition cursor-pointer shrink-0" title="Réinitialiser les filtres">
+                                    <i class="ti ti-x text-sm"></i>
+                                </button>
+                            ` : ''}
                         </div>
                     </div>
 
@@ -3786,26 +3810,93 @@
                 </div>
             `;
 
-            // Wire Toolbar Events
+            // Filter wiring
             const searchInput = document.getElementById('review-search-input');
-            let searchTimeout;
+            const searchContainer = searchInput?.closest('.admin-search-container');
+            const searchClearBtn = document.getElementById('review-search-clear');
+            let timer = null;
+
+            searchInput?.addEventListener('focus', () => {
+                searchContainer?.classList.add('is-expanded');
+            });
+
+            searchInput?.addEventListener('blur', () => {
+                if (!searchInput.value.trim()) {
+                    searchContainer?.classList.remove('is-expanded');
+                }
+            });
+
             searchInput?.addEventListener('input', (e) => {
-                clearTimeout(searchTimeout);
-                searchTimeout = setTimeout(() => {
-                    appState.reviewsFilter.search = e.target.value.trim();
+                const val = e.target.value;
+                if (searchClearBtn) {
+                    if (val.trim().length > 0) {
+                        searchClearBtn.classList.remove('hidden');
+                        searchContainer?.classList.add('is-expanded');
+                    } else {
+                        searchClearBtn.classList.add('hidden');
+                    }
+                }
+                clearTimeout(timer);
+                timer = setTimeout(() => {
+                    appState.reviewsFilter.search = val;
                     this.loadReviewsList();
                 }, 300);
             });
 
-            document.querySelectorAll('.review-status-tab').forEach(tab => {
-                tab.addEventListener('click', () => {
-                    document.querySelectorAll('.review-status-tab').forEach(t => {
-                        t.className = 'review-status-tab px-3.5 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer text-zinc-500 hover:text-zinc-900';
-                    });
-                    tab.className = 'review-status-tab px-3.5 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer bg-white text-zinc-900 shadow-xs';
-                    appState.reviewsFilter.status = tab.dataset.reviewStatus;
+            searchInput?.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    if (searchInput.value) {
+                        searchInput.value = '';
+                        searchClearBtn?.classList.add('hidden');
+                        appState.reviewsFilter.search = '';
+                        this.loadReviewsList();
+                    }
+                    searchInput.blur();
+                    searchContainer?.classList.remove('is-expanded');
+                }
+            });
+
+            searchClearBtn?.addEventListener('click', () => {
+                if (searchInput) {
+                    searchInput.value = '';
+                    searchClearBtn.classList.add('hidden');
+                    searchInput.focus();
+                    appState.reviewsFilter.search = '';
                     this.loadReviewsList();
+                }
+            });
+
+            // Review status custom dropdown wiring
+            const reviewStatusWrap = document.getElementById('review-status-dropdown-wrap');
+            const reviewStatusTrigger = document.getElementById('review-status-trigger');
+            const reviewStatusPanel = reviewStatusWrap?.querySelector('.custom-dropdown-panel');
+            const reviewStatusChevron = reviewStatusTrigger?.querySelector('.chevron-icon');
+
+            reviewStatusTrigger?.addEventListener('click', (e) => {
+                e.stopPropagation();
+                document.querySelectorAll('.custom-dropdown-panel').forEach(p => {
+                    if (p !== reviewStatusPanel) p.classList.add('hidden');
                 });
+                document.querySelectorAll('.custom-admin-dropdown .chevron-icon').forEach(c => {
+                    if (c !== reviewStatusChevron) c.classList.remove('rotate-180');
+                });
+                const isHidden = reviewStatusPanel.classList.toggle('hidden');
+                reviewStatusChevron?.classList.toggle('rotate-180', !isHidden);
+            });
+
+            reviewStatusWrap?.querySelectorAll('[data-review-status-val]').forEach(opt => {
+                opt.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    reviewStatusPanel?.classList.add('hidden');
+                    reviewStatusChevron?.classList.remove('rotate-180');
+                    appState.reviewsFilter.status = opt.dataset.reviewStatusVal;
+                    this.renderReviews();
+                });
+            });
+
+            document.getElementById('review-reset-filters')?.addEventListener('click', () => {
+                appState.reviewsFilter = { search: '', status: '' };
+                this.renderReviews();
             });
 
             document.getElementById('btn-create-review')?.addEventListener('click', () => {

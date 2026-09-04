@@ -732,7 +732,8 @@ input#navbar-search-input[type="text"]:focus {
 .admin-search-container .admin-search-input,
 input.admin-search-input[type="text"],
 input#prod-search-input[type="text"],
-input#order-search-input[type="text"] {
+input#order-search-input[type="text"],
+input#review-search-input[type="text"] {
   width: 100% !important;
   padding-left: 2.85rem !important; /* Generous clearance so text NEVER overlaps search icon */
   padding-right: 2.5rem !important;
