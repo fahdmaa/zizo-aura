@@ -35,7 +35,7 @@
                             @else Popularité
                             @endif
                         </span>
-                        <i id="sort-dropdown-chevron" class="ti ti-chevron-down text-xs text-zinc-400 group-hover:rotate-180 transition-transform duration-200"></i>
+                        <i id="sort-dropdown-chevron" class="uil uil-angle-down text-xs text-zinc-400 group-hover:rotate-180 transition-transform duration-200"></i>
                     </button>
 
                     <!-- Custom Floating Dropdown Panel -->
@@ -44,22 +44,22 @@
                         <a href="{{ route('shop.index', ['category' => $selectedCategory, 'sort' => 'popular']) }}"
                            class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all {{ $sortBy === 'popular' ? 'bg-pink-50 text-pink-600' : 'text-zinc-700 hover:bg-zinc-50 hover:text-black' }}">
                             <span>Popularité</span>
-                            @if($sortBy === 'popular') <i class="ti ti-check text-xs"></i> @endif
+                            @if($sortBy === 'popular') <i class="uil uil-check text-xs"></i> @endif
                         </a>
                         <a href="{{ route('shop.index', ['category' => $selectedCategory, 'sort' => 'rating']) }}"
                            class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all {{ $sortBy === 'rating' ? 'bg-pink-50 text-pink-600' : 'text-zinc-700 hover:bg-zinc-50 hover:text-black' }}">
                             <span>Mieux notés</span>
-                            @if($sortBy === 'rating') <i class="ti ti-check text-xs"></i> @endif
+                            @if($sortBy === 'rating') <i class="uil uil-check text-xs"></i> @endif
                         </a>
                         <a href="{{ route('shop.index', ['category' => $selectedCategory, 'sort' => 'price-asc']) }}"
                            class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all {{ $sortBy === 'price-asc' ? 'bg-pink-50 text-pink-600' : 'text-zinc-700 hover:bg-zinc-50 hover:text-black' }}">
                             <span>Prix croissant</span>
-                            @if($sortBy === 'price-asc') <i class="ti ti-check text-xs"></i> @endif
+                            @if($sortBy === 'price-asc') <i class="uil uil-check text-xs"></i> @endif
                         </a>
                         <a href="{{ route('shop.index', ['category' => $selectedCategory, 'sort' => 'price-desc']) }}"
                            class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all {{ $sortBy === 'price-desc' ? 'bg-pink-50 text-pink-600' : 'text-zinc-700 hover:bg-zinc-50 hover:text-black' }}">
                             <span>Prix décroissant</span>
-                            @if($sortBy === 'price-desc') <i class="ti ti-check text-xs"></i> @endif
+                            @if($sortBy === 'price-desc') <i class="uil uil-check text-xs"></i> @endif
                         </a>
                     </div>
                 </div>
@@ -81,7 +81,7 @@
             <div class="mb-8 p-4 bg-pink-50/70 border border-pink-200/80 rounded-2xl flex flex-wrap items-center justify-between gap-3 shadow-xs">
                 <div class="flex items-center gap-3">
                     <div class="w-9 h-9 rounded-xl bg-pink-600 text-white flex items-center justify-center text-base shrink-0 shadow-xs">
-                        <i class="ti ti-search"></i>
+                        <i class="uil uil-search"></i>
                     </div>
                     <div>
                         <p class="text-xs sm:text-sm font-bold text-zinc-900">
@@ -95,7 +95,7 @@
 
                 <a href="{{ route('shop.index', ['category' => $selectedCategory !== 'all' ? $selectedCategory : null]) }}"
                    class="btn-pill-secondary btn-pill-sm">
-                    <i class="ti ti-x text-xs"></i>
+                    <i class="uil uil-multiply text-xs"></i>
                     <span>Effacer la recherche</span>
                 </a>
             </div>
@@ -143,7 +143,11 @@
                         <div class="flex items-center gap-1 text-amber-400 text-xs mb-1.5">
                             <div class="flex items-center">
                                 @for($i = 1; $i <= 5; $i++)
-                                    <i class="ti ti-star-filled text-[11px] {{ $i <= round($product['rating']) ? 'text-amber-400' : 'text-zinc-200' }}"></i>
+                                    @if($i <= round($product['rating']))
+                                        <i class="uis uis-star text-[11px]"></i>
+                                    @else
+                                        <i class="uil uil-star text-[11px] text-zinc-200"></i>
+                                    @endif
                                 @endfor
                             </div>
                             <span class="text-[10px] font-bold text-zinc-400">({{ $product['review_count'] }})</span>
@@ -182,7 +186,7 @@
                                 data-product-price="{{ $product['price'] }}"
                                 data-product-image="{{ $product['image'] }}"
                                 data-product-slug="{{ $product['slug'] }}">
-                            <i class="ti ti-shopping-bag-plus text-base"></i>
+                            <i class="uil uil-shopping-bag text-base"></i>
                             <span>Ajouter au panier</span>
                         </button>
                     </div>
@@ -190,7 +194,7 @@
                 </div>
             @empty
                 <div class="col-span-full py-16 text-center text-zinc-400">
-                    <i class="ti ti-package text-4xl mb-3 block"></i>
+                    <i class="uil uil-box text-4xl mb-3 block"></i>
                     <p class="text-sm font-semibold">Aucun produit trouvé dans cette catégorie.</p>
                 </div>
             @endforelse

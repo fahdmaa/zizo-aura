@@ -11,6 +11,7 @@ class ProductFlavor extends Model
 
     protected $casts = [
         'in_stock' => 'boolean',
+        'sort_order' => 'integer',
     ];
 
     public function product(): BelongsTo

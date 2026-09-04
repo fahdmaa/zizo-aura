@@ -491,7 +491,11 @@ class ShopController extends Controller
             return self::getCategories();
         }
 
-        return array_merge([['slug' => 'all', 'name' => 'Tous les packs & produits', 'count' => Product::active()->count()]], $categories
+        $totalActiveCount = Product::active()
+            ->whereHas('category', fn ($query) => $query->where('is_active', true))
+            ->count();
+
+        return array_merge([['slug' => 'all', 'name' => 'Tous les packs & produits', 'count' => $totalActiveCount]], $categories
             ->map(fn (Category $category) => ['slug' => $category->slug, 'name' => $category->name, 'count' => $category->count])
             ->all());
     }

@@ -221,8 +221,19 @@ class AdminApiController extends Controller
     public function updateOrderStatus(Request $request, Order $order): JsonResponse
     {
         $data = $request->validate(['status' => 'required|in:pending,confirmed,processing,shipped,delivered,cancelled']);
-        $column = ['confirmed' => 'confirmed_at', 'shipped' => 'shipped_at', 'delivered' => 'delivered_at'][$data['status']] ?? null;
-        $order->update(array_filter(['status' => $data['status'], $column => $column && ! $order->$column ? now() : null]));
+        $column = match ($data['status']) {
+            'confirmed' => 'confirmed_at',
+            'shipped' => 'shipped_at',
+            'delivered' => 'delivered_at',
+            default => null,
+        };
+
+        $update = ['status' => $data['status']];
+        if ($column && ! $order->$column) {
+            $update[$column] = now();
+        }
+
+        $order->update($update);
         return response()->json($order->fresh());
     }
 
@@ -328,7 +339,7 @@ class AdminApiController extends Controller
     private function productData(Request $request, ?int $id = null): array
     {
         return $request->validate([
-            'category_id' => 'required|exists:categories,id', 'name' => 'required|string|max:255', 'subtitle' => 'nullable|string|max:500',
+            'category_id' => 'required|exists:categories,id', 'name' => 'required|string|max:255', 'subtitle' => 'nullable|string|max:255',
             'slug' => ['nullable', 'string', 'max:255', "unique:products,slug,{$id}"], 'description' => 'nullable|string', 'ingredients' => 'nullable|string', 'olfactory' => 'nullable|string', 'usage' => 'nullable|string',
             'price' => 'required|numeric|min:0.01', 'discounted_price' => 'nullable|numeric|min:0|lt:price', 'image' => 'required|string', 'gallery' => 'nullable|array', 'gallery.*' => 'string',
             'badge' => 'nullable|string|max:100', 'badge_color' => 'nullable|string|max:100', 'rating' => 'nullable|numeric|min:0|max:5', 'review_count' => 'nullable|integer|min:0',

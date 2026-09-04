@@ -23,13 +23,13 @@
             <div class="flex items-center gap-3 shrink-0">
                 <button id="review-prev"
                         aria-label="Avis précédent"
-                        class="btn-circle-action w-11 h-11 rounded-full bg-white hover:bg-pink-50 border border-zinc-200 hover:border-pink-300 text-zinc-800 hover:text-pink-600 flex items-center justify-center text-base shadow-2xs transition-all">
-                    <i class="ti ti-arrow-left"></i>
+                        class="btn-circle-action w-11 h-11 rounded-full bg-white hover:bg-pink-50 border border-zinc-200 hover:border-pink-300 text-zinc-800 hover:text-pink-600 flex items-center justify-center text-lg shadow-2xs transition-all">
+                    <i class="uil uil-arrow-left"></i>
                 </button>
                 <button id="review-next"
                         aria-label="Avis suivant"
-                        class="btn-circle-action w-11 h-11 rounded-full bg-zinc-900 hover:bg-pink-600 border border-zinc-900 hover:border-pink-600 text-white flex items-center justify-center text-base shadow-sm transition-all">
-                    <i class="ti ti-arrow-right"></i>
+                        class="btn-circle-action w-11 h-11 rounded-full bg-zinc-900 hover:bg-pink-600 border border-zinc-900 hover:border-pink-600 text-white flex items-center justify-center text-lg shadow-sm transition-all">
+                    <i class="uil uil-arrow-right"></i>
                 </button>
             </div>
         </div>
@@ -63,7 +63,7 @@
                             <div>
                                 <h3 class="text-sm sm:text-base font-extrabold text-zinc-900 leading-tight flex items-center gap-1.5">
                                     <span>{{ $review->author_name }}</span>
-                                    <i class="ti ti-circle-check-filled text-pink-600 text-sm" title="{{ $review->badge ?: 'Achat vérifié' }}"></i>
+                                    <i class="uis uis-check-circle text-pink-600 text-sm" title="{{ $review->badge ?: 'Achat vérifié' }}"></i>
                                 </h3>
                                 @if($review->author_role)
                                     <p class="text-xs text-zinc-500 font-medium">{{ $review->author_role }}</p>
@@ -72,12 +72,12 @@
                         </div>
 
                         <!-- Stars -->
-                        <div class="flex items-center text-amber-400 text-xs mb-3">
+                        <div class="flex items-center text-amber-400 text-xs mb-3 gap-0.5">
                             @for($i = 1; $i <= 5; $i++)
                                 @if($i <= $rating)
-                                    <i class="ti ti-star-filled"></i>
+                                    <i class="uis uis-star text-sm"></i>
                                 @else
-                                    <i class="ti ti-star text-zinc-300"></i>
+                                    <i class="uil uil-star text-zinc-300 text-sm"></i>
                                 @endif
                             @endfor
                         </div>

@@ -8,7 +8,7 @@
                 type="button"
                 aria-label="Fermer la promotion"
                 class="btn-circle-action absolute top-3.5 right-3.5 z-30 w-9 h-9 bg-white/90 hover:bg-black hover:text-white text-zinc-700 flex items-center justify-center shadow-md">
-            <i class="ti ti-x text-lg"></i>
+            <i class="uil uil-multiply text-lg"></i>
         </button>
 
         <!-- Left Column: Attached Model Image -->
@@ -48,7 +48,7 @@
 
                     <button id="copy-promo-code"
                             class="btn-pill-secondary btn-pill-sm">
-                        <i class="ti ti-copy text-xs"></i>
+                        <i class="uil uil-copy text-sm"></i>
                         <span id="copy-text">Copier</span>
                     </button>
                 </div>
@@ -59,7 +59,7 @@
                 <a href="{{ route('shop.index', ['category' => 'sol-de-janeiro']) }}"
                    class="btn-card-pill w-full py-3.5 text-sm font-extrabold uppercase tracking-wider">
                     <span>Profiter de l'offre Sol de Janeiro</span>
-                    <i class="ti ti-arrow-right text-base"></i>
+                    <i class="uil uil-arrow-right text-base"></i>
                 </a>
 
                 <p class="text-center text-[10px] text-zinc-400 font-medium">

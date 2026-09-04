@@ -9,7 +9,7 @@
                     aria-expanded="false"
                     aria-controls="mobile-menu-drawer"
                     class="md:hidden p-2 -ml-1 text-zinc-900 hover:text-pink-600 focus:outline-none transition-colors cursor-pointer">
-                <i class="ti ti-menu-2 text-2xl"></i>
+                <i class="uil uil-bars text-2xl"></i>
             </button>
 
             <a href="{{ route('home') }}" class="flex items-center hover:opacity-85 transition-opacity select-none shrink-0" aria-label="zizo aura - Accueil">
@@ -32,7 +32,7 @@
                    aria-expanded="false"
                    class="flex items-center gap-1.5 hover:text-pink-600 transition-colors {{ request()->routeIs('shop.*') ? 'text-pink-600' : '' }}">
                     <span>BOUTIQUE</span>
-                    <i class="ti ti-chevron-down text-xs group-hover:rotate-180 transition-transform duration-200" id="nav-boutique-chevron"></i>
+                    <i class="uil uil-angle-down text-xs group-hover:rotate-180 transition-transform duration-200" id="nav-boutique-chevron"></i>
                 </a>
 
                 <!-- Custom Dropdown Sub-menu Panel matching Website Theme -->
@@ -40,19 +40,19 @@
                      class="absolute top-full left-1/2 -translate-x-1/2 w-64 bg-white/95 backdrop-blur-md rounded-2xl shadow-[0_20px_45px_rgba(0,0,0,0.12)] border border-zinc-100 p-2 opacity-0 invisible translate-y-1 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-200 z-50">
                     <a href="{{ route('shop.index') }}" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold text-zinc-800 hover:bg-pink-50 hover:text-pink-600 transition-colors group/item">
                         <span>Tous les packs &amp; produits</span>
-                        <i class="ti ti-chevron-right text-xs opacity-0 group-hover/item:opacity-100 -translate-x-1 group-hover/item:translate-x-0 transition-all text-pink-600"></i>
+                        <i class="uil uil-angle-right text-xs opacity-0 group-hover/item:opacity-100 -translate-x-1 group-hover/item:translate-x-0 transition-all text-pink-600"></i>
                     </a>
                     <a href="{{ route('shop.index', ['category' => 'sol-de-janeiro']) }}" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold text-zinc-800 hover:bg-pink-50 hover:text-pink-600 transition-colors group/item">
                         <span>Sol de Janeiro Packs</span>
-                        <i class="ti ti-chevron-right text-xs opacity-0 group-hover/item:opacity-100 -translate-x-1 group-hover/item:translate-x-0 transition-all text-pink-600"></i>
+                        <i class="uil uil-angle-right text-xs opacity-0 group-hover/item:opacity-100 -translate-x-1 group-hover/item:translate-x-0 transition-all text-pink-600"></i>
                     </a>
                     <a href="{{ route('shop.index', ['category' => 'victorias-secret']) }}" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold text-zinc-800 hover:bg-pink-50 hover:text-pink-600 transition-colors group/item">
                         <span>Victoria's Secret Duos</span>
-                        <i class="ti ti-chevron-right text-xs opacity-0 group-hover/item:opacity-100 -translate-x-1 group-hover/item:translate-x-0 transition-all text-pink-600"></i>
+                        <i class="uil uil-angle-right text-xs opacity-0 group-hover/item:opacity-100 -translate-x-1 group-hover/item:translate-x-0 transition-all text-pink-600"></i>
                     </a>
                     <a href="{{ route('shop.index', ['category' => 'rituals']) }}" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold text-zinc-800 hover:bg-pink-50 hover:text-pink-600 transition-colors group/item">
                         <span>Rituals Coffrets</span>
-                        <i class="ti ti-chevron-right text-xs opacity-0 group-hover/item:opacity-100 -translate-x-1 group-hover/item:translate-x-0 transition-all text-pink-600"></i>
+                        <i class="uil uil-angle-right text-xs opacity-0 group-hover/item:opacity-100 -translate-x-1 group-hover/item:translate-x-0 transition-all text-pink-600"></i>
                     </a>
                 </div>
             </div>
@@ -79,7 +79,7 @@
                                 aria-expanded="false"
                                 aria-controls="navbar-search-input"
                                 class="search-btn-icon">
-                            <i class="ti ti-search text-lg"></i>
+                            <i class="uil uil-search text-lg"></i>
                         </button>
 
                         <!-- Input Field (smooth width expansion) -->
@@ -97,7 +97,7 @@
                                 id="navbar-clear-btn"
                                 aria-label="Effacer la recherche"
                                 class="search-clear-btn hidden">
-                            <i class="ti ti-x text-xs"></i>
+                            <i class="uil uil-multiply text-xs"></i>
                         </button>
                     </div>
                 </form>
@@ -115,7 +115,7 @@
                     id="navbar-cart-btn"
                     aria-label="Voir mon panier"
                     class="relative p-2 text-zinc-900 hover:text-pink-600 transition-colors shrink-0 cursor-pointer">
-                <i class="ti ti-shopping-bag text-2xl"></i>
+                <i class="uil uil-shopping-bag text-2xl"></i>
                 <span id="cart-count-badge" class="absolute -top-1 -right-1 w-5 h-5 bg-black text-white text-[10px] font-black rounded-full flex items-center justify-center">
                     0
                 </span>
@@ -141,7 +141,7 @@
                             id="mobile-menu-close-btn"
                             aria-label="Fermer le menu"
                     class="btn-circle-action w-9 h-9 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 flex items-center justify-center cursor-pointer">
-                        <i class="ti ti-x text-lg"></i>
+                        <i class="uil uil-multiply text-lg"></i>
                     </button>
                 </div>
 
@@ -149,7 +149,7 @@
                 <div class="p-4 space-y-1">
                     <a href="{{ route('home') }}" class="flex items-center justify-between px-4 py-3 rounded-2xl text-xs font-extrabold uppercase tracking-wider transition-colors {{ (request()->routeIs('home') || request()->is('/')) && !request()->routeIs('shop.*') && !request()->routeIs('contact') ? 'bg-pink-50 text-pink-600' : 'text-zinc-900 hover:bg-zinc-50' }}">
                         <span>Accueil</span>
-                        <i class="ti ti-home text-base"></i>
+                        <i class="uil uil-estate text-base"></i>
                     </a>
 
                     <!-- Boutique Accordion / Submenu -->
@@ -163,32 +163,32 @@
                                 <span>Boutique</span>
                                 <span class="px-1.5 py-0.5 rounded-full bg-pink-100 text-pink-600 text-[10px] font-black">16</span>
                             </span>
-                            <i id="mobile-boutique-chevron" class="ti ti-chevron-down text-xs transition-transform duration-200 {{ request()->routeIs('shop.*') ? 'rotate-180' : '' }}"></i>
+                            <i id="mobile-boutique-chevron" class="uil uil-angle-down text-xs transition-transform duration-200 {{ request()->routeIs('shop.*') ? 'rotate-180' : '' }}"></i>
                         </button>
 
                         <div id="mobile-boutique-sublinks" class="{{ request()->routeIs('shop.*') ? '' : 'hidden' }} space-y-1 px-3 pb-2">
                             <a href="{{ route('shop.index') }}" class="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-bold text-zinc-700 hover:text-pink-600 hover:bg-pink-50/60 transition-colors">
                                 <span>Tous les packs &amp; produits</span>
-                                <i class="ti ti-chevron-right text-xs text-pink-600"></i>
+                                <i class="uil uil-angle-right text-xs text-pink-600"></i>
                             </a>
                             <a href="{{ route('shop.index', ['category' => 'sol-de-janeiro']) }}" class="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-bold text-zinc-700 hover:text-pink-600 hover:bg-pink-50/60 transition-colors">
                                 <span>Sol de Janeiro Packs</span>
-                                <i class="ti ti-chevron-right text-xs text-pink-600"></i>
+                                <i class="uil uil-angle-right text-xs text-pink-600"></i>
                             </a>
-                            <a href="{{ route('shop.index', ['category' => 'victorias-secret']) }}" class="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-bold text-zinc-700 hover:text-pink-600 hover:bg-pink-50/60 transition-colors">
+                            <a href="{{ route('shop.index', ['category' => 'victorias-secret']) }}" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold text-zinc-800 hover:bg-pink-50 hover:text-pink-600 transition-colors group/item">
                                 <span>Victoria's Secret Duos</span>
-                                <i class="ti ti-chevron-right text-xs text-pink-600"></i>
+                                <i class="uil uil-angle-right text-xs text-pink-600"></i>
                             </a>
-                            <a href="{{ route('shop.index', ['category' => 'rituals']) }}" class="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-bold text-zinc-700 hover:text-pink-600 hover:bg-pink-50/60 transition-colors">
+                            <a href="{{ route('shop.index', ['category' => 'rituals']) }}" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold text-zinc-800 hover:bg-pink-50 hover:text-pink-600 transition-colors group/item">
                                 <span>Rituals Coffrets</span>
-                                <i class="ti ti-chevron-right text-xs text-pink-600"></i>
+                                <i class="uil uil-angle-right text-xs text-pink-600"></i>
                             </a>
                         </div>
                     </div>
 
                     <a href="{{ route('contact') }}" class="flex items-center justify-between px-4 py-3 rounded-2xl text-xs font-extrabold uppercase tracking-wider transition-colors {{ request()->routeIs('contact') ? 'bg-pink-50 text-pink-600' : 'text-zinc-900 hover:bg-zinc-50' }}">
                         <span>Contact &amp; Support</span>
-                        <i class="ti ti-mail text-base"></i>
+                        <i class="uil uil-envelope text-base"></i>
                     </a>
                 </div>
             </div>
@@ -197,7 +197,7 @@
             <div class="p-5 border-t border-zinc-100 bg-[#fbfbfc] space-y-3">
                 <div class="p-3 bg-pink-50 rounded-2xl border border-pink-100 text-center">
                     <p class="text-xs font-black text-pink-600 uppercase tracking-wider flex items-center justify-center gap-1.5">
-                        <i class="ti ti-truck-delivery text-base"></i>
+                        <i class="uil uil-truck text-base"></i>
                         <span>Livraison Express Partout au Maroc</span>
                     </p>
                     <p class="text-[10px] text-zinc-500 font-semibold mt-0.5">Expédition rapide sous 24/48h &bull; Paiement à la livraison</p>
@@ -205,14 +205,13 @@
 
                 <div class="flex items-center justify-center gap-4 text-zinc-600 pt-1">
                     <a href="https://www.instagram.com/zizo_aura_/" target="_blank" rel="noopener noreferrer" aria-label="Instagram @zizo_aura_" class="btn-circle-action w-9 h-9 bg-white border border-zinc-200 hover:border-pink-500 hover:text-pink-600 flex items-center justify-center text-base shadow-2xs">
-                        <i class="ti ti-brand-instagram"></i>
+                        <i class="uil uil-instagram"></i>
                     </a>
-                    <a href="https://www.tiktok.com/@zizo_aura_" target="_blank" rel="noopener noreferrer" aria-label="TikTok @zizo_aura_" class="btn-circle-action w-9 h-9 bg-white border border-zinc-200 hover:border-pink-500 hover:text-pink-600 flex items-center justify-center text-base shadow-2xs">
-                        <i class="ti ti-brand-tiktok"></i>
+                    <a href="https://www.tiktok.com/@zizo_aura_" target="_blank" rel="noopener noreferrer" aria-label="TikTok @zizo_aura_" class="btn-circle-action w-9 h-9 bg-white border border-zinc-200 hover:border-pink-500 hover:text-pink-600 flex items-center justify-center text-sm shadow-2xs">
+                        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.298-.002.595.042.88.13V9.4a6.33 6.33 0 0 0-1-.08A6.34 6.34 0 0 0 3 15.66a6.34 6.34 0 0 0 10.86 4.43c.04-.04.07-.08.1-.12.02-.03.04-.06.06-.09V9.17a8.28 8.28 0 0 0 5.57 2.14V7.87a4.87 4.87 0 0 1-.0-.18z"/></svg>
                     </a>
                 </div>
             </div>
-
         </div>
     </div>
 </header>

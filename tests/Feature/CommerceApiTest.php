@@ -34,9 +34,9 @@ class CommerceApiTest extends TestCase
         $this->withSession(['cart_id' => 'test-cart'])->postJson('/api/cart/items', ['product_id' => $product->id, 'quantity' => 2])->assertCreated();
         $this->withSession(['cart_id' => 'test-cart'])->postJson('/api/checkout', [
             'customer_name' => 'Amina', 'customer_phone' => '0600000000', 'shipping_address' => '1 rue Atlas', 'city' => 'Casablanca', 'coupon_code' => 'SAVE10',
-        ])->assertCreated()->assertJsonPath('order.total', '540.00');
+        ])->assertCreated()->assertJsonPath('order.total', '575.00');
 
-        $this->assertDatabaseHas('orders', ['customer_name' => 'Amina', 'subtotal' => 600, 'discount_amount' => 60, 'total' => 540]);
+        $this->assertDatabaseHas('orders', ['customer_name' => 'Amina', 'subtotal' => 600, 'discount_amount' => 60, 'total' => 575]);
         $this->assertDatabaseHas('coupons', ['code' => 'SAVE10', 'used_count' => 1]);
         $this->assertSame(2, $product->fresh()->stock_quantity);
         $this->assertSame(1, Order::first()->items()->count());
@@ -173,5 +173,109 @@ class CommerceApiTest extends TestCase
         $this->assertContains($pInStock->id, $activeInStockIds);
         $this->assertContains($pUnlimited->id, $activeInStockIds);
         $this->assertNotContains($pDepleted->id, $activeInStockIds);
+    }
+
+    public function test_catalog_api_filters_by_category_correctly(): void
+    {
+        $catA = Category::create(['name' => 'Visage', 'slug' => 'visage', 'is_active' => true]);
+        $catB = Category::create(['name' => 'Corps', 'slug' => 'corps', 'is_active' => true]);
+
+        Product::create([
+            'category_id' => $catA->id,
+            'name' => 'Sérum Visage',
+            'slug' => 'serum-visage',
+            'price' => 150,
+            'image' => '/serum.jpg',
+            'is_active' => true,
+        ]);
+        Product::create([
+            'category_id' => $catB->id,
+            'name' => 'Lait Corps',
+            'slug' => 'lait-corps',
+            'price' => 120,
+            'image' => '/lait.jpg',
+            'is_active' => true,
+        ]);
+
+        $res = $this->getJson('/api/catalog/products?category=visage');
+        $res->assertOk();
+        $res->assertJsonCount(1, 'data');
+        $this->assertSame('serum-visage', $res->json('data.0.slug'));
+    }
+
+    public function test_catalog_api_shows_product_by_slug_and_id(): void
+    {
+        $cat = Category::create(['name' => 'Visage', 'slug' => 'visage', 'is_active' => true]);
+        $product = Product::create([
+            'category_id' => $cat->id,
+            'name' => 'Sérum Éclat',
+            'slug' => 'serum-eclat',
+            'price' => 180,
+            'image' => '/serum.jpg',
+            'is_active' => true,
+        ]);
+
+        $this->getJson('/api/catalog/products/serum-eclat')
+            ->assertOk()
+            ->assertJsonPath('data.slug', 'serum-eclat');
+
+        $this->getJson('/api/catalog/products/' . $product->id)
+            ->assertOk()
+            ->assertJsonPath('data.name', 'Sérum Éclat');
+    }
+
+    public function test_cart_coupon_validation_returns_specific_messages(): void
+    {
+        $category = Category::create(['name' => 'Parfums', 'slug' => 'parfums', 'is_active' => true]);
+        $product = Product::create([
+            'category_id' => $category->id,
+            'name' => 'Eau de Parfum',
+            'slug' => 'eau-de-parfum',
+            'price' => 200,
+            'image' => '/perfume.jpg',
+            'is_active' => true,
+        ]);
+
+        Coupon::create([
+            'code' => 'MIN500',
+            'type' => 'fixed',
+            'value' => 50,
+            'min_order_amount' => 500,
+            'is_active' => true,
+        ]);
+
+        // Add 1 item = 200 DH (below 500 DH minimum)
+        $this->withSession(['cart_id' => 'cart-coupon'])
+            ->postJson('/api/cart/items', ['product_id' => $product->id, 'quantity' => 1])
+            ->assertCreated();
+
+        $res = $this->withSession(['cart_id' => 'cart-coupon'])
+            ->postJson('/api/cart/coupon', ['code' => 'MIN500']);
+
+        $res->assertStatus(422)
+            ->assertJsonPath('message', 'Montant minimum d\'achat de 500 DH requis.');
+    }
+
+    public function test_admin_api_updates_order_status_and_timestamps(): void
+    {
+        $order = Order::create([
+            'customer_name' => 'Kenza',
+            'customer_phone' => '0622334455',
+            'shipping_address' => '20 Rue Fès',
+            'city' => 'Rabat',
+            'subtotal' => 350,
+            'total' => 385,
+            'status' => 'pending',
+        ]);
+
+        $this->assertNull($order->confirmed_at);
+
+        $res = $this->withSession(['admin_authenticated' => true])
+            ->patchJson("/api/admin/orders/{$order->id}/status", ['status' => 'confirmed']);
+
+        $res->assertOk()
+            ->assertJsonPath('status', 'confirmed');
+
+        $this->assertNotNull($order->fresh()->confirmed_at);
     }
 }

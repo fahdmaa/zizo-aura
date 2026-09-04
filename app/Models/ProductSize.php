@@ -12,6 +12,7 @@ class ProductSize extends Model
     protected $casts = [
         'price' => 'decimal:2',
         'in_stock' => 'boolean',
+        'sort_order' => 'integer',
     ];
 
     public function product(): BelongsTo

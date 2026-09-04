@@ -9,13 +9,13 @@
         <!-- Breadcrumbs -->
         <nav class="flex items-center gap-2 text-xs font-semibold text-zinc-400 mb-8 overflow-x-auto whitespace-nowrap">
             <a href="{{ route('home') }}" class="hover:text-black transition-colors">Accueil</a>
-            <i class="ti ti-chevron-right text-[10px]"></i>
+            <i class="uil uil-angle-right text-[10px]"></i>
             <a href="{{ route('shop.index') }}" class="hover:text-black transition-colors">Boutique</a>
-            <i class="ti ti-chevron-right text-[10px]"></i>
+            <i class="uil uil-angle-right text-[10px]"></i>
             <a href="{{ route('shop.index', ['category' => $product['category']]) }}" class="hover:text-black transition-colors">
                 {{ $product['category_label'] }}
             </a>
-            <i class="ti ti-chevron-right text-[10px]"></i>
+            <i class="uil uil-angle-right text-[10px]"></i>
             <span class="text-zinc-900 font-bold truncate max-w-[200px] sm:max-w-none">{{ $product['name'] }}</span>
         </nav>
 
@@ -64,7 +64,7 @@
                     @if(count($allImages) > 1)
                         <div class="absolute top-4 right-4 z-20">
                             <span id="gallery-counter-badge" class="px-3 py-1 rounded-full bg-black/70 backdrop-blur-md text-white text-[11px] font-extrabold shadow-sm flex items-center gap-1">
-                                <i class="ti ti-photo text-xs"></i>
+                                <i class="uil uil-image text-xs"></i>
                                 <span><span id="gallery-current-idx">1</span> / {{ count($allImages) }}</span>
                             </span>
                         </div>
@@ -83,13 +83,13 @@
                                 id="gallery-prev-btn"
                                 aria-label="Photo précédente"
                                 class="absolute left-3.5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/90 hover:bg-white text-zinc-800 shadow-md border border-zinc-200/80 flex items-center justify-center cursor-pointer transition-all hover:scale-110 hover:text-pink-600 opacity-90 sm:opacity-0 group-hover:opacity-100">
-                            <i class="ti ti-chevron-left text-lg font-bold"></i>
+                            <i class="uil uil-angle-left-b text-xl font-bold"></i>
                         </button>
                         <button type="button"
                                 id="gallery-next-btn"
                                 aria-label="Photo suivante"
                                 class="absolute right-3.5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/90 hover:bg-white text-zinc-800 shadow-md border border-zinc-200/80 flex items-center justify-center cursor-pointer transition-all hover:scale-110 hover:text-pink-600 opacity-90 sm:opacity-0 group-hover:opacity-100">
-                            <i class="ti ti-chevron-right text-lg font-bold"></i>
+                            <i class="uil uil-angle-right-b text-xl font-bold"></i>
                         </button>
                     @endif
                 </div>
@@ -133,9 +133,13 @@
 
                 <!-- Reviews Rating Bar -->
                 <div class="flex items-center gap-2 mb-6 pb-6 border-b border-zinc-100">
-                    <div class="flex items-center text-amber-400">
+                    <div class="flex items-center text-amber-400 gap-0.5">
                         @for($i = 1; $i <= 5; $i++)
-                            <i class="ti ti-star-filled text-base {{ $i <= round($product['rating']) ? 'text-amber-400' : 'text-zinc-200' }}"></i>
+                            @if($i <= round($product['rating']))
+                                <i class="uis uis-star text-base"></i>
+                            @else
+                                <i class="uil uil-star text-base text-zinc-200"></i>
+                            @endif
                         @endfor
                     </div>
                     <span class="text-xs font-bold text-zinc-900">{{ $product['rating'] }} / 5</span>
@@ -204,7 +208,7 @@
                                     id="qty-minus-btn"
                                     aria-label="Diminuer la quantité"
                                     class="btn-circle-action w-7 h-7 bg-white hover:bg-zinc-200 text-zinc-800 flex items-center justify-center disabled:opacity-25 disabled:cursor-not-allowed cursor-pointer shadow-2xs">
-                                <i class="ti ti-minus text-xs font-bold"></i>
+                                <i class="uil uil-minus text-xs font-bold"></i>
                             </button>
 
                             <span id="product-quantity-display" class="w-8 sm:w-6 text-center font-extrabold text-sm text-zinc-900 select-none">
@@ -216,7 +220,7 @@
                                     id="qty-plus-btn"
                                     aria-label="Augmenter la quantité"
                                     class="btn-circle-action w-7 h-7 bg-white hover:bg-zinc-200 text-zinc-800 flex items-center justify-center cursor-pointer shadow-2xs">
-                                <i class="ti ti-plus text-xs font-bold"></i>
+                                <i class="uil uil-plus text-xs font-bold"></i>
                             </button>
                         </div>
 
@@ -229,13 +233,13 @@
                                 data-product-price="{{ $product['price'] }}"
                                 data-product-image="{{ $product['image'] }}"
                                 data-product-slug="{{ $product['slug'] }}">
-                            <i class="ti ti-shopping-bag-plus text-base"></i>
+                            <i class="uil uil-shopping-bag text-base"></i>
                             <span id="btn-cart-text">Ajouter au panier &bull; {{ $product['price'] }} DH</span>
                         </button>
                     </div>
 
                     <p class="text-left text-[11px] text-zinc-400 font-semibold flex items-center gap-1.5">
-                        <i class="ti ti-truck text-sm text-emerald-500"></i>
+                        <i class="uil uil-truck text-base text-emerald-500"></i>
                         <span>Livraison rapide partout au Maroc &bull; Expédié sous 24h &bull; Paiement à la livraison</span>
                     </p>
                 </div>
@@ -247,8 +251,8 @@
                     <details class="group py-4" open>
                         <summary class="flex justify-between items-center cursor-pointer font-bold text-xs uppercase tracking-wider text-zinc-900 list-none">
                             <span>Description &amp; Résultats</span>
-                            <i class="ti ti-plus group-open:hidden text-zinc-500"></i>
-                            <i class="ti ti-minus hidden group-open:block text-zinc-500"></i>
+                            <i class="uil uil-plus group-open:hidden text-zinc-500"></i>
+                            <i class="uil uil-minus hidden group-open:block text-zinc-500"></i>
                         </summary>
                         <div class="pt-3 text-xs sm:text-sm text-zinc-600 leading-relaxed">
                             {{ $product['description'] }}
@@ -259,8 +263,8 @@
                     <details class="group py-4">
                         <summary class="flex justify-between items-center cursor-pointer font-bold text-xs uppercase tracking-wider text-zinc-900 list-none">
                             <span>Ingrédients Clés &amp; Bienfaits</span>
-                            <i class="ti ti-plus group-open:hidden text-zinc-500"></i>
-                            <i class="ti ti-minus hidden group-open:block text-zinc-500"></i>
+                            <i class="uil uil-plus group-open:hidden text-zinc-500"></i>
+                            <i class="uil uil-minus hidden group-open:block text-zinc-500"></i>
                         </summary>
                         <div class="pt-3 text-xs sm:text-sm text-zinc-600 leading-relaxed">
                             {{ $product['ingredients'] }}
@@ -271,8 +275,8 @@
                     <details class="group py-4">
                         <summary class="flex justify-between items-center cursor-pointer font-bold text-xs uppercase tracking-wider text-zinc-900 list-none">
                             <span>Pyramide Olfactive</span>
-                            <i class="ti ti-plus group-open:hidden text-zinc-500"></i>
-                            <i class="ti ti-minus hidden group-open:block text-zinc-500"></i>
+                            <i class="uil uil-plus group-open:hidden text-zinc-500"></i>
+                            <i class="uil uil-minus hidden group-open:block text-zinc-500"></i>
                         </summary>
                         <div class="pt-3 text-xs sm:text-sm text-zinc-600 leading-relaxed">
                             {{ $product['olfactory'] }}
@@ -283,8 +287,8 @@
                     <details class="group py-4">
                         <summary class="flex justify-between items-center cursor-pointer font-bold text-xs uppercase tracking-wider text-zinc-900 list-none">
                             <span>Conseils d'Application</span>
-                            <i class="ti ti-plus group-open:hidden text-zinc-500"></i>
-                            <i class="ti ti-minus hidden group-open:block text-zinc-500"></i>
+                            <i class="uil uil-plus group-open:hidden text-zinc-500"></i>
+                            <i class="uil uil-minus hidden group-open:block text-zinc-500"></i>
                         </summary>
                         <div class="pt-3 text-xs sm:text-sm text-zinc-600 leading-relaxed">
                             {{ $product['usage'] }}
@@ -339,7 +343,11 @@
                                 <div class="flex items-center gap-1 text-amber-400 text-xs mb-1.5">
                                     <div class="flex items-center">
                                         @for($i = 1; $i <= 5; $i++)
-                                            <i class="ti ti-star-filled text-[11px] {{ $i <= round($rel['rating'] ?? 5) ? 'text-amber-400' : 'text-zinc-200' }}"></i>
+                                            @if($i <= round($rel['rating'] ?? 5))
+                                                <i class="uis uis-star text-[11px]"></i>
+                                            @else
+                                                <i class="uil uil-star text-[11px] text-zinc-200"></i>
+                                            @endif
                                         @endfor
                                     </div>
                                     <span class="text-[10px] font-bold text-zinc-400">({{ $rel['review_count'] ?? 100 }})</span>
@@ -362,7 +370,7 @@
                                         data-product-price="{{ $rel['price'] }}"
                                         data-product-image="{{ $rel['image'] }}"
                                         data-product-slug="{{ $rel['slug'] }}">
-                                    <i class="ti ti-shopping-bag-plus text-base"></i>
+                                    <i class="uil uil-shopping-bag text-base"></i>
                                     <span>Ajouter au panier</span>
                                 </button>
                             </div>
@@ -392,7 +400,7 @@
     <button type="button"
             id="mobile-sticky-add-btn"
             class="btn-card-pill py-2.5 px-4 text-xs font-extrabold uppercase tracking-wider shrink-0 shadow-sm">
-        <i class="ti ti-shopping-bag-plus text-sm"></i>
+        <i class="uil uil-shopping-bag text-sm"></i>
         <span>Ajouter</span>
     </button>
 </div>
@@ -400,11 +408,11 @@
 <!-- Full-Screen High-Res Lightbox Visualizer Modal -->
 <div id="product-lightbox-modal" class="fixed inset-0 z-50 bg-black/95 backdrop-blur-xl flex items-center justify-center p-4 sm:p-8 opacity-0 pointer-events-none transition-all duration-300 select-none">
     <button type="button" id="lightbox-close-btn" class="absolute top-5 right-5 w-11 h-11 rounded-full bg-white/15 hover:bg-white text-white hover:text-black flex items-center justify-center text-xl transition-all cursor-pointer z-50 shadow-lg">
-        <i class="ti ti-x"></i>
+        <i class="uil uil-multiply"></i>
     </button>
 
     <button type="button" id="lightbox-prev-btn" class="absolute left-4 sm:left-8 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/15 hover:bg-white text-white hover:text-black flex items-center justify-center text-xl transition-all cursor-pointer z-50 shadow-lg">
-        <i class="ti ti-chevron-left"></i>
+        <i class="uil uil-angle-left"></i>
     </button>
 
     <div class="relative max-w-4xl max-h-[85vh] w-full flex items-center justify-center p-2">
@@ -412,7 +420,7 @@
     </div>
 
     <button type="button" id="lightbox-next-btn" class="absolute right-4 sm:right-8 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/15 hover:bg-white text-white hover:text-black flex items-center justify-center text-xl transition-all cursor-pointer z-50 shadow-lg">
-        <i class="ti ti-chevron-right"></i>
+        <i class="uil uil-angle-right"></i>
     </button>
 
     <div class="absolute bottom-6 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/20 text-white text-xs font-black tracking-wide">

@@ -69,10 +69,30 @@ class CartController extends Controller
     {
         $data = $request->validate(['code' => ['required', 'string', 'max:50']]);
         $summary = $this->summary($request);
-        $coupon = Coupon::whereRaw('upper(code) = ?', [mb_strtoupper(trim($data['code']))])->first();
+        $code = mb_strtoupper(trim($data['code']));
+        $subtotal = (float) $summary['subtotal'];
+        $coupon = Coupon::whereRaw('upper(code) = ?', [$code])->first();
 
-        if (! $coupon || ! $coupon->appliesTo((float) $summary['subtotal'])) {
-            return response()->json(['message' => 'Code promo invalide ou non applicable.'], 422);
+        if (! $coupon) {
+            return response()->json(['message' => 'Code promo invalide.'], 422);
+        }
+
+        if (! $coupon->is_active) {
+            return response()->json(['message' => 'Ce code promo est inactif.'], 422);
+        }
+
+        if ($coupon->isExpired()) {
+            return response()->json(['message' => 'Ce code promo a expiré.'], 422);
+        }
+
+        if ($coupon->isExhausted()) {
+            return response()->json(['message' => 'Ce code promo a atteint sa limite d\'utilisation.'], 422);
+        }
+
+        if ($subtotal > 0 && $subtotal < (float) $coupon->min_order_amount) {
+            return response()->json([
+                'message' => 'Montant minimum d\'achat de ' . (int) $coupon->min_order_amount . ' DH requis.',
+            ], 422);
         }
 
         return response()->json($this->summary($request, $coupon));

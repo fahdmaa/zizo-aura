@@ -14,7 +14,7 @@
 
             <a href="{{ route('shop.index') }}" class="inline-flex items-center gap-1.5 text-xs sm:text-sm font-extrabold text-zinc-900 hover:text-pink-600 transition-colors uppercase tracking-wider whitespace-nowrap">
                 <span>Voir toute la boutique</span>
-                <i class="ti ti-arrow-right text-base"></i>
+                <i class="uil uil-arrow-right text-base"></i>
             </a>
         </div>
     </div>
@@ -69,7 +69,11 @@
                             <div class="flex items-center gap-1 text-amber-400 text-xs mb-1">
                                 <div class="flex items-center">
                                     @for($i = 1; $i <= 5; $i++)
-                                        <i class="ti ti-star-filled text-[10px] {{ $i <= round($product['rating'] ?? 5) ? 'text-amber-400' : 'text-zinc-200' }}"></i>
+                                        @if($i <= round($product['rating'] ?? 5))
+                                            <i class="uis uis-star text-[10px]"></i>
+                                        @else
+                                            <i class="uil uil-star text-[10px] text-zinc-200"></i>
+                                        @endif
                                     @endfor
                                 </div>
                                 <span class="text-[10px] font-bold text-zinc-400">({{ $product['review_count'] ?? 100 }})</span>
@@ -104,7 +108,7 @@
                                     data-product-price="{{ $product['price'] }}"
                                     data-product-image="{{ $product['image'] }}"
                                     data-product-slug="{{ $product['slug'] }}">
-                                <i class="ti ti-shopping-bag-plus text-sm"></i>
+                                <i class="uil uil-shopping-bag text-sm"></i>
                                 <span>Ajouter au panier</span>
                             </button>
                         </div>

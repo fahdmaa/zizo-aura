@@ -229,7 +229,7 @@ document.addEventListener('DOMContentLoaded', () => {
             cartDrawerItems.innerHTML = `
                 <div class="h-full flex flex-col items-center justify-center text-center py-12 px-4">
                     <div class="w-16 h-16 rounded-full bg-pink-50 text-pink-600 flex items-center justify-center text-3xl mb-4 shadow-xs">
-                        <i class="ti ti-shopping-bag"></i>
+                        <i class="uil uil-shopping-bag"></i>
                     </div>
                     <h4 class="text-base font-extrabold text-zinc-900 mb-1">Votre panier est vide</h4>
                     <p class="text-xs text-zinc-400 max-w-xs mb-6 font-medium">
@@ -237,7 +237,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     </p>
                     <a href="/boutique" id="empty-cart-shop-btn" class="btn-card-pill py-3 px-6 text-xs uppercase font-extrabold">
                         <span>Explorer la boutique</span>
-                        <i class="ti ti-arrow-right text-sm"></i>
+                        <i class="uil uil-arrow-right text-sm"></i>
                     </a>
                 </div>
             `;
@@ -264,17 +264,17 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <span class="text-xs font-extrabold text-pink-600">${item.price} DH</span>
                                 <div class="flex items-center bg-[#f8f9fa] border border-zinc-200 rounded-full px-1.5 py-0.5 shadow-2xs">
                                     <button type="button" data-cart-action="dec" data-index="${index}" class="btn-circle-action w-7 h-7 min-w-[28px] min-h-[28px] bg-white text-zinc-700 flex items-center justify-center cursor-pointer shadow-2xs text-xs" aria-label="Diminuer">
-                                        <i class="ti ti-minus"></i>
+                                        <i class="uil uil-minus"></i>
                                     </button>
                                     <span class="w-6 text-center text-xs font-bold text-zinc-900 select-none">${item.quantity || 1}</span>
                                     <button type="button" data-cart-action="inc" data-index="${index}" class="btn-circle-action w-7 h-7 min-w-[28px] min-h-[28px] bg-white text-zinc-700 flex items-center justify-center cursor-pointer shadow-2xs text-xs" aria-label="Augmenter">
-                                        <i class="ti ti-plus"></i>
+                                        <i class="uil uil-plus"></i>
                                     </button>
                                 </div>
                             </div>
                         </div>
                         <button type="button" data-cart-action="remove" data-index="${index}" class="p-2 text-zinc-400 hover:text-rose-500 rounded-xl transition-colors cursor-pointer shrink-0" aria-label="Supprimer du panier">
-                            <i class="ti ti-trash text-base"></i>
+                            <i class="uil uil-trash-alt text-base"></i>
                         </button>
                     </div>
                 `;
@@ -302,7 +302,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (couponApplyBtn) {
             couponApplyBtn.disabled = true;
-            couponApplyBtn.innerHTML = '<i class="ti ti-loader-2 animate-spin text-xs"></i>';
+            couponApplyBtn.innerHTML = '<i class="uil uil-spinner-alt animate-spin text-xs"></i>';
         }
 
         const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
@@ -478,7 +478,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Button Feedback Animation
             const origHtml = button.innerHTML;
             button.style.backgroundColor = '#10b981';
-            button.innerHTML = `<i class="ti ti-check text-base"></i><span>Ajouté ✓</span>`;
+            button.innerHTML = `<i class="uil uil-check text-base"></i><span>Ajouté ✓</span>`;
             button.disabled = true;
 
             setTimeout(() => {
@@ -588,7 +588,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Button Feedback
             const origContent = productAddCartBtn.innerHTML;
             productAddCartBtn.style.backgroundColor = '#10b981';
-            productAddCartBtn.innerHTML = `<i class="ti ti-check text-base sm:text-lg"></i><span>${qty} Ajouté${qty > 1 ? 's' : ''} ✓</span>`;
+            productAddCartBtn.innerHTML = `<i class="uil uil-check text-base sm:text-lg"></i><span>${qty} Ajouté${qty > 1 ? 's' : ''} ✓</span>`;
             productAddCartBtn.disabled = true;
 
             setTimeout(() => {
@@ -970,7 +970,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="pt-2 mt-1 text-center border-t border-zinc-100">
                             <a href="/boutique?q=${encodeURIComponent(query)}" class="text-[11px] font-bold text-pink-600 hover:text-pink-700 flex items-center justify-center gap-1">
                                 <span>Voir tous les résultats (${data.count})</span>
-                                <i class="ti ti-arrow-right text-[10px]"></i>
+                                <i class="uil uil-arrow-right text-[10px]"></i>
                             </a>
                         </div>
                     `;
@@ -1129,7 +1129,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (contactSubmitBtn) {
                 contactSubmitBtn.disabled = true;
                 contactSubmitBtn.innerHTML = `
-                    <i class="ti ti-loader-2 animate-spin text-base"></i>
+                    <i class="uil uil-spinner-alt animate-spin text-base"></i>
                     <span>Envoi de votre message...</span>
                 `;
             }
@@ -1177,7 +1177,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (contactSubmitBtn) {
                         contactSubmitBtn.disabled = false;
                         contactSubmitBtn.innerHTML = `
-                            <i class="ti ti-send text-base"></i>
+                            <i class="uil uil-envelope-send text-base"></i>
                             <span>Envoyer le message</span>
                         `;
                     }
@@ -1195,7 +1195,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (contactSubmitBtn) {
                     contactSubmitBtn.disabled = false;
                     contactSubmitBtn.innerHTML = `
-                        <i class="ti ti-send text-base"></i>
+                        <i class="uil uil-envelope-send text-base"></i>
                         <span>Envoyer le message</span>
                     `;
                 }

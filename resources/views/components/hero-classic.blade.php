@@ -15,7 +15,7 @@
             <div class="flex flex-wrap items-center gap-3 sm:gap-4">
                 <a href="{{ route('shop.index') }}" class="btn-hero-pill group">
                     <span>Découvrir nos produits</span>
-                    <i class="ti ti-arrow-right ml-2 text-lg group-hover:translate-x-1 transition-transform"></i>
+                    <i class="uil uil-arrow-right ml-2 text-lg group-hover:translate-x-1 transition-transform"></i>
                 </a>
 
                 <a href="{{ route('contact') }}" class="btn-secondary-pill group">

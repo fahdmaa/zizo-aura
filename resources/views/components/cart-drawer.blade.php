@@ -6,7 +6,7 @@
         <!-- Cart Header -->
         <div class="p-4 sm:p-5 border-b border-zinc-100 flex items-center justify-between">
             <div class="flex items-center gap-2">
-                <i class="ti ti-shopping-bag text-2xl text-zinc-900"></i>
+                <i class="uil uil-shopping-bag text-2xl text-zinc-900"></i>
                 <h3 id="cart-drawer-title" class="text-base font-extrabold text-zinc-900 tracking-tight uppercase">Mon Panier</h3>
                 <span id="cart-drawer-count" class="px-2 py-0.5 rounded-full bg-pink-100 text-pink-600 text-xs font-black">0</span>
             </div>
@@ -15,7 +15,7 @@
                     id="cart-drawer-close-btn"
                     aria-label="Fermer le panier"
                     class="btn-circle-action w-9 h-9 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 flex items-center justify-center cursor-pointer">
-                <i class="ti ti-x text-lg"></i>
+                <i class="uil uil-multiply text-lg"></i>
             </button>
         </div>
 
@@ -50,7 +50,7 @@
                             title="Retirer le code promo"
                             aria-label="Retirer le code promo"
                             class="w-6 h-6 rounded-full hover:bg-emerald-200/70 text-emerald-800 flex items-center justify-center cursor-pointer transition-colors shrink-0 ml-1">
-                        <i class="ti ti-x text-xs font-bold"></i>
+                        <i class="uil uil-multiply text-xs font-bold"></i>
                     </button>
                 </div>
 
@@ -93,7 +93,7 @@
                    target="_blank"
                    rel="noopener noreferrer"
                    class="btn-card-pill w-full py-3.5 text-xs font-extrabold uppercase tracking-wider bg-emerald-600 hover:bg-emerald-700 hover:border-emerald-700 hover:shadow-[0_8px_20px_rgba(16,185,129,0.3)]">
-                    <i class="ti ti-brand-whatsapp text-lg"></i>
+                    <i class="uil uil-whatsapp text-lg"></i>
                     <span>Commander via WhatsApp</span>
                 </a>
 

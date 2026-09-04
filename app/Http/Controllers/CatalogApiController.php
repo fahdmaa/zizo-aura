@@ -11,16 +11,26 @@ class CatalogApiController extends Controller
     public function index(Request $request): JsonResponse
     {
         $products = ShopController::catalogProducts();
-        if ($request->filled('category') && $request->string('category') !== 'all') {
-            $products = array_values(array_filter($products, fn (array $product) => $product['category'] === $request->string('category')));
+        $category = (string) $request->input('category', '');
+        if ($category !== '' && $category !== 'all') {
+            $products = array_values(array_filter($products, fn (array $product) => $product['category'] === $category));
         }
         return response()->json(['data' => $products, 'meta' => ['count' => count($products)]]);
     }
 
     public function show(string $slug): JsonResponse
     {
-        $product = Product::with(['category', 'sizes', 'flavors'])->active()->where('slug', $slug)->firstOrFail();
-        abort_unless($product->category?->is_active, 404);
+        $product = Product::with(['category', 'sizes', 'flavors'])
+            ->active()
+            ->whereHas('category', fn ($q) => $q->where('is_active', true))
+            ->where(function ($q) use ($slug) {
+                $q->where('slug', $slug);
+                if (is_numeric($slug)) {
+                    $q->orWhere('id', (int) $slug);
+                }
+            })
+            ->firstOrFail();
+
         return response()->json(['data' => $product->toStorefrontArray()]);
     }
 }

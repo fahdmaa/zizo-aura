@@ -49,9 +49,22 @@ class CheckoutController extends Controller
 
             $coupon = null;
             if (! empty($data['coupon_code'])) {
-                $coupon = Coupon::whereRaw('upper(code) = ?', [mb_strtoupper(trim($data['coupon_code']))])->lockForUpdate()->first();
-                if (! $coupon || ! $coupon->appliesTo($subtotal)) {
-                    throw ValidationException::withMessages(['coupon_code' => 'Code promo invalide ou non applicable.']);
+                $couponCode = mb_strtoupper(trim($data['coupon_code']));
+                $coupon = Coupon::whereRaw('upper(code) = ?', [$couponCode])->lockForUpdate()->first();
+                if (! $coupon) {
+                    throw ValidationException::withMessages(['coupon_code' => 'Code promo invalide.']);
+                }
+                if (! $coupon->is_active) {
+                    throw ValidationException::withMessages(['coupon_code' => 'Ce code promo est inactif.']);
+                }
+                if ($coupon->isExpired()) {
+                    throw ValidationException::withMessages(['coupon_code' => 'Ce code promo a expiré.']);
+                }
+                if ($coupon->isExhausted()) {
+                    throw ValidationException::withMessages(['coupon_code' => 'Ce code promo a atteint sa limite d\'utilisation.']);
+                }
+                if ($subtotal < (float) $coupon->min_order_amount) {
+                    throw ValidationException::withMessages(['coupon_code' => 'Montant minimum d\'achat de ' . (int) $coupon->min_order_amount . ' DH requis pour ce code promo.']);
                 }
             }
 

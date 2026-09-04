@@ -19,8 +19,8 @@
                 <div class="absolute top-6 right-6 text-2xl font-black text-zinc-200 group-hover:text-pink-300 transition-colors select-none">
                     01
                 </div>
-                <div class="w-14 h-14 rounded-2xl bg-pink-50 text-pink-600 flex items-center justify-center text-2xl mb-6 shadow-xs group-hover:scale-110 group-hover:bg-pink-100 transition-all">
-                    <i class="ti ti-shield-check"></i>
+                <div class="w-14 h-14 rounded-2xl bg-pink-50 text-pink-600 flex items-center justify-center text-3xl mb-6 shadow-xs group-hover:scale-110 group-hover:bg-pink-100 transition-all">
+                    <i class="uil uil-shield-check"></i>
                 </div>
                 <h3 class="text-base font-bold text-zinc-900 mb-2">
                     100% Authentique &amp; Scellé
@@ -35,8 +35,8 @@
                 <div class="absolute top-6 right-6 text-2xl font-black text-zinc-200 group-hover:text-pink-300 transition-colors select-none">
                     02
                 </div>
-                <div class="w-14 h-14 rounded-2xl bg-pink-50 text-pink-600 flex items-center justify-center text-2xl mb-6 shadow-xs group-hover:scale-110 group-hover:bg-pink-100 transition-all">
-                    <i class="ti ti-gift"></i>
+                <div class="w-14 h-14 rounded-2xl bg-pink-50 text-pink-600 flex items-center justify-center text-3xl mb-6 shadow-xs group-hover:scale-110 group-hover:bg-pink-100 transition-all">
+                    <i class="uil uil-gift"></i>
                 </div>
                 <h3 class="text-base font-bold text-zinc-900 mb-2">
                     Préparation &amp; Cadeaux
@@ -51,8 +51,8 @@
                 <div class="absolute top-6 right-6 text-2xl font-black text-zinc-200 group-hover:text-pink-300 transition-colors select-none">
                     03
                 </div>
-                <div class="w-14 h-14 rounded-2xl bg-pink-50 text-pink-600 flex items-center justify-center text-2xl mb-6 shadow-xs group-hover:scale-110 group-hover:bg-pink-100 transition-all">
-                    <i class="ti ti-truck-delivery"></i>
+                <div class="w-14 h-14 rounded-2xl bg-pink-50 text-pink-600 flex items-center justify-center text-3xl mb-6 shadow-xs group-hover:scale-110 group-hover:bg-pink-100 transition-all">
+                    <i class="uil uil-truck"></i>
                 </div>
                 <h3 class="text-base font-bold text-zinc-900 mb-2">
                     Livraison Express Suivie
@@ -67,8 +67,8 @@
                 <div class="absolute top-6 right-6 text-2xl font-black text-zinc-200 group-hover:text-pink-300 transition-colors select-none">
                     04
                 </div>
-                <div class="w-14 h-14 rounded-2xl bg-pink-50 text-pink-600 flex items-center justify-center text-2xl mb-6 shadow-xs group-hover:scale-110 group-hover:bg-pink-100 transition-all">
-                    <i class="ti ti-headset"></i>
+                <div class="w-14 h-14 rounded-2xl bg-pink-50 text-pink-600 flex items-center justify-center text-3xl mb-6 shadow-xs group-hover:scale-110 group-hover:bg-pink-100 transition-all">
+                    <i class="uil uil-headphones-alt"></i>
                 </div>
                 <h3 class="text-base font-bold text-zinc-900 mb-2">
                     Garantie &amp; Support 6j/7

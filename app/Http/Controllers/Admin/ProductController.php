@@ -212,7 +212,7 @@ class ProductController extends Controller
             'ingredients'      => 'nullable|string',
             'olfactory'        => 'nullable|string',
             'usage'            => 'nullable|string',
-            'price'            => 'required|numeric|min:0',
+            'price'            => 'required|numeric|min:0.01',
             'discounted_price' => 'nullable|numeric|min:0|lt:price',
             'image'            => 'required|string',
             'gallery'          => 'nullable|array',
@@ -242,7 +242,7 @@ class ProductController extends Controller
                     $product->sizes()->create([
                         'label'      => $size['label'],
                         'price'      => $size['price'] ?? null,
-                        'in_stock'   => isset($size['in_stock']),
+                        'in_stock'   => isset($size['in_stock']) ? filter_var($size['in_stock'], FILTER_VALIDATE_BOOLEAN) : false,
                         'sort_order' => $i,
                     ]);
                 }
@@ -257,7 +257,7 @@ class ProductController extends Controller
                     $product->flavors()->create([
                         'label'      => $flavor['label'],
                         'color_hex'  => $flavor['color_hex'] ?? null,
-                        'in_stock'   => isset($flavor['in_stock']),
+                        'in_stock'   => isset($flavor['in_stock']) ? filter_var($flavor['in_stock'], FILTER_VALIDATE_BOOLEAN) : false,
                         'sort_order' => $i,
                     ]);
                 }

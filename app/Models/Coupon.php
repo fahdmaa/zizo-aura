@@ -20,6 +20,8 @@ class Coupon extends Model
     protected $casts = [
         'value' => 'decimal:2',
         'min_order_amount' => 'decimal:2',
+        'max_uses' => 'integer',
+        'used_count' => 'integer',
         'is_active' => 'boolean',
         'expires_at' => 'datetime',
     ];

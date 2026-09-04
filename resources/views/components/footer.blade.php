@@ -17,8 +17,8 @@
                target="_blank"
                rel="noopener noreferrer"
                aria-label="Instagram @zizo_aura_"
-               class="btn-circle-action w-12 h-12 rounded-full bg-[#f8f9fa] hover:bg-[#ff1b7a] text-zinc-800 hover:text-white border-2 border-zinc-200 hover:border-[#ff1b7a] flex items-center justify-center text-xl shadow-xs">
-                <i class="ti ti-brand-instagram"></i>
+               class="btn-circle-action w-12 h-12 rounded-full bg-[#f8f9fa] hover:bg-[#ff1b7a] text-zinc-800 hover:text-white border-2 border-zinc-200 hover:border-[#ff1b7a] flex items-center justify-center text-2xl shadow-xs transition-all duration-300">
+                <i class="uil uil-instagram"></i>
             </a>
 
             <!-- TikTok -->
@@ -26,8 +26,8 @@
                target="_blank"
                rel="noopener noreferrer"
                aria-label="TikTok @zizo_aura_"
-               class="btn-circle-action w-12 h-12 rounded-full bg-[#f8f9fa] hover:bg-[#ff1b7a] text-zinc-800 hover:text-white border-2 border-zinc-200 hover:border-[#ff1b7a] flex items-center justify-center text-xl shadow-xs">
-                <i class="ti ti-brand-tiktok"></i>
+               class="btn-circle-action w-12 h-12 rounded-full bg-[#f8f9fa] hover:bg-[#ff1b7a] text-zinc-800 hover:text-white border-2 border-zinc-200 hover:border-[#ff1b7a] flex items-center justify-center text-xl shadow-xs transition-all duration-300">
+                <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.298-.002.595.042.88.13V9.4a6.33 6.33 0 0 0-1-.08A6.34 6.34 0 0 0 3 15.66a6.34 6.34 0 0 0 10.86 4.43c.04-.04.07-.08.1-.12.02-.03.04-.06.06-.09V9.17a8.28 8.28 0 0 0 5.57 2.14V7.87a4.87 4.87 0 0 1-.0-.18z"/></svg>
             </a>
         </div>
 

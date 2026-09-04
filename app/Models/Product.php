@@ -43,12 +43,15 @@ class Product extends Model
         'discounted_price' => 'decimal:2',
         'gallery' => 'array',
         'rating' => 'decimal:1',
+        'review_count' => 'integer',
         'is_new' => 'boolean',
         'is_bestseller' => 'boolean',
         'in_stock' => 'boolean',
         'is_active' => 'boolean',
+        'stock_quantity' => 'integer',
         'has_sizes' => 'boolean',
         'has_flavors' => 'boolean',
+        'sort_order' => 'integer',
     ];
 
     // ── Relations ─────────────────────────────────────────────────────────────
@@ -73,6 +76,11 @@ class Product extends Model
         return $this->hasMany(OrderItem::class);
     }
 
+    public function cartItems(): HasMany
+    {
+        return $this->hasMany(CartItem::class);
+    }
+
     // ── Computed ──────────────────────────────────────────────────────────────
 
     /**
@@ -88,11 +96,11 @@ class Product extends Model
      */
     public function getDiscountPercentAttribute(): ?int
     {
-        if (! $this->discounted_price) {
+        if (! $this->discounted_price || (float) $this->price <= 0) {
             return null;
         }
 
-        return (int) round((1 - $this->discounted_price / $this->price) * 100);
+        return (int) round((1 - (float) $this->discounted_price / (float) $this->price) * 100);
     }
 
     // ── Scopes ────────────────────────────────────────────────────────────────

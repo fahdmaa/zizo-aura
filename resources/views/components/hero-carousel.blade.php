@@ -49,7 +49,7 @@
                 id="heroPrevBtn"
                 aria-label="Image précédente"
                 class="absolute left-3 sm:left-6 lg:left-8 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-13 sm:h-13 rounded-full bg-white/85 hover:bg-white text-zinc-900 shadow-[0_8px_30px_rgba(0,0,0,0.18)] backdrop-blur-md border border-white/60 flex items-center justify-center transition-all duration-300 hover:scale-108 active:scale-95 cursor-pointer">
-            <i class="ti ti-chevron-left text-lg sm:text-2xl -ml-0.5"></i>
+            <i class="uil uil-angle-left-b text-xl sm:text-3xl -ml-0.5"></i>
         </button>
 
         <!-- Right Manual Switch Arrow (Floating Glassmorphism Button) -->
@@ -57,7 +57,7 @@
                 id="heroNextBtn"
                 aria-label="Image suivante"
                 class="absolute right-3 sm:right-6 lg:right-8 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-13 sm:h-13 rounded-full bg-white/85 hover:bg-white text-zinc-900 shadow-[0_8px_30px_rgba(0,0,0,0.18)] backdrop-blur-md border border-white/60 flex items-center justify-center transition-all duration-300 hover:scale-108 active:scale-95 cursor-pointer">
-            <i class="ti ti-chevron-right text-lg sm:text-2xl -mr-0.5"></i>
+            <i class="uil uil-angle-right-b text-xl sm:text-3xl -mr-0.5"></i>
         </button>
 
         <!-- Floating Bottom Brand Navigation Pills -->
@@ -116,10 +116,10 @@
                         aria-label="Pause ou lecture du défilement"
                         title="Pause / Lecture">
                     <span class="hero-autoplay-icon-pause flex items-center justify-center">
-                        <i class="ti ti-player-pause text-xs"></i>
+                        <i class="uil uil-pause text-sm"></i>
                     </span>
                     <span class="hero-autoplay-icon-play hidden items-center justify-center text-pink-400">
-                        <i class="ti ti-player-play text-xs"></i>
+                        <i class="uil uil-play text-sm"></i>
                     </span>
                 </button>
 
