@@ -15,7 +15,10 @@ class AdminAuth
         if (! $isAuthenticated && $request->hasCookie('admin_auth_token')) {
             $adminPassword = (string) (config('app.admin_password') ?: env('ADMIN_PASSWORD') ?: 'zizoaura2025!');
             $cookieToken = (string) $request->cookie('admin_auth_token');
-            if (! empty($cookieToken) && Hash::check($adminPassword, $cookieToken)) {
+            $appKey = (string) (config('app.key') ?: env('APP_KEY') ?: 'base64:zizoaura');
+            $expectedToken = hash_hmac('sha256', 'admin_auth_' . $adminPassword, $appKey);
+
+            if (! empty($cookieToken) && hash_equals($expectedToken, $cookieToken)) {
                 $isAuthenticated = true;
                 $request->session()->put('admin_authenticated', true);
             }

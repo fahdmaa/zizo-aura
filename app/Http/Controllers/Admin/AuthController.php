@@ -26,17 +26,25 @@ class AuthController extends Controller
         $adminPassword = (string) (config('app.admin_password') ?: env('ADMIN_PASSWORD') ?: 'zizoaura2025!');
         $inputPassword = (string) $request->input('password');
 
-        $isHash = password_get_info($adminPassword)['algo'] !== null;
-        $isValid = $isHash
-            ? (Hash::check($inputPassword, $adminPassword) || Hash::check(trim($inputPassword), $adminPassword))
-            : (hash_equals($adminPassword, $inputPassword) || hash_equals(trim($adminPassword), trim($inputPassword)));
+        $isHash = !empty($adminPassword) && (str_starts_with($adminPassword, '$2y$') || str_starts_with($adminPassword, '$2a$') || str_starts_with($adminPassword, '$argon2'));
+        $isValid = false;
+        if ($isHash) {
+            try {
+                $isValid = password_verify($inputPassword, $adminPassword) || password_verify(trim($inputPassword), $adminPassword);
+            } catch (\Throwable $e) {
+                $isValid = false;
+            }
+        } else {
+            $isValid = hash_equals($adminPassword, $inputPassword) || hash_equals(trim($adminPassword), trim($inputPassword));
+        }
 
         if ($isValid) {
             $request->session()->regenerate();
             $request->session()->put('admin_authenticated', true);
             $request->session()->save();
 
-            $token = Hash::make($adminPassword);
+            $appKey = (string) (config('app.key') ?: env('APP_KEY') ?: 'base64:zizoaura');
+            $token = hash_hmac('sha256', 'admin_auth_' . $adminPassword, $appKey);
             $authCookie = cookie('admin_auth_token', $token, 240, '/', null, null, true, false, 'lax');
 
             return redirect()->to('/admin')->withCookie($authCookie);
