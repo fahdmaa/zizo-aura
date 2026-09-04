@@ -11,7 +11,7 @@
         <!-- Modal Header -->
         <div class="px-5 py-4 sm:px-6 sm:py-5 border-b border-zinc-100 flex items-center justify-between bg-[#fafafa]">
             <div class="flex items-center gap-2.5">
-                <div class="w-8 h-8 rounded-full bg-pink-100 text-pink-600 flex items-center justify-center text-base shrink-0">
+                <div class="w-8 h-8 rounded-full bg-zinc-900 text-white flex items-center justify-center text-base shrink-0">
                     <i class="uil uil-truck"></i>
                 </div>
                 <div>
@@ -36,9 +36,8 @@
             <form id="online-checkout-form" class="space-y-5" onsubmit="return false;">
                 <!-- Customer Details Card -->
                 <div class="space-y-3.5">
-                    <div class="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-zinc-900 pb-1 border-b border-zinc-100">
-                        <i class="uil uil-user-circle text-pink-600 text-base"></i>
-                        <span>1. Coordonnées de livraison</span>
+                    <div class="text-xs font-black uppercase tracking-wider text-zinc-900 pb-1.5 border-b border-zinc-100 text-left">
+                        1. Coordonnées de livraison
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -47,15 +46,12 @@
                             <label class="block text-[11px] font-bold uppercase tracking-wider text-zinc-700 mb-1">
                                 Nom complet <span class="text-pink-600 font-black">*</span>
                             </label>
-                            <div class="relative">
-                                <i class="uil uil-user absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400 text-sm"></i>
-                                <input type="text"
-                                       id="checkout-customer-name"
-                                       name="customer_name"
-                                       required
-                                       placeholder="ex: Sara Bennani"
-                                       class="w-full !h-11 pl-9 pr-3 text-xs font-semibold rounded-xl bg-zinc-50 border border-zinc-200 hover:border-pink-300 focus:bg-white focus:border-pink-500 focus:ring-4 focus:ring-pink-500/12 outline-none transition-all">
-                            </div>
+                            <input type="text"
+                                   id="checkout-customer-name"
+                                   name="customer_name"
+                                   required
+                                   placeholder="ex: Sara Bennani"
+                                   class="w-full !h-11 px-4 text-xs font-semibold rounded-xl bg-zinc-50 border border-zinc-200 hover:border-zinc-300 focus:bg-white focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/5 outline-none transition-all">
                         </div>
 
                         <!-- Phone Number -->
@@ -63,15 +59,12 @@
                             <label class="block text-[11px] font-bold uppercase tracking-wider text-zinc-700 mb-1">
                                 Numéro de téléphone <span class="text-pink-600 font-black">*</span>
                             </label>
-                            <div class="relative">
-                                <i class="uil uil-phone absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400 text-sm"></i>
-                                <input type="tel"
-                                       id="checkout-customer-phone"
-                                       name="customer_phone"
-                                       required
-                                       placeholder="06 XX XX XX XX"
-                                       class="w-full !h-11 pl-9 pr-3 text-xs font-semibold rounded-xl bg-zinc-50 border border-zinc-200 hover:border-pink-300 focus:bg-white focus:border-pink-500 focus:ring-4 focus:ring-pink-500/12 outline-none transition-all">
-                            </div>
+                            <input type="tel"
+                                   id="checkout-customer-phone"
+                                   name="customer_phone"
+                                   required
+                                   placeholder="06 XX XX XX XX"
+                                   class="w-full !h-11 px-4 text-xs font-semibold rounded-xl bg-zinc-50 border border-zinc-200 hover:border-zinc-300 focus:bg-white focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/5 outline-none transition-all">
                         </div>
                     </div>
 
@@ -81,38 +74,35 @@
                             <label class="block text-[11px] font-bold uppercase tracking-wider text-zinc-700 mb-1">
                                 Ville <span class="text-pink-600 font-black">*</span>
                             </label>
-                            <div class="relative">
-                                <i class="uil uil-building absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400 text-sm"></i>
-                                <input type="text"
-                                       id="checkout-city"
-                                       name="city"
-                                       required
-                                       list="morocco-cities-list"
-                                       placeholder="ex: Casablanca, Rabat..."
-                                       class="w-full !h-11 pl-9 pr-3 text-xs font-semibold rounded-xl bg-zinc-50 border border-zinc-200 hover:border-pink-300 focus:bg-white focus:border-pink-500 focus:ring-4 focus:ring-pink-500/12 outline-none transition-all">
-                                <datalist id="morocco-cities-list">
-                                    <option value="Casablanca">
-                                    <option value="Rabat">
-                                    <option value="Marrakech">
-                                    <option value="Tanger">
-                                    <option value="Fès">
-                                    <option value="Agadir">
-                                    <option value="Salé">
-                                    <option value="Meknès">
-                                    <option value="Kénitra">
-                                    <option value="Oujda">
-                                    <option value="Tétouan">
-                                    <option value="Mohammedia">
-                                    <option value="El Jadida">
-                                    <option value="Nador">
-                                    <option value="Safi">
-                                    <option value="Béni Mellal">
-                                    <option value="Khouribga">
-                                    <option value="Témara">
-                                    <option value="Settat">
-                                    <option value="Laâyoune">
-                                </datalist>
-                            </div>
+                            <input type="text"
+                                   id="checkout-city"
+                                   name="city"
+                                   required
+                                   list="morocco-cities-list"
+                                   placeholder="ex: Casablanca, Rabat..."
+                                   class="w-full !h-11 px-4 text-xs font-semibold rounded-xl bg-zinc-50 border border-zinc-200 hover:border-zinc-300 focus:bg-white focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/5 outline-none transition-all">
+                            <datalist id="morocco-cities-list">
+                                <option value="Casablanca">
+                                <option value="Rabat">
+                                <option value="Marrakech">
+                                <option value="Tanger">
+                                <option value="Fès">
+                                <option value="Agadir">
+                                <option value="Salé">
+                                <option value="Meknès">
+                                <option value="Kénitra">
+                                <option value="Oujda">
+                                <option value="Tétouan">
+                                <option value="Mohammedia">
+                                <option value="El Jadida">
+                                <option value="Nador">
+                                <option value="Safi">
+                                <option value="Béni Mellal">
+                                <option value="Khouribga">
+                                <option value="Témara">
+                                <option value="Settat">
+                                <option value="Laâyoune">
+                            </datalist>
                         </div>
 
                         <!-- Email (Optional) -->
@@ -120,14 +110,11 @@
                             <label class="block text-[11px] font-bold uppercase tracking-wider text-zinc-700 mb-1">
                                 Adresse e-mail <span class="text-zinc-400 font-normal text-[10px]">(facultatif)</span>
                             </label>
-                            <div class="relative">
-                                <i class="uil uil-envelope absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400 text-sm"></i>
-                                <input type="email"
-                                       id="checkout-customer-email"
-                                       name="customer_email"
-                                       placeholder="pour le reçu de commande"
-                                       class="w-full !h-11 pl-9 pr-3 text-xs font-semibold rounded-xl bg-zinc-50 border border-zinc-200 hover:border-pink-300 focus:bg-white focus:border-pink-500 focus:ring-4 focus:ring-pink-500/12 outline-none transition-all">
-                            </div>
+                            <input type="email"
+                                   id="checkout-customer-email"
+                                   name="customer_email"
+                                   placeholder="pour le reçu de commande"
+                                   class="w-full !h-11 px-4 text-xs font-semibold rounded-xl bg-zinc-50 border border-zinc-200 hover:border-zinc-300 focus:bg-white focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/5 outline-none transition-all">
                         </div>
                     </div>
 
@@ -136,15 +123,12 @@
                         <label class="block text-[11px] font-bold uppercase tracking-wider text-zinc-700 mb-1">
                             Adresse de livraison exacte <span class="text-pink-600 font-black">*</span>
                         </label>
-                        <div class="relative">
-                            <i class="uil uil-map-pin absolute left-3.5 top-3 text-zinc-400 text-sm"></i>
-                            <textarea id="checkout-shipping-address"
-                                      name="shipping_address"
-                                      required
-                                      rows="2"
-                                      placeholder="Quartier, Boulevard/Rue, Immeuble, N° Appartement..."
-                                      class="w-full pl-9 pr-3 py-2.5 text-xs font-semibold rounded-xl bg-zinc-50 border border-zinc-200 hover:border-pink-300 focus:bg-white focus:border-pink-500 focus:ring-4 focus:ring-pink-500/12 outline-none transition-all resize-none"></textarea>
-                        </div>
+                        <textarea id="checkout-shipping-address"
+                                  name="shipping_address"
+                                  required
+                                  rows="2"
+                                  placeholder="Quartier, Boulevard/Rue, Immeuble, N° Appartement..."
+                                  class="w-full px-4 py-2.5 text-xs font-semibold rounded-xl bg-zinc-50 border border-zinc-200 hover:border-zinc-300 focus:bg-white focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/5 outline-none transition-all resize-none"></textarea>
                     </div>
 
                     <!-- Delivery Notes (Optional) -->
@@ -156,15 +140,14 @@
                                id="checkout-notes"
                                name="notes"
                                placeholder="ex: Appeler avant la livraison, créneau après 16h..."
-                               class="w-full !h-10 px-3.5 text-xs font-medium rounded-xl bg-zinc-50 border border-zinc-200 hover:border-pink-300 focus:bg-white focus:border-pink-500 focus:ring-4 focus:ring-pink-500/12 outline-none transition-all">
+                               class="w-full !h-10 px-4 text-xs font-medium rounded-xl bg-zinc-50 border border-zinc-200 hover:border-zinc-300 focus:bg-white focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/5 outline-none transition-all">
                     </div>
                 </div>
 
                 <!-- Order Recap Box -->
                 <div class="space-y-3 pt-2">
-                    <div class="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-zinc-900 pb-1 border-b border-zinc-100">
-                        <i class="uil uil-receipt text-pink-600 text-base"></i>
-                        <span>2. Récapitulatif de votre commande</span>
+                    <div class="text-xs font-black uppercase tracking-wider text-zinc-900 pb-1.5 border-b border-zinc-100 text-left">
+                        2. Récapitulatif de votre commande
                     </div>
 
                     <div class="bg-[#f8f9fa] border border-zinc-200 rounded-2xl p-4 space-y-3">
@@ -195,18 +178,18 @@
                     </div>
                 </div>
 
-                <!-- Trust Guarantee Badges -->
+                <!-- Trust Guarantee Badges (Neutral Light Grey) -->
                 <div class="grid grid-cols-3 gap-2 py-1 text-center">
-                    <div class="p-2 rounded-xl bg-emerald-50/60 border border-emerald-100 text-emerald-800">
-                        <i class="uil uil-money-bill text-base block mb-0.5 text-emerald-600"></i>
+                    <div class="p-2.5 rounded-xl bg-zinc-100/70 border border-zinc-200/80 text-zinc-700">
+                        <i class="uil uil-money-bill text-base block mb-0.5 text-zinc-700"></i>
                         <span class="text-[10px] font-bold block leading-tight">Paiement à la livraison</span>
                     </div>
-                    <div class="p-2 rounded-xl bg-blue-50/60 border border-blue-100 text-blue-800">
-                        <i class="uil uil-truck text-base block mb-0.5 text-blue-600"></i>
+                    <div class="p-2.5 rounded-xl bg-zinc-100/70 border border-zinc-200/80 text-zinc-700">
+                        <i class="uil uil-truck text-base block mb-0.5 text-zinc-700"></i>
                         <span class="text-[10px] font-bold block leading-tight">Expédié sous 24-48h</span>
                     </div>
-                    <div class="p-2 rounded-xl bg-purple-50/60 border border-purple-100 text-purple-800">
-                        <i class="uil uil-gift text-base block mb-0.5 text-purple-600"></i>
+                    <div class="p-2.5 rounded-xl bg-zinc-100/70 border border-zinc-200/80 text-zinc-700">
+                        <i class="uil uil-gift text-base block mb-0.5 text-zinc-700"></i>
                         <span class="text-[10px] font-bold block leading-tight">Échantillons offerts</span>
                     </div>
                 </div>
@@ -219,12 +202,11 @@
                     </div>
                 </div>
 
-                <!-- Action Button -->
+                <!-- Action Button (Clean Solid Black, No Pink Glow, No Inner Icon) -->
                 <div class="pt-2">
                     <button type="button"
                             id="checkout-submit-btn"
-                            class="btn-card-pill w-full py-4 text-xs sm:text-sm font-black uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-pink-600/20 hover:shadow-pink-600/30 active:scale-[0.99] transition-all cursor-pointer">
-                        <i id="checkout-btn-icon" class="uil uil-check-circle text-lg"></i>
+                            class="w-full py-4 px-6 rounded-full bg-zinc-900 hover:bg-black text-white text-xs sm:text-sm font-black uppercase tracking-wider flex items-center justify-center gap-2 shadow-md hover:shadow-lg active:scale-[0.99] transition-all cursor-pointer">
                         <span id="checkout-btn-text">Confirmer la commande (Paiement à la livraison)</span>
                         <div id="checkout-btn-spinner" class="hidden w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                     </button>

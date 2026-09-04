@@ -103,7 +103,7 @@
                     <button type="button"
                             id="cart-online-checkout-btn"
                             class="btn-card-pill w-full !py-3 !px-2 text-[11px] font-black uppercase tracking-wider bg-zinc-900 hover:bg-black hover:border-black flex items-center justify-center gap-1.5 shadow-sm text-center cursor-pointer">
-                        <i class="uil uil-shopping-cart text-base shrink-0 text-pink-400"></i>
+                        <i class="uil uil-shopping-cart text-base shrink-0 text-white"></i>
                         <span class="truncate">Commander</span>
                     </button>
                 </div>
