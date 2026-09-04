@@ -226,13 +226,13 @@
             </div>
 
             <div class="space-y-2">
-                <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-[11px] font-black uppercase tracking-wider">
+                <span id="success-badge-title" class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-[11px] font-black uppercase tracking-wider">
                     Commande validée avec succès
                 </span>
-                <h3 class="text-xl sm:text-2xl font-black text-zinc-900">
+                <h3 id="success-heading-title" class="text-xl sm:text-2xl font-black text-zinc-900">
                     Merci pour votre commande !
                 </h3>
-                <p class="text-xs sm:text-sm text-zinc-600 max-w-md mx-auto">
+                <p id="success-message-text" class="text-xs sm:text-sm text-zinc-600 max-w-md mx-auto">
                     Votre numéro de commande est <strong id="success-order-number" class="text-pink-600 font-extrabold">#CMD-0000</strong>. Notre équipe va préparer votre colis avec le plus grand soin.
                 </p>
             </div>
@@ -257,7 +257,7 @@
                 </div>
             </div>
 
-            <div class="p-3 bg-pink-50/60 rounded-xl border border-pink-100 max-w-md mx-auto text-[11px] text-pink-900">
+            <div id="success-contact-notice" class="p-3 bg-pink-50/60 rounded-xl border border-pink-100 max-w-md mx-auto text-[11px] text-pink-900">
                 <i class="uil uil-phone-volume text-sm text-pink-600 mr-1"></i>
                 Notre service client vous contactera très rapidement par téléphone pour confirmer l'expédition.
             </div>

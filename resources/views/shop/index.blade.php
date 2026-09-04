@@ -179,16 +179,30 @@
                             @endif
                         </div>
 
-                        <!-- Black Pill "Ajouter au panier" Button -->
-                        <button class="btn-card-pill w-full mt-auto"
-                                data-add-to-cart
-                                data-product-name="{{ $product['name'] }}"
-                                data-product-price="{{ $product['price'] }}"
-                                data-product-image="{{ $product['image'] }}"
-                                data-product-slug="{{ $product['slug'] }}">
-                            <i class="uil uil-shopping-bag text-base"></i>
-                            <span>Ajouter au panier</span>
-                        </button>
+                        @if($product['is_active'] ?? true)
+                            <!-- Black Pill "Ajouter au panier" Button -->
+                            <button class="btn-card-pill w-full mt-auto cursor-pointer"
+                                    data-add-to-cart
+                                    data-product-name="{{ $product['name'] }}"
+                                    data-product-price="{{ $product['price'] }}"
+                                    data-product-image="{{ $product['image'] }}"
+                                    data-product-slug="{{ $product['slug'] }}">
+                                <i class="uil uil-shopping-bag text-base"></i>
+                                <span>Ajouter au panier</span>
+                            </button>
+                        @else
+                            <!-- Black Pill "Précommander" Button -->
+                            <button class="btn-card-pill w-full mt-auto !bg-zinc-900 hover:!bg-black text-white cursor-pointer"
+                                    data-preorder-product
+                                    data-product-id="{{ $product['id'] ?? '' }}"
+                                    data-product-name="{{ $product['name'] }}"
+                                    data-product-price="{{ $product['price'] }}"
+                                    data-product-image="{{ $product['image'] }}"
+                                    data-product-slug="{{ $product['slug'] }}">
+                                <i class="uil uil-clock text-base text-amber-400"></i>
+                                <span>Précommander</span>
+                            </button>
+                        @endif
                     </div>
 
                 </div>

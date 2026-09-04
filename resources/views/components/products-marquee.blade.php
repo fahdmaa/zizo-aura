@@ -101,16 +101,30 @@
                                 @endif
                             </div>
 
-                            <!-- Quick Add to Cart Button -->
-                            <button class="btn-card-pill w-full mt-auto py-2.5 text-xs font-bold"
-                                    data-add-to-cart
-                                    data-product-name="{{ $product['name'] }}"
-                                    data-product-price="{{ $product['price'] }}"
-                                    data-product-image="{{ $product['image'] }}"
-                                    data-product-slug="{{ $product['slug'] }}">
-                                <i class="uil uil-shopping-bag text-sm"></i>
-                                <span>Ajouter au panier</span>
-                            </button>
+                            @if($product['is_active'] ?? true)
+                                <!-- Quick Add to Cart Button -->
+                                <button class="btn-card-pill w-full mt-auto py-2.5 text-xs font-bold cursor-pointer"
+                                        data-add-to-cart
+                                        data-product-name="{{ $product['name'] }}"
+                                        data-product-price="{{ $product['price'] }}"
+                                        data-product-image="{{ $product['image'] }}"
+                                        data-product-slug="{{ $product['slug'] }}">
+                                    <i class="uil uil-shopping-bag text-sm"></i>
+                                    <span>Ajouter au panier</span>
+                                </button>
+                            @else
+                                <!-- Quick Preorder Button -->
+                                <button class="btn-card-pill w-full mt-auto py-2.5 text-xs font-bold !bg-zinc-900 hover:!bg-black text-white cursor-pointer"
+                                        data-preorder-product
+                                        data-product-id="{{ $product['id'] ?? '' }}"
+                                        data-product-name="{{ $product['name'] }}"
+                                        data-product-price="{{ $product['price'] }}"
+                                        data-product-image="{{ $product['image'] }}"
+                                        data-product-slug="{{ $product['slug'] }}">
+                                    <i class="uil uil-clock text-sm text-amber-400"></i>
+                                    <span>Précommander</span>
+                                </button>
+                            @endif
                         </div>
 
                     </div>

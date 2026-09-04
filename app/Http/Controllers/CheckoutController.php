@@ -26,6 +26,7 @@ class CheckoutController extends Controller
             'city' => ['required', 'string', 'max:100'],
             'notes' => ['nullable', 'string', 'max:2000'],
             'coupon_code' => ['nullable', 'string', 'max:50'],
+            'is_preorder' => ['nullable', 'boolean'],
             'items' => ['nullable', 'array', 'min:1'],
             'items.*.slug' => ['nullable', 'string', 'max:255'],
             'items.*.name' => ['nullable', 'string', 'max:255'],
@@ -41,8 +42,9 @@ class CheckoutController extends Controller
         $order = DB::transaction(function () use ($request, $data) {
             $processedItems = [];
             $subtotal = 0.0;
+            $hasPreorderItem = (bool) ($data['is_preorder'] ?? false);
 
-            // 1. Process items from payload if provided (localStorage cart)
+            // 1. Process items from payload if provided (localStorage cart / direct preorder)
             if (! empty($data['items']) && is_array($data['items'])) {
                 foreach ($data['items'] as $itemData) {
                     $qty = max(1, (int) ($itemData['quantity'] ?? 1));
@@ -59,15 +61,18 @@ class CheckoutController extends Controller
                         $product = Product::lockForUpdate()->where('name', $itemData['name'])->first();
                     }
                     if (! $product) {
-                        // Fallback to first active product to ensure database integrity
-                        $product = Product::lockForUpdate()->where('is_active', true)->first();
+                        // Fallback to any existing product to ensure database integrity
+                        $product = Product::lockForUpdate()->first();
                     }
 
                     if (! $product) {
                         throw ValidationException::withMessages(['cart' => 'Produit introuvable dans le catalogue.']);
                     }
 
-                    if ($product->stock_quantity !== null && $product->stock_quantity < $qty) {
+                    $isItemPreorder = (! $product->is_active) || $hasPreorderItem;
+                    if ($isItemPreorder) {
+                        $hasPreorderItem = true;
+                    } elseif ($product->stock_quantity !== null && $product->stock_quantity < $qty) {
                         throw ValidationException::withMessages(['cart' => "Le produit {$product->name} n'est plus disponible dans cette quantité."]);
                     }
 
@@ -169,13 +174,18 @@ class CheckoutController extends Controller
             $finalTotal = max(0, round($subtotal + $shipping - $discount, 2));
 
             // 4. Create Order
+            $orderNotes = $data['notes'] ?? null;
+            if ($hasPreorderItem) {
+                $orderNotes = trim('[PRÉCOMMANDE] ' . ($orderNotes ?? 'Réservation article en réapprovisionnement'));
+            }
+
             $order = Order::create([
                 'customer_name' => $data['customer_name'],
                 'customer_phone' => $data['customer_phone'],
                 'customer_email' => $data['customer_email'] ?? null,
                 'shipping_address' => $data['shipping_address'],
                 'city' => $data['city'],
-                'notes' => $data['notes'] ?? null,
+                'notes' => $orderNotes,
                 'subtotal' => $subtotal,
                 'shipping_cost' => $shipping,
                 'discount_amount' => $discount,
@@ -184,7 +194,7 @@ class CheckoutController extends Controller
                 'status' => 'pending',
             ]);
 
-            // 5. Create Order Items & Decrement Stock
+            // 5. Create Order Items & Decrement Stock (skip decrement for preorder items)
             foreach ($processedItems as $itemInfo) {
                 $order->items()->create([
                     'product_id' => $itemInfo['product_id'],
@@ -196,7 +206,7 @@ class CheckoutController extends Controller
                     'subtotal' => $itemInfo['subtotal'],
                 ]);
 
-                if ($itemInfo['product']->stock_quantity !== null) {
+                if (! $hasPreorderItem && $itemInfo['product']->stock_quantity !== null) {
                     $itemInfo['product']->decrement('stock_quantity', $itemInfo['quantity']);
                 }
             }
@@ -226,9 +236,14 @@ class CheckoutController extends Controller
             Log::warning('Notification email failed for order #' . $order->id . ': ' . $e->getMessage());
         }
 
+        $isPreorder = str_contains((string) $order->notes, '[PRÉCOMMANDE]');
+
         return response()->json([
             'success' => true,
-            'message' => 'Votre commande a été confirmée avec succès !',
+            'is_preorder' => $isPreorder,
+            'message' => $isPreorder
+                ? 'Votre précommande a été validée avec succès ! Notre équipe vous contactera dès réception du stock.'
+                : 'Votre commande a été confirmée avec succès !',
             'order' => [
                 'id' => $order->id,
                 'order_number' => 'CMD-' . str_pad($order->id, 5, '0', STR_PAD_LEFT),

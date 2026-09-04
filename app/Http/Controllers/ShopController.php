@@ -1040,7 +1040,6 @@ class ShopController extends Controller
     {
         $products = Product::query()
             ->with(['category', 'sizes', 'flavors'])
-            ->active()
             ->whereHas('category', fn ($query) => $query->where('is_active', true))
             ->orderBy('sort_order')
             ->get();
@@ -1054,7 +1053,7 @@ class ShopController extends Controller
     {
         $categories = Category::query()
             ->where('is_active', true)
-            ->withCount(['activeProducts as count'])
+            ->withCount(['products as count'])
             ->orderBy('sort_order')
             ->get();
 
@@ -1062,11 +1061,10 @@ class ShopController extends Controller
             return self::getCategories();
         }
 
-        $totalActiveCount = Product::active()
-            ->whereHas('category', fn ($query) => $query->where('is_active', true))
+        $totalCount = Product::whereHas('category', fn ($query) => $query->where('is_active', true))
             ->count();
 
-        return array_merge([['slug' => 'all', 'name' => 'Tous les packs & produits', 'count' => $totalActiveCount]], $categories
+        return array_merge([['slug' => 'all', 'name' => 'Tous les packs & produits', 'count' => $totalCount]], $categories
             ->map(fn (Category $category) => ['slug' => $category->slug, 'name' => $category->name, 'count' => $category->count])
             ->all());
     }

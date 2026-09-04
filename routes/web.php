@@ -58,6 +58,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
         // Products
         Route::post('/produits/restaurer/{id}', [ProductController::class, 'restore'])->name('products.restore');
         Route::post('/produits/{product}/dupliquer', [ProductController::class, 'duplicate'])->name('products.duplicate');
+        Route::post('/produits/{product}/toggle', [ProductController::class, 'toggleStatus'])->name('products.toggle');
+        Route::delete('/produits/{product}/force', [ProductController::class, 'forceDestroy'])->name('products.force-destroy');
         Route::resource('produits', ProductController::class)->except(['show'])->parameters(['produits' => 'product'])->names('products');
 
         // Categories
@@ -83,6 +85,8 @@ Route::prefix('api/admin')->middleware('admin.auth')->group(function () {
     Route::get('/products/{product}', [AdminApiController::class, 'product']);
     Route::put('/products/{product}', [AdminApiController::class, 'updateProduct']);
     Route::post('/products/{product}/duplicate', [AdminApiController::class, 'duplicateProduct']);
+    Route::post('/products/{product}/toggle-status', [AdminApiController::class, 'toggleProductStatus']);
+    Route::delete('/products/{product}/force', [AdminApiController::class, 'forceDeleteProduct']);
     Route::delete('/products/{product}', [AdminApiController::class, 'deleteProduct']);
     Route::post('/products/{id}/restore', [AdminApiController::class, 'restoreProduct']);
     Route::get('/categories', [AdminApiController::class, 'categories']);

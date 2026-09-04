@@ -224,24 +224,48 @@
                             </button>
                         </div>
 
-                        <!-- Compact Add to Cart Button -->
-                        <button id="product-add-cart-btn"
-                                type="button"
-                                class="btn-card-pill h-11 px-5 sm:px-6 py-2 text-xs sm:text-sm font-extrabold uppercase tracking-wider flex-1 flex items-center justify-center gap-2 shadow-sm"
-                                data-product-name="{{ $product['name'] }}"
-                                data-unit-price="{{ $product['raw_price'] ?? $product['price'] }}"
-                                data-product-price="{{ $product['price'] }}"
-                                data-product-image="{{ $product['image'] }}"
-                                data-product-slug="{{ $product['slug'] }}">
-                            <i class="uil uil-shopping-bag text-base"></i>
-                            <span id="btn-cart-text">Ajouter au panier &bull; {{ $product['price'] }} DH</span>
-                        </button>
+                        @if($product['is_active'] ?? true)
+                            <!-- Compact Add to Cart Button -->
+                            <button id="product-add-cart-btn"
+                                    type="button"
+                                    class="btn-card-pill h-11 px-5 sm:px-6 py-2 text-xs sm:text-sm font-extrabold uppercase tracking-wider flex-1 flex items-center justify-center gap-2 shadow-sm cursor-pointer"
+                                    data-product-name="{{ $product['name'] }}"
+                                    data-unit-price="{{ $product['raw_price'] ?? $product['price'] }}"
+                                    data-product-price="{{ $product['price'] }}"
+                                    data-product-image="{{ $product['image'] }}"
+                                    data-product-slug="{{ $product['slug'] }}">
+                                <i class="uil uil-shopping-bag text-base"></i>
+                                <span id="btn-cart-text">Ajouter au panier &bull; {{ $product['price'] }} DH</span>
+                            </button>
+                        @else
+                            <!-- Pre-Order Button -->
+                            <button id="product-preorder-btn"
+                                    type="button"
+                                    class="btn-card-pill h-11 px-5 sm:px-6 py-2 text-xs sm:text-sm font-extrabold uppercase tracking-wider flex-1 flex items-center justify-center gap-2 shadow-sm !bg-zinc-900 hover:!bg-black text-white cursor-pointer"
+                                    data-preorder-product
+                                    data-product-id="{{ $product['id'] ?? '' }}"
+                                    data-product-name="{{ $product['name'] }}"
+                                    data-unit-price="{{ $product['raw_price'] ?? $product['price'] }}"
+                                    data-product-price="{{ $product['price'] }}"
+                                    data-product-image="{{ $product['image'] }}"
+                                    data-product-slug="{{ $product['slug'] }}">
+                                <i class="uil uil-clock text-base text-amber-400"></i>
+                                <span id="btn-cart-text">Précommander &bull; {{ $product['price'] }} DH</span>
+                            </button>
+                        @endif
                     </div>
 
-                    <p class="text-left text-[11px] text-zinc-400 font-semibold flex items-center gap-1.5">
-                        <i class="uil uil-truck text-base text-emerald-500"></i>
-                        <span>Livraison rapide partout au Maroc &bull; Expédié sous 24h &bull; Paiement à la livraison</span>
-                    </p>
+                    @if($product['is_active'] ?? true)
+                        <p class="text-left text-[11px] text-zinc-400 font-semibold flex items-center gap-1.5">
+                            <i class="uil uil-truck text-base text-emerald-500"></i>
+                            <span>Livraison rapide partout au Maroc &bull; Expédié sous 24h &bull; Paiement à la livraison</span>
+                        </p>
+                    @else
+                        <p class="text-left text-[11px] text-amber-600 font-semibold flex items-center gap-1.5">
+                            <i class="uil uil-clock text-base text-amber-500"></i>
+                            <span>Article en précommande &bull; Réservation prioritaire &bull; Paiement à la livraison dès disponibilité</span>
+                        </p>
+                    @endif
                 </div>
 
                 <!-- Product Information Tabs Accordions -->
@@ -364,15 +388,28 @@
                                     <span class="text-xs text-zinc-400 line-through">{{ $rel['original_price'] }} DH</span>
                                 </div>
 
-                                <button class="btn-card-pill w-full mt-auto"
-                                        data-add-to-cart
-                                        data-product-name="{{ $rel['name'] }}"
-                                        data-product-price="{{ $rel['price'] }}"
-                                        data-product-image="{{ $rel['image'] }}"
-                                        data-product-slug="{{ $rel['slug'] }}">
-                                    <i class="uil uil-shopping-bag text-base"></i>
-                                    <span>Ajouter au panier</span>
-                                </button>
+                                @if($rel['is_active'] ?? true)
+                                    <button class="btn-card-pill w-full mt-auto cursor-pointer"
+                                            data-add-to-cart
+                                            data-product-name="{{ $rel['name'] }}"
+                                            data-product-price="{{ $rel['price'] }}"
+                                            data-product-image="{{ $rel['image'] }}"
+                                            data-product-slug="{{ $rel['slug'] }}">
+                                        <i class="uil uil-shopping-bag text-base"></i>
+                                        <span>Ajouter au panier</span>
+                                    </button>
+                                @else
+                                    <button class="btn-card-pill w-full mt-auto !bg-zinc-900 hover:!bg-black text-white cursor-pointer"
+                                            data-preorder-product
+                                            data-product-id="{{ $rel['id'] ?? '' }}"
+                                            data-product-name="{{ $rel['name'] }}"
+                                            data-product-price="{{ $rel['price'] }}"
+                                            data-product-image="{{ $rel['image'] }}"
+                                            data-product-slug="{{ $rel['slug'] }}">
+                                        <i class="uil uil-clock text-base text-amber-400"></i>
+                                        <span>Précommander</span>
+                                    </button>
+                                @endif
                             </div>
                         </div>
                     @endforeach
@@ -397,12 +434,28 @@
             </div>
         </div>
     </div>
-    <button type="button"
-            id="mobile-sticky-add-btn"
-            class="btn-card-pill py-2.5 px-4 text-xs font-extrabold uppercase tracking-wider shrink-0 shadow-sm">
-        <i class="uil uil-shopping-bag text-sm"></i>
-        <span>Ajouter</span>
-    </button>
+    @if($product['is_active'] ?? true)
+        <button type="button"
+                id="mobile-sticky-add-btn"
+                class="btn-card-pill py-2.5 px-4 text-xs font-extrabold uppercase tracking-wider shrink-0 shadow-sm cursor-pointer">
+            <i class="uil uil-shopping-bag text-sm"></i>
+            <span>Ajouter</span>
+        </button>
+    @else
+        <button type="button"
+                id="mobile-sticky-add-btn"
+                class="btn-card-pill py-2.5 px-4 text-xs font-extrabold uppercase tracking-wider shrink-0 shadow-sm !bg-zinc-900 hover:!bg-black text-white cursor-pointer"
+                data-preorder-product
+                data-product-id="{{ $product['id'] ?? '' }}"
+                data-product-name="{{ $product['name'] }}"
+                data-unit-price="{{ $product['raw_price'] ?? $product['price'] }}"
+                data-product-price="{{ $product['price'] }}"
+                data-product-image="{{ $product['image'] }}"
+                data-product-slug="{{ $product['slug'] }}">
+            <i class="uil uil-clock text-sm text-amber-400"></i>
+            <span>Précommander</span>
+        </button>
+    @endif
 </div>
 
 <!-- Full-Screen High-Res Lightbox Visualizer Modal -->

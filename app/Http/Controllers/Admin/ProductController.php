@@ -92,11 +92,36 @@ class ProductController extends Controller
             ->with('success', 'Produit mis à jour.');
     }
 
+    public function toggleStatus(Product $product)
+    {
+        $product->update([
+            'is_active' => ! $product->is_active,
+        ]);
+
+        $statusMsg = $product->is_active
+            ? 'Produit activé (achat direct actif sur le site).'
+            : 'Produit désactivé (mode précommande actif sur le site).';
+
+        return back()->with('success', $statusMsg);
+    }
+
     public function destroy(Product $product)
     {
         $product->delete(); // soft delete
 
         return back()->with('success', 'Produit archivé.');
+    }
+
+    public function forceDestroy(Product $product)
+    {
+        DB::transaction(function () use ($product) {
+            $product->sizes()->delete();
+            $product->flavors()->delete();
+            $product->cartItems()->delete();
+            $product->forceDelete();
+        });
+
+        return back()->with('success', 'Produit supprimé définitivement du site.');
     }
 
     public function duplicate(Product $product)

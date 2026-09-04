@@ -168,7 +168,42 @@ class AdminApiController extends Controller
         return response()->json($duplicated->fresh()->load(['category', 'sizes', 'flavors']), 201);
     }
 
-    public function deleteProduct(Product $product): JsonResponse { $product->delete(); return response()->json([], 204); }
+    public function toggleProductStatus(Product $product): JsonResponse
+    {
+        $product->update([
+            'is_active' => ! $product->is_active,
+        ]);
+
+        return response()->json($product->fresh()->load(['category', 'sizes', 'flavors']));
+    }
+
+    public function deleteProduct(Request $request, Product $product): JsonResponse
+    {
+        if ($request->boolean('force') || $request->query('force') === 'true' || $request->query('force') === '1') {
+            DB::transaction(function () use ($product) {
+                $product->sizes()->delete();
+                $product->flavors()->delete();
+                $product->cartItems()->delete();
+                $product->forceDelete();
+            });
+            return response()->json(['deleted' => true, 'forced' => true], 200);
+        }
+
+        $product->delete();
+        return response()->json([], 204);
+    }
+
+    public function forceDeleteProduct(Product $product): JsonResponse
+    {
+        DB::transaction(function () use ($product) {
+            $product->sizes()->delete();
+            $product->flavors()->delete();
+            $product->cartItems()->delete();
+            $product->forceDelete();
+        });
+        return response()->json(['deleted' => true, 'forced' => true], 200);
+    }
+
     public function restoreProduct(int $id): JsonResponse { $product = Product::withTrashed()->findOrFail($id); $product->restore(); return response()->json($product); }
 
     public function categories(): JsonResponse { return response()->json(Category::withCount('products')->orderBy('sort_order')->get()); }

@@ -21,7 +21,6 @@ class CatalogApiController extends Controller
     public function show(string $slug): JsonResponse
     {
         $product = Product::with(['category', 'sizes', 'flavors'])
-            ->active()
             ->whereHas('category', fn ($q) => $q->where('is_active', true))
             ->where(function ($q) use ($slug) {
                 $q->where('slug', $slug);

@@ -129,7 +129,10 @@ class Product extends Model
         $badgeColor = $this->badge_color;
 
         if (empty($badge)) {
-            if ($this->is_bestseller) {
+            if (! $this->is_active) {
+                $badge = 'Précommande';
+                $badgeColor = $badgeColor ?: 'bg-amber-500 text-white';
+            } elseif ($this->is_bestseller) {
                 $badge = 'Best-Seller';
                 $badgeColor = $badgeColor ?: 'bg-rose-500 text-white';
             } elseif ($this->is_new) {
@@ -163,6 +166,7 @@ class Product extends Model
             'ingredients' => $this->ingredients,
             'olfactory' => $this->olfactory,
             'usage' => $this->usage,
+            'is_active' => (bool) $this->is_active,
             'in_stock' => $this->in_stock && ($this->stock_quantity === null || $this->stock_quantity > 0),
         ];
     }

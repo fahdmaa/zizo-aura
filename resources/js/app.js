@@ -522,7 +522,76 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    let activeCheckoutMode = 'cart'; // 'cart' | 'preorder'
+    let currentPreorderItem = null;
+
+    const renderPreorderRecap = (item) => {
+        const qty = parseInt(item.quantity, 10) || 1;
+        const unitPrice = parseFloat(item.price) || 0;
+        const subtotal = Math.round(unitPrice * qty);
+        const shippingFee = subtotal === 0 ? 0 : STANDARD_SHIPPING_FEE;
+        const finalTotal = subtotal + shippingFee;
+
+        if (checkoutRecapSubtotal) checkoutRecapSubtotal.textContent = `${subtotal} DH`;
+        if (checkoutRecapDiscountRow) checkoutRecapDiscountRow.classList.add('hidden');
+        if (checkoutRecapTotal) checkoutRecapTotal.textContent = `${finalTotal} DH`;
+
+        if (checkoutItemsPreview) {
+            const variantInfo = [item.flavor, item.size].filter(Boolean).join(' • ');
+            checkoutItemsPreview.innerHTML = `
+                <div class="py-2 flex items-center justify-between gap-3 text-xs">
+                    <div class="flex items-center gap-2.5 min-w-0">
+                        <img src="${item.image || '/images/sdj_bum_bum_set.png'}" alt="${item.name}" class="w-9 h-9 object-contain rounded-lg bg-white border border-zinc-200 p-0.5 shrink-0" />
+                        <div class="truncate">
+                            <div class="flex items-center gap-1.5 truncate">
+                                <p class="font-bold text-zinc-900 truncate">${item.name}</p>
+                                <span class="px-1.5 py-0.2 rounded-full bg-amber-100 text-amber-800 font-extrabold text-[9px] shrink-0">Précommande</span>
+                            </div>
+                            ${variantInfo ? `<p class="text-[10px] text-zinc-400 font-medium truncate">${variantInfo}</p>` : ''}
+                        </div>
+                    </div>
+                    <div class="text-right shrink-0">
+                        <span class="text-zinc-500 font-semibold mr-1.5">x${qty}</span>
+                        <span class="font-extrabold text-pink-600">${subtotal} DH</span>
+                    </div>
+                </div>
+            `;
+        }
+    };
+
+    const openPreorderModal = (item) => {
+        activeCheckoutMode = 'preorder';
+        currentPreorderItem = item;
+
+        closeCartDrawer();
+
+        const modalTitle = document.getElementById('checkout-modal-title');
+        const modalSubtitle = document.querySelector('#checkout-modal-container .px-5 p') || document.querySelector('#checkout-modal-container p');
+        if (modalTitle) modalTitle.textContent = 'Précommander en ligne';
+        if (modalSubtitle) modalSubtitle.textContent = 'Paiement en espèces à la livraison dès disponibilité';
+
+        if (checkoutBtnText) checkoutBtnText.textContent = 'Confirmer la précommande (Paiement à la livraison)';
+
+        renderPreorderRecap(item);
+
+        // Reset views
+        if (checkoutFormView) checkoutFormView.classList.remove('hidden');
+        if (checkoutSuccessView) checkoutSuccessView.classList.add('hidden');
+        if (checkoutErrorBanner) checkoutErrorBanner.classList.add('hidden');
+
+        if (checkoutModal && checkoutModalContainer) {
+            checkoutModal.classList.remove('opacity-0', 'pointer-events-none');
+            checkoutModal.classList.add('opacity-100', 'pointer-events-auto');
+            checkoutModalContainer.classList.remove('scale-95', 'opacity-0');
+            checkoutModalContainer.classList.add('scale-100', 'opacity-100');
+            document.body.classList.add('overflow-hidden');
+        }
+    };
+
     const openCheckoutModal = () => {
+        activeCheckoutMode = 'cart';
+        currentPreorderItem = null;
+
         const cart = getCart();
         if (cart.length === 0) {
             showToast('Votre panier est vide.');
@@ -531,6 +600,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         closeCartDrawer();
+
+        const modalTitle = document.getElementById('checkout-modal-title');
+        const modalSubtitle = document.querySelector('#checkout-modal-container .px-5 p') || document.querySelector('#checkout-modal-container p');
+        if (modalTitle) modalTitle.textContent = 'Commander en ligne';
+        if (modalSubtitle) modalSubtitle.textContent = 'Paiement en espèces à la livraison partout au Maroc';
+
+        if (checkoutBtnText) checkoutBtnText.textContent = 'Confirmer la commande (Paiement à la livraison)';
+
         renderCheckoutRecap();
 
         // Reset views
@@ -559,8 +636,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const handleCheckoutSubmit = async () => {
         const cart = getCart();
-        if (cart.length === 0) {
-            showToast('Votre panier est vide.');
+        const items = activeCheckoutMode === 'preorder' ? [currentPreorderItem] : cart;
+
+        if (!items || items.length === 0 || !items[0]) {
+            showToast(activeCheckoutMode === 'preorder' ? 'Aucun article en précommande sélectionné.' : 'Votre panier est vide.');
             closeCheckoutModal();
             return;
         }
@@ -608,8 +687,9 @@ document.addEventListener('DOMContentLoaded', () => {
             city: city,
             shipping_address: address,
             notes: notes || null,
-            coupon_code: appliedCoupon ? appliedCoupon.code : null,
-            items: cart
+            coupon_code: appliedCoupon && activeCheckoutMode === 'cart' ? appliedCoupon.code : null,
+            is_preorder: activeCheckoutMode === 'preorder',
+            items: items
         };
 
         try {
@@ -628,10 +708,12 @@ document.addEventListener('DOMContentLoaded', () => {
             if (res.ok && (data.success || data.order)) {
                 const orderData = data.order || {};
                 
-                // Clear cart state
-                saveCart([]);
-                setAppliedCoupon(null);
-                showCouponFeedback('', 'clear');
+                // Clear cart state if regular checkout
+                if (activeCheckoutMode === 'cart') {
+                    saveCart([]);
+                    setAppliedCoupon(null);
+                    showCouponFeedback('', 'clear');
+                }
 
                 // Populate success view
                 if (successOrderNumber) successOrderNumber.textContent = `#${orderData.order_number || ('CMD-' + orderData.id)}`;
@@ -640,11 +722,35 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (successCity) successCity.textContent = city;
                 if (successTotal) successTotal.textContent = `${orderData.total || '0'} DH`;
 
+                const successBadgeTitle = document.getElementById('success-badge-title');
+                const successHeadingTitle = document.getElementById('success-heading-title');
+                const successMessageText = document.getElementById('success-message-text');
+                const successContactNotice = document.getElementById('success-contact-notice');
+
+                if (activeCheckoutMode === 'preorder' || data.is_preorder) {
+                    if (successBadgeTitle) {
+                        successBadgeTitle.textContent = 'Précommande enregistrée avec succès';
+                        successBadgeTitle.className = 'px-3 py-1 rounded-full bg-amber-100 text-amber-800 text-[11px] font-black uppercase tracking-wider';
+                    }
+                    if (successHeadingTitle) successHeadingTitle.textContent = 'Merci pour votre précommande !';
+                    if (successMessageText) successMessageText.innerHTML = `Votre numéro de précommande est <strong id="success-order-number" class="text-pink-600 font-extrabold">#${orderData.order_number || ('CMD-' + orderData.id)}</strong>. Notre équipe va réserver votre article et vous contacter dès réception du stock.`;
+                    if (successContactNotice) successContactNotice.innerHTML = `<i class="uil uil-clock text-sm text-amber-600 mr-1"></i>Notre service client vous contactera dès la réception du stock pour confirmer la livraison.`;
+                    showToast('Précommande enregistrée avec succès !');
+                } else {
+                    if (successBadgeTitle) {
+                        successBadgeTitle.textContent = 'Commande validée avec succès';
+                        successBadgeTitle.className = 'px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-[11px] font-black uppercase tracking-wider';
+                    }
+                    if (successHeadingTitle) successHeadingTitle.textContent = 'Merci pour votre commande !';
+                    if (successMessageText) successMessageText.innerHTML = `Votre numéro de commande est <strong id="success-order-number" class="text-pink-600 font-extrabold">#${orderData.order_number || ('CMD-' + orderData.id)}</strong>. Notre équipe va préparer votre colis avec le plus grand soin.`;
+                    if (successContactNotice) successContactNotice.innerHTML = `<i class="uil uil-phone-volume text-sm text-pink-600 mr-1"></i>Notre service client vous contactera très rapidement par téléphone pour confirmer l'expédition.`;
+                    showToast('Commande validée avec succès !');
+                }
+
                 // Switch to success view
                 if (checkoutFormView) checkoutFormView.classList.add('hidden');
                 if (checkoutSuccessView) checkoutSuccessView.classList.remove('hidden');
 
-                showToast('Commande validée avec succès !');
             } else {
                 const errorMsg = data.message || (data.errors ? Object.values(data.errors).flat().join(' ') : 'Une erreur est survenue lors de la validation.');
                 if (checkoutErrorBanner && checkoutErrorMsg) {
@@ -660,7 +766,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } finally {
             if (checkoutSubmitBtn) {
                 checkoutSubmitBtn.disabled = false;
-                if (checkoutBtnText) checkoutBtnText.textContent = 'Confirmer la commande (Paiement à la livraison)';
+                if (checkoutBtnText) checkoutBtnText.textContent = activeCheckoutMode === 'preorder' ? 'Confirmer la précommande (Paiement à la livraison)' : 'Confirmer la commande (Paiement à la livraison)';
                 if (checkoutBtnIcon) checkoutBtnIcon.classList.remove('hidden');
                 if (checkoutBtnSpinner) checkoutBtnSpinner.classList.add('hidden');
             }
@@ -757,6 +863,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const qtyInput = document.getElementById('product-quantity-input');
     const qtyDisplay = document.getElementById('product-quantity-display');
     const productAddCartBtn = document.getElementById('product-add-cart-btn');
+    const productPreorderBtn = document.getElementById('product-preorder-btn');
+    const mainActionBtn = productAddCartBtn || productPreorderBtn;
     const btnCartText = document.getElementById('btn-cart-text');
     const selectedFlavorLabel = document.getElementById('selected-flavor-label');
     const selectedSizeLabel = document.getElementById('selected-size-label');
@@ -803,9 +911,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Quantity Selector Controller
-    if (qtyMinusBtn && qtyPlusBtn && productAddCartBtn) {
-        const unitPrice = parseFloat(productAddCartBtn.dataset.unitPrice) || 350;
+    // Quantity Selector Controller (Active for both direct order & pre-order)
+    if (qtyMinusBtn && qtyPlusBtn && mainActionBtn) {
+        const unitPrice = parseFloat(mainActionBtn.dataset.unitPrice) || 350;
+        const isPreorderMode = !productAddCartBtn && !!productPreorderBtn;
 
         const updateQtyUI = (qty) => {
             if (qtyInput) qtyInput.value = qty;
@@ -813,57 +922,82 @@ document.addEventListener('DOMContentLoaded', () => {
             qtyMinusBtn.disabled = (qty <= 1);
             const totalPrice = Math.round(unitPrice * qty);
             if (btnCartText) {
-                btnCartText.textContent = `Ajouter au panier • ${totalPrice} DH`;
+                btnCartText.textContent = isPreorderMode ? `Précommander • ${totalPrice} DH` : `Ajouter au panier • ${totalPrice} DH`;
             }
         };
 
         qtyMinusBtn.addEventListener('click', () => {
-            let current = parseInt(qtyInput ? qtyInput.value : qtyDisplay.textContent, 10) || 1;
+            let current = parseInt(qtyInput ? qtyInput.value : (qtyDisplay ? qtyDisplay.textContent : '1'), 10) || 1;
             if (current > 1) updateQtyUI(current - 1);
         });
 
         qtyPlusBtn.addEventListener('click', () => {
-            let current = parseInt(qtyInput ? qtyInput.value : qtyDisplay.textContent, 10) || 1;
+            let current = parseInt(qtyInput ? qtyInput.value : (qtyDisplay ? qtyDisplay.textContent : '1'), 10) || 1;
             if (current < 20) updateQtyUI(current + 1);
         });
 
-        productAddCartBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            const qty = parseInt(qtyInput ? qtyInput.value : qtyDisplay.textContent, 10) || 1;
-            const name = productAddCartBtn.dataset.productName || 'Produit';
-            const price = parseFloat(productAddCartBtn.dataset.unitPrice) || 350;
-            const image = productAddCartBtn.dataset.productImage || '';
-            const slug = productAddCartBtn.dataset.productSlug || '';
+        if (productAddCartBtn) {
+            productAddCartBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const qty = parseInt(qtyInput ? qtyInput.value : (qtyDisplay ? qtyDisplay.textContent : '1'), 10) || 1;
+                const name = productAddCartBtn.dataset.productName || 'Produit';
+                const price = parseFloat(productAddCartBtn.dataset.unitPrice) || 350;
+                const image = productAddCartBtn.dataset.productImage || '';
+                const slug = productAddCartBtn.dataset.productSlug || '';
 
-            addItemToCart({
-                name,
-                price,
-                image,
-                slug,
-                flavor: currentFlavor,
-                size: currentSize,
-                quantity: qty
+                addItemToCart({
+                    name,
+                    price,
+                    image,
+                    slug,
+                    flavor: currentFlavor,
+                    size: currentSize,
+                    quantity: qty
+                });
+
+                // Button Feedback
+                const origContent = productAddCartBtn.innerHTML;
+                productAddCartBtn.style.backgroundColor = '#10b981';
+                productAddCartBtn.innerHTML = `<i class="uil uil-check text-base sm:text-lg"></i><span>${qty} Ajouté${qty > 1 ? 's' : ''} ✓</span>`;
+                productAddCartBtn.disabled = true;
+
+                setTimeout(() => {
+                    productAddCartBtn.style.backgroundColor = '';
+                    productAddCartBtn.innerHTML = origContent;
+                    productAddCartBtn.disabled = false;
+                    openCartDrawer();
+                }, 1000);
             });
+        }
 
-            // Button Feedback
-            const origContent = productAddCartBtn.innerHTML;
-            productAddCartBtn.style.backgroundColor = '#10b981';
-            productAddCartBtn.innerHTML = `<i class="uil uil-check text-base sm:text-lg"></i><span>${qty} Ajouté${qty > 1 ? 's' : ''} ✓</span>`;
-            productAddCartBtn.disabled = true;
+        if (productPreorderBtn) {
+            productPreorderBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const qty = parseInt(qtyInput ? qtyInput.value : (qtyDisplay ? qtyDisplay.textContent : '1'), 10) || 1;
+                const name = productPreorderBtn.dataset.productName || 'Produit';
+                const price = parseFloat(productPreorderBtn.dataset.unitPrice) || 350;
+                const image = productPreorderBtn.dataset.productImage || '';
+                const slug = productPreorderBtn.dataset.productSlug || '';
+                const id = productPreorderBtn.dataset.productId || null;
 
-            setTimeout(() => {
-                productAddCartBtn.style.backgroundColor = '';
-                productAddCartBtn.innerHTML = origContent;
-                productAddCartBtn.disabled = false;
-                openCartDrawer();
-            }, 1000);
-        });
+                openPreorderModal({
+                    id,
+                    name,
+                    price,
+                    image,
+                    slug,
+                    flavor: currentFlavor,
+                    size: currentSize,
+                    quantity: qty
+                });
+            });
+        }
 
         // Mobile Sticky Purchase Bar Scroll Visibility Controller
         const mobileStickyBuyBar = document.getElementById('mobile-sticky-buy-bar');
         const mobileStickyAddBtn = document.getElementById('mobile-sticky-add-btn');
 
-        if (mobileStickyBuyBar && productAddCartBtn) {
+        if (mobileStickyBuyBar && mainActionBtn) {
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (window.innerWidth < 640) {
@@ -878,32 +1012,70 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }, { threshold: 0 });
 
-            observer.observe(productAddCartBtn);
+            observer.observe(mainActionBtn);
 
             if (mobileStickyAddBtn) {
                 mobileStickyAddBtn.addEventListener('click', (e) => {
                     e.preventDefault();
-                    const qty = parseInt(qtyInput ? qtyInput.value : 1, 10) || 1;
-                    const name = productAddCartBtn.dataset.productName || 'Produit';
-                    const price = parseFloat(productAddCartBtn.dataset.unitPrice) || 350;
-                    const image = productAddCartBtn.dataset.productImage || '';
-                    const slug = productAddCartBtn.dataset.productSlug || '';
+                    const qty = parseInt(qtyInput ? qtyInput.value : '1', 10) || 1;
+                    const name = mainActionBtn.dataset.productName || 'Produit';
+                    const price = parseFloat(mainActionBtn.dataset.unitPrice || mainActionBtn.dataset.productPrice) || 350;
+                    const image = mainActionBtn.dataset.productImage || '';
+                    const slug = mainActionBtn.dataset.productSlug || '';
+                    const id = mainActionBtn.dataset.productId || null;
 
-                    addItemToCart({
-                        name,
-                        price,
-                        image,
-                        slug,
-                        flavor: currentFlavor,
-                        size: currentSize,
-                        quantity: qty
-                    });
-
-                    openCartDrawer();
+                    if (productPreorderBtn) {
+                        openPreorderModal({
+                            id,
+                            name,
+                            price,
+                            image,
+                            slug,
+                            flavor: currentFlavor,
+                            size: currentSize,
+                            quantity: qty
+                        });
+                    } else {
+                        addItemToCart({
+                            name,
+                            price,
+                            image,
+                            slug,
+                            flavor: currentFlavor,
+                            size: currentSize,
+                            quantity: qty
+                        });
+                        openCartDrawer();
+                    }
                 });
             }
         }
     }
+
+    // Global Pre-order Buttons Listener (Catalog, Marquee, Related Products)
+    document.addEventListener('click', (e) => {
+        const btn = e.target.closest('button[data-preorder-product]');
+        if (!btn) return;
+        if (btn === productPreorderBtn || (typeof mobileStickyAddBtn !== 'undefined' && btn === mobileStickyAddBtn)) return;
+
+        e.preventDefault();
+        const name = btn.dataset.productName || 'Produit';
+        const price = parseFloat(btn.dataset.productPrice || btn.dataset.unitPrice) || 350;
+        const image = btn.dataset.productImage || '';
+        const slug = btn.dataset.productSlug || '';
+        const id = btn.dataset.productId || null;
+
+        openPreorderModal({
+            id,
+            name,
+            price,
+            image,
+            slug,
+            flavor: '',
+            size: '',
+            quantity: 1
+        });
+    });
 
     // =========================================================================
     // 4. Mobile Navigation Drawer & Accordions

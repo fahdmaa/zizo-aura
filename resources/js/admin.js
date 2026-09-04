@@ -1214,24 +1214,45 @@
                                                 ` : p.is_active ? `
                                                     <span class="inline-flex px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-bold">Actif</span>
                                                 ` : `
-                                                    <span class="inline-flex px-2.5 py-1 rounded-full bg-zinc-100 text-zinc-600 text-[10px] font-bold">Inactif</span>
+                                                    <span class="inline-flex px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 border border-amber-200 text-[10px] font-bold">Inactif (Précommande)</span>
                                                 `}
                                             </td>
                                             <td class="px-6 py-4 text-right">
-                                                <div class="flex items-center justify-end gap-2">
+                                                <div class="flex items-center justify-end gap-1.5">
                                                     ${isDeleted ? `
                                                         <button type="button" data-action="restore" data-id="${p.id}" class="px-3 py-1.5 rounded-xl bg-emerald-50 text-emerald-700 hover:bg-emerald-600 hover:text-white font-bold text-xs transition cursor-pointer">
                                                             <i class="ti ti-refresh mr-1"></i> Restaurer
                                                         </button>
                                                     ` : `
-                                                        <button type="button" data-action="duplicate" data-id="${p.id}" data-name="${p.name}" class="p-2 rounded-xl bg-purple-50 hover:bg-purple-600 hover:text-white text-purple-600 transition cursor-pointer" title="Dupliquer le produit">
-                                                            <i class="ti ti-copy text-sm"></i>
+                                                        <!-- Option 1: Toggle Status (Actif / Inactif) -->
+                                                        <button type="button"
+                                                                data-action="toggle-status"
+                                                                data-id="${p.id}"
+                                                                data-name="${p.name}"
+                                                                data-active="${p.is_active ? '1' : '0'}"
+                                                                class="px-2.5 py-1.5 rounded-xl font-bold text-xs transition cursor-pointer flex items-center gap-1.5 ${
+                                                                    p.is_active
+                                                                        ? 'bg-emerald-50 hover:bg-amber-50 text-emerald-700 hover:text-amber-700 border border-emerald-200 hover:border-amber-300'
+                                                                        : 'bg-amber-50 hover:bg-emerald-50 text-amber-700 hover:text-emerald-700 border border-amber-200 hover:border-emerald-300'
+                                                                }"
+                                                                title="${p.is_active ? 'Actif : Cliquer pour passer en Inactif (Mode Précommande)' : 'Inactif : Cliquer pour passer en Actif (Achat direct)'}">
+                                                            <i class="ti ${p.is_active ? 'ti-toggle-right text-base text-emerald-600' : 'ti-toggle-left text-base text-amber-600'}"></i>
+                                                            <span class="hidden xl:inline">${p.is_active ? 'Actif' : 'Inactif'}</span>
                                                         </button>
-                                                        <button type="button" data-action="edit" data-id="${p.id}" class="p-2 rounded-xl bg-zinc-100 hover:bg-zinc-900 hover:text-white text-zinc-700 transition cursor-pointer" title="Modifier">
+
+                                                        <!-- Edit Button -->
+                                                        <button type="button" data-action="edit" data-id="${p.id}" class="p-2 rounded-xl bg-zinc-100 hover:bg-zinc-900 hover:text-white text-zinc-700 transition cursor-pointer" title="Modifier la fiche produit">
                                                             <i class="ti ti-edit text-sm"></i>
                                                         </button>
-                                                        <button type="button" data-action="delete" data-id="${p.id}" data-name="${p.name}" class="p-2 rounded-xl bg-red-50 hover:bg-red-600 hover:text-white text-red-600 transition cursor-pointer" title="Archiver">
+
+                                                        <!-- Option 2: Radical Delete (Hard Delete from Website) -->
+                                                        <button type="button" data-action="force-delete" data-id="${p.id}" data-name="${p.name}" class="p-2 rounded-xl bg-red-50 hover:bg-red-600 hover:text-white text-red-600 transition cursor-pointer" title="Supprimer radicalement le produit du site">
                                                             <i class="ti ti-trash text-sm"></i>
+                                                        </button>
+
+                                                        <!-- Duplicate Button -->
+                                                        <button type="button" data-action="duplicate" data-id="${p.id}" data-name="${p.name}" class="p-2 rounded-xl bg-purple-50 hover:bg-purple-600 hover:text-white text-purple-600 transition cursor-pointer" title="Dupliquer le produit">
+                                                            <i class="ti ti-copy text-sm"></i>
                                                         </button>
                                                     `}
                                                 </div>
@@ -1260,6 +1281,47 @@
                 `;
 
                 // Wire row actions
+                tableBox.querySelectorAll('button[data-action="toggle-status"]').forEach(btn => {
+                    btn.addEventListener('click', async () => {
+                        const id = btn.dataset.id;
+                        const name = btn.dataset.name;
+                        const origHtml = btn.innerHTML;
+                        btn.disabled = true;
+                        btn.innerHTML = '<i class="ti ti-loader-2 animate-spin text-sm"></i>';
+                        try {
+                            const res = await api.post(`/api/admin/products/${id}/toggle-status`);
+                            if (res.is_active) {
+                                toast.show(`"${name}" est maintenant ACTIF (Achat direct disponible sur le site).`);
+                            } else {
+                                toast.show(`"${name}" est maintenant INACTIF (Mode Précommande activé sur le site).`);
+                            }
+                            await this.loadProductsList();
+                        } catch (err) {
+                            toast.show(err.message || 'Erreur lors du changement de statut', 'error');
+                            btn.disabled = false;
+                            btn.innerHTML = origHtml;
+                        }
+                    });
+                });
+
+                tableBox.querySelectorAll('button[data-action="force-delete"]').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const id = btn.dataset.id;
+                        const name = btn.dataset.name;
+                        modalSystem.confirm({
+                            title: 'Supprimer radicalement le produit',
+                            message: `Attention : Voulez-vous vraiment supprimer radicalement "${name}" du site web et de la base de données ? Cette action est irréversible.`,
+                            confirmText: 'Supprimer définitivement',
+                            type: 'danger',
+                            onConfirm: async () => {
+                                await api.delete(`/api/admin/products/${id}/force`);
+                                toast.show(`Produit "${name}" supprimé radicalement du site.`);
+                                this.loadProductsList();
+                            }
+                        });
+                    });
+                });
+
                 tableBox.querySelectorAll('button[data-action="duplicate"]').forEach(btn => {
                     btn.addEventListener('click', async () => {
                         const id = btn.dataset.id;
@@ -1280,24 +1342,6 @@
 
                 tableBox.querySelectorAll('button[data-action="edit"]').forEach(btn => {
                     btn.addEventListener('click', () => this.openProductEditor(btn.dataset.id));
-                });
-
-                tableBox.querySelectorAll('button[data-action="delete"]').forEach(btn => {
-                    btn.addEventListener('click', () => {
-                        const id = btn.dataset.id;
-                        const name = btn.dataset.name;
-                        modalSystem.confirm({
-                            title: 'Archiver le produit',
-                            message: `Voulez-vous vraiment archiver "${name}" ? Le produit ne sera plus visible par les clients mais pourra être restauré.`,
-                            confirmText: 'Archiver le produit',
-                            type: 'danger',
-                            onConfirm: async () => {
-                                await api.delete(`/api/admin/products/${id}`);
-                                toast.show(`Produit "${name}" archivé.`);
-                                this.loadProductsList();
-                            }
-                        });
-                    });
                 });
 
                 tableBox.querySelectorAll('button[data-action="restore"]').forEach(btn => {
@@ -3098,30 +3142,38 @@
                                     <th class="px-6 py-3.5 text-right">Détails</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-zinc-100">
-                                ${orders.map(o => `
-                                    <tr class="hover:bg-pink-50/30 transition-colors group">
-                                        <td class="px-6 py-4 font-mono font-bold text-zinc-900">#${o.id}</td>
-                                        <td class="px-6 py-4">
-                                            <div class="font-bold text-zinc-900">${o.customer_name}</div>
-                                            <div class="text-[11px] text-zinc-400 font-medium">${o.customer_phone} • ${o.city || 'Maroc'}</div>
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            <span class="inline-flex items-center gap-1 font-semibold text-zinc-700">
-                                                <i class="ti ti-package text-zinc-400"></i>
-                                                ${o.items?.length || 0} article(s)
-                                            </span>
-                                        </td>
-                                        <td class="px-6 py-4 font-black text-zinc-900">${formatDH(o.total)}</td>
-                                        <td class="px-6 py-4">${orderStatusBadge(o.status)}</td>
-                                        <td class="px-6 py-4 text-zinc-400 font-medium">${formatDate(o.created_at)}</td>
-                                        <td class="px-6 py-4 text-right">
-                                            <button type="button" data-order-view="${o.id}" class="px-3.5 py-1.5 rounded-xl bg-zinc-100 hover:bg-zinc-900 hover:text-white text-zinc-800 font-bold text-xs transition cursor-pointer">
-                                                Gérer
-                                            </button>
-                                        </td>
-                                    </tr>
-                                `).join('')}
+                                <tbody class="divide-y divide-zinc-100">
+                                ${orders.map(o => {
+                                    const isPreorder = (o.notes && o.notes.includes('[PRÉCOMMANDE]')) || false;
+                                    return `
+                                        <tr class="hover:bg-pink-50/30 transition-colors group">
+                                            <td class="px-6 py-4 font-mono font-bold text-zinc-900">
+                                                <div class="flex items-center gap-1.5">
+                                                    <span>#${o.id}</span>
+                                                    ${isPreorder ? '<span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[9px] font-black border border-amber-200">Précommande</span>' : ''}
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                <div class="font-bold text-zinc-900">${o.customer_name}</div>
+                                                <div class="text-[11px] text-zinc-400 font-medium">${o.customer_phone} • ${o.city || 'Maroc'}</div>
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                <span class="inline-flex items-center gap-1 font-semibold text-zinc-700">
+                                                    <i class="ti ti-package text-zinc-400"></i>
+                                                    ${o.items?.length || 0} article(s)
+                                                </span>
+                                            </td>
+                                            <td class="px-6 py-4 font-black text-zinc-900">${formatDH(o.total)}</td>
+                                            <td class="px-6 py-4">${orderStatusBadge(o.status)}</td>
+                                            <td class="px-6 py-4 text-zinc-400 font-medium">${formatDate(o.created_at)}</td>
+                                            <td class="px-6 py-4 text-right">
+                                                <button type="button" data-order-view="${o.id}" class="px-3.5 py-1.5 rounded-xl bg-zinc-100 hover:bg-zinc-900 hover:text-white text-zinc-800 font-bold text-xs transition cursor-pointer">
+                                                    Gérer
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    `;
+                                }).join('')}
                             </tbody>
                         </table>
                     </div>
@@ -3178,17 +3230,21 @@
 
                 const cleanPhone = (order.customer_phone || '').replace(/[^0-9]/g, '');
                 const whatsappUrl = cleanPhone ? `https://wa.me/${cleanPhone.startsWith('0') ? '212' + cleanPhone.substring(1) : cleanPhone}` : '#';
+                const isPreorder = (order.notes && order.notes.includes('[PRÉCOMMANDE]')) || false;
 
                 const html = `
                     <div class="h-full flex flex-col bg-white">
                         <!-- Header -->
                         <div class="px-6 py-4 border-b border-zinc-100 flex items-center justify-between bg-zinc-50/50 shrink-0">
                             <div class="flex items-center gap-3">
-                                <div class="w-9 h-9 rounded-xl bg-pink-50 text-pink-600 flex items-center justify-center text-lg">
-                                    <i class="ti ti-shopping-bag"></i>
+                                <div class="w-9 h-9 rounded-xl ${isPreorder ? 'bg-amber-50 text-amber-600' : 'bg-pink-50 text-pink-600'} flex items-center justify-center text-lg">
+                                    <i class="ti ${isPreorder ? 'ti-clock-hour-4' : 'ti-shopping-bag'}"></i>
                                 </div>
                                 <div>
-                                    <h3 class="text-sm font-bold text-zinc-900">Commande #${order.id}</h3>
+                                    <div class="flex items-center gap-2">
+                                        <h3 class="text-sm font-bold text-zinc-900">Commande #${order.id}</h3>
+                                        ${isPreorder ? '<span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[9px] font-black border border-amber-200">Précommande</span>' : ''}
+                                    </div>
                                     <p class="text-[11px] text-zinc-400 font-medium">Reçue le ${formatDate(order.created_at)}</p>
                                 </div>
                             </div>
@@ -3202,6 +3258,18 @@
 
                         <!-- Scrollable Body -->
                         <div class="flex-1 overflow-y-auto p-6 space-y-6 text-xs">
+                            ${isPreorder ? `
+                                <!-- Preorder Highlight Banner -->
+                                <div class="p-3.5 rounded-2xl bg-amber-50 border border-amber-200/90 text-amber-900 text-xs font-bold flex items-center gap-3 shadow-2xs">
+                                    <div class="w-9 h-9 rounded-xl bg-amber-500 text-white flex items-center justify-center text-lg shrink-0">
+                                        <i class="ti ti-clock-hour-4"></i>
+                                    </div>
+                                    <div class="min-w-0">
+                                        <span class="block font-black text-amber-900 uppercase tracking-wider text-[11px]">Commande en Précommande</span>
+                                        <p class="text-[11px] text-amber-800 font-medium mt-0.5">Cette commande a été passée en précommande pour un produit temporairement indisponible. Notre équipe contactera le client dès que le stock est disponible.</p>
+                                    </div>
+                                </div>
+                            ` : ''}
                             <!-- Status Transition Controller Card -->
                             <div class="bg-gradient-to-br from-pink-50/60 to-rose-50/40 rounded-2xl p-4 border border-pink-100 space-y-3">
                                 <div class="flex items-center justify-between">
