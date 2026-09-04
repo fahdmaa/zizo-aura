@@ -288,4 +288,65 @@ class CommerceApiTest extends TestCase
 
         $this->assertNotNull($order->fresh()->confirmed_at);
     }
+
+    public function test_online_checkout_via_payload_items_creates_order_and_dispatches_email(): void
+    {
+        \Illuminate\Support\Facades\Mail::fake();
+
+        $category = Category::create(['name' => 'Victoria\'s Secret', 'slug' => 'victorias-secret']);
+        $product = Product::create([
+            'category_id' => $category->id,
+            'name' => 'Brume Parfumée Bare Vanilla',
+            'slug' => 'victorias-secret-bare-vanilla-brume-parfumee',
+            'price' => 280,
+            'discounted_price' => 195,
+            'image' => '/images/vs_mist_bare_vanilla.png',
+            'in_stock' => true,
+            'is_active' => true,
+            'stock_quantity' => 20,
+        ]);
+
+        $payload = [
+            'customer_name' => 'Nadia Idrissi',
+            'customer_phone' => '0678901234',
+            'customer_email' => 'nadia@example.com',
+            'city' => 'Marrakech',
+            'shipping_address' => 'Guéliz, Résidence Majorelle Appt 12',
+            'notes' => 'Sonner à l\'interphone',
+            'items' => [
+                [
+                    'id' => $product->id,
+                    'slug' => $product->slug,
+                    'name' => $product->name,
+                    'price' => 195,
+                    'quantity' => 2,
+                    'variant' => 'Format Standard (250 ml)',
+                    'image' => $product->image,
+                ]
+            ]
+        ];
+
+        $res = $this->postJson('/api/checkout', $payload);
+
+        $res->assertCreated()
+            ->assertJsonPath('success', true)
+            ->assertJsonPath('order.customer_name', 'Nadia Idrissi')
+            ->assertJsonPath('order.city', 'Marrakech')
+            ->assertJsonPath('order.total', '425.00'); // (195 * 2 = 390) + 35 shipping = 425
+
+        $this->assertDatabaseHas('orders', [
+            'customer_name' => 'Nadia Idrissi',
+            'customer_phone' => '0678901234',
+            'city' => 'Marrakech',
+            'subtotal' => 390.00,
+            'shipping_cost' => 35.00,
+            'total' => 425.00,
+            'status' => 'pending',
+        ]);
+
+        $this->assertSame(18, $product->fresh()->stock_quantity);
+
+        \Illuminate\Support\Facades\Mail::assertSent(\App\Mail\OrderReceived::class);
+    }
 }
+

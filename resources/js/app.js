@@ -432,6 +432,266 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // =========================================================================
+    // 2.1 Online Checkout Modal & Order Processing (Route 2)
+    // =========================================================================
+    const checkoutModal = document.getElementById('checkout-modal');
+    const checkoutModalContainer = document.getElementById('checkout-modal-container');
+    const checkoutModalCloseBtn = document.getElementById('checkout-modal-close-btn');
+    const cartOnlineCheckoutBtn = document.getElementById('cart-online-checkout-btn');
+    const checkoutFormView = document.getElementById('checkout-form-view');
+    const checkoutSuccessView = document.getElementById('checkout-success-view');
+    const checkoutCustomerName = document.getElementById('checkout-customer-name');
+    const checkoutCustomerPhone = document.getElementById('checkout-customer-phone');
+    const checkoutCity = document.getElementById('checkout-city');
+    const checkoutShippingAddress = document.getElementById('checkout-shipping-address');
+    const checkoutCustomerEmail = document.getElementById('checkout-customer-email');
+    const checkoutNotes = document.getElementById('checkout-notes');
+    const checkoutItemsPreview = document.getElementById('checkout-items-preview');
+    const checkoutRecapSubtotal = document.getElementById('checkout-recap-subtotal');
+    const checkoutRecapDiscountRow = document.getElementById('checkout-recap-discount-row');
+    const checkoutRecapDiscountLabel = document.getElementById('checkout-recap-discount-label');
+    const checkoutRecapDiscountAmount = document.getElementById('checkout-recap-discount-amount');
+    const checkoutRecapTotal = document.getElementById('checkout-recap-total');
+    const checkoutSubmitBtn = document.getElementById('checkout-submit-btn');
+    const checkoutBtnText = document.getElementById('checkout-btn-text');
+    const checkoutBtnIcon = document.getElementById('checkout-btn-icon');
+    const checkoutBtnSpinner = document.getElementById('checkout-btn-spinner');
+    const checkoutErrorBanner = document.getElementById('checkout-error-banner');
+    const checkoutErrorMsg = document.getElementById('checkout-error-msg');
+    const checkoutSuccessCloseBtn = document.getElementById('checkout-success-close-btn');
+
+    const successOrderNumber = document.getElementById('success-order-number');
+    const successCustomerName = document.getElementById('success-customer-name');
+    const successCustomerPhone = document.getElementById('success-customer-phone');
+    const successCity = document.getElementById('success-city');
+    const successTotal = document.getElementById('success-total');
+
+    const renderCheckoutRecap = () => {
+        const cart = getCart();
+        const subtotal = cart.reduce((sum, item) => sum + ((parseFloat(item.price) || 0) * (item.quantity || 1)), 0);
+        const appliedCoupon = getAppliedCoupon();
+
+        let discountAmount = 0;
+        if (appliedCoupon && subtotal > 0) {
+            if (appliedCoupon.type === 'percent') {
+                discountAmount = Math.round(subtotal * (parseFloat(appliedCoupon.value) || 0) / 100);
+            } else {
+                discountAmount = Math.min(parseFloat(appliedCoupon.value) || 0, subtotal);
+            }
+        }
+
+        const shippingFee = subtotal === 0 ? 0 : STANDARD_SHIPPING_FEE;
+        const finalTotal = subtotal === 0 ? 0 : Math.max(0, subtotal - discountAmount + shippingFee);
+
+        if (checkoutRecapSubtotal) checkoutRecapSubtotal.textContent = `${subtotal} DH`;
+
+        if (checkoutRecapDiscountRow) {
+            if (appliedCoupon && discountAmount > 0) {
+                checkoutRecapDiscountRow.classList.remove('hidden');
+                if (checkoutRecapDiscountLabel) checkoutRecapDiscountLabel.textContent = `Remise (${appliedCoupon.code})`;
+                if (checkoutRecapDiscountAmount) checkoutRecapDiscountAmount.textContent = `-${discountAmount} DH`;
+            } else {
+                checkoutRecapDiscountRow.classList.add('hidden');
+            }
+        }
+
+        if (checkoutRecapTotal) checkoutRecapTotal.textContent = `${finalTotal} DH`;
+
+        if (checkoutItemsPreview) {
+            let html = '';
+            cart.forEach(item => {
+                const variantInfo = [item.flavor, item.size].filter(Boolean).join(' • ');
+                html += `
+                    <div class="py-2 flex items-center justify-between gap-3 text-xs">
+                        <div class="flex items-center gap-2.5 min-w-0">
+                            <img src="${item.image || '/images/sdj_bum_bum_set.png'}" alt="${item.name}" class="w-9 h-9 object-contain rounded-lg bg-white border border-zinc-200 p-0.5 shrink-0" />
+                            <div class="truncate">
+                                <p class="font-bold text-zinc-900 truncate">${item.name}</p>
+                                ${variantInfo ? `<p class="text-[10px] text-zinc-400 font-medium truncate">${variantInfo}</p>` : ''}
+                            </div>
+                        </div>
+                        <div class="text-right shrink-0">
+                            <span class="text-zinc-500 font-semibold mr-1.5">x${item.quantity || 1}</span>
+                            <span class="font-extrabold text-pink-600">${item.price * (item.quantity || 1)} DH</span>
+                        </div>
+                    </div>
+                `;
+            });
+            checkoutItemsPreview.innerHTML = html;
+        }
+    };
+
+    const openCheckoutModal = () => {
+        const cart = getCart();
+        if (cart.length === 0) {
+            showToast('Votre panier est vide.');
+            openCartDrawer();
+            return;
+        }
+
+        closeCartDrawer();
+        renderCheckoutRecap();
+
+        // Reset views
+        if (checkoutFormView) checkoutFormView.classList.remove('hidden');
+        if (checkoutSuccessView) checkoutSuccessView.classList.add('hidden');
+        if (checkoutErrorBanner) checkoutErrorBanner.classList.add('hidden');
+
+        if (checkoutModal && checkoutModalContainer) {
+            checkoutModal.classList.remove('opacity-0', 'pointer-events-none');
+            checkoutModal.classList.add('opacity-100', 'pointer-events-auto');
+            checkoutModalContainer.classList.remove('scale-95', 'opacity-0');
+            checkoutModalContainer.classList.add('scale-100', 'opacity-100');
+            document.body.classList.add('overflow-hidden');
+        }
+    };
+
+    const closeCheckoutModal = () => {
+        if (checkoutModal && checkoutModalContainer) {
+            checkoutModal.classList.remove('opacity-100', 'pointer-events-auto');
+            checkoutModal.classList.add('opacity-0', 'pointer-events-none');
+            checkoutModalContainer.classList.remove('scale-100', 'opacity-100');
+            checkoutModalContainer.classList.add('scale-95', 'opacity-0');
+            document.body.classList.remove('overflow-hidden');
+        }
+    };
+
+    const handleCheckoutSubmit = async () => {
+        const cart = getCart();
+        if (cart.length === 0) {
+            showToast('Votre panier est vide.');
+            closeCheckoutModal();
+            return;
+        }
+
+        const name = checkoutCustomerName?.value.trim();
+        const phone = checkoutCustomerPhone?.value.trim();
+        const city = checkoutCity?.value.trim();
+        const address = checkoutShippingAddress?.value.trim();
+        const email = checkoutCustomerEmail?.value.trim();
+        const notes = checkoutNotes?.value.trim();
+        const appliedCoupon = getAppliedCoupon();
+
+        if (!name || !phone || !city || !address) {
+            if (checkoutErrorBanner && checkoutErrorMsg) {
+                checkoutErrorMsg.textContent = 'Veuillez remplir tous les champs obligatoires (*).';
+                checkoutErrorBanner.classList.remove('hidden');
+            }
+            return;
+        }
+
+        if (phone.length < 8) {
+            if (checkoutErrorBanner && checkoutErrorMsg) {
+                checkoutErrorMsg.textContent = 'Veuillez renseigner un numéro de téléphone valide.';
+                checkoutErrorBanner.classList.remove('hidden');
+            }
+            return;
+        }
+
+        if (checkoutErrorBanner) checkoutErrorBanner.classList.add('hidden');
+
+        // Loading state
+        if (checkoutSubmitBtn) {
+            checkoutSubmitBtn.disabled = true;
+            if (checkoutBtnText) checkoutBtnText.textContent = 'Validation en cours...';
+            if (checkoutBtnIcon) checkoutBtnIcon.classList.add('hidden');
+            if (checkoutBtnSpinner) checkoutBtnSpinner.classList.remove('hidden');
+        }
+
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+
+        const payload = {
+            customer_name: name,
+            customer_phone: phone,
+            customer_email: email || null,
+            city: city,
+            shipping_address: address,
+            notes: notes || null,
+            coupon_code: appliedCoupon ? appliedCoupon.code : null,
+            items: cart
+        };
+
+        try {
+            const res = await fetch('/api/checkout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken || '',
+                },
+                body: JSON.stringify(payload)
+            });
+
+            const data = await res.json();
+
+            if (res.ok && (data.success || data.order)) {
+                const orderData = data.order || {};
+                
+                // Clear cart state
+                saveCart([]);
+                setAppliedCoupon(null);
+                showCouponFeedback('', 'clear');
+
+                // Populate success view
+                if (successOrderNumber) successOrderNumber.textContent = `#${orderData.order_number || ('CMD-' + orderData.id)}`;
+                if (successCustomerName) successCustomerName.textContent = name;
+                if (successCustomerPhone) successCustomerPhone.textContent = phone;
+                if (successCity) successCity.textContent = city;
+                if (successTotal) successTotal.textContent = `${orderData.total || '0'} DH`;
+
+                // Switch to success view
+                if (checkoutFormView) checkoutFormView.classList.add('hidden');
+                if (checkoutSuccessView) checkoutSuccessView.classList.remove('hidden');
+
+                showToast('Commande validée avec succès !');
+            } else {
+                const errorMsg = data.message || (data.errors ? Object.values(data.errors).flat().join(' ') : 'Une erreur est survenue lors de la validation.');
+                if (checkoutErrorBanner && checkoutErrorMsg) {
+                    checkoutErrorMsg.textContent = errorMsg;
+                    checkoutErrorBanner.classList.remove('hidden');
+                }
+            }
+        } catch (err) {
+            if (checkoutErrorBanner && checkoutErrorMsg) {
+                checkoutErrorMsg.textContent = 'Erreur réseau. Veuillez réessayer ou commander via WhatsApp.';
+                checkoutErrorBanner.classList.remove('hidden');
+            }
+        } finally {
+            if (checkoutSubmitBtn) {
+                checkoutSubmitBtn.disabled = false;
+                if (checkoutBtnText) checkoutBtnText.textContent = 'Confirmer la commande (Paiement à la livraison)';
+                if (checkoutBtnIcon) checkoutBtnIcon.classList.remove('hidden');
+                if (checkoutBtnSpinner) checkoutBtnSpinner.classList.add('hidden');
+            }
+        }
+    };
+
+    if (cartOnlineCheckoutBtn) {
+        cartOnlineCheckoutBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            openCheckoutModal();
+        });
+    }
+
+    if (checkoutModalCloseBtn) {
+        checkoutModalCloseBtn.addEventListener('click', closeCheckoutModal);
+    }
+
+    if (checkoutSuccessCloseBtn) {
+        checkoutSuccessCloseBtn.addEventListener('click', closeCheckoutModal);
+    }
+
+    if (checkoutModal) {
+        checkoutModal.addEventListener('click', (e) => {
+            if (e.target === checkoutModal) closeCheckoutModal();
+        });
+    }
+
+    if (checkoutSubmitBtn) {
+        checkoutSubmitBtn.addEventListener('click', handleCheckoutSubmit);
+    }
+
     // Helper: Add Item to Cart Array
     const addItemToCart = ({ name, price, image, slug, flavor, size, quantity = 1 }) => {
         const cart = getCart();

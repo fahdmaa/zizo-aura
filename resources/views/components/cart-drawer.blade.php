@@ -86,20 +86,31 @@
                 </div>
             </div>
 
-            <!-- WhatsApp Direct Order Button (Popular in Morocco) & Shop Link -->
+            <!-- Dual Ordering Action Buttons (WhatsApp & Commander en ligne) -->
             <div class="space-y-2 pt-1">
-                <a id="cart-whatsapp-btn"
-                   href="https://wa.me/212682787594?text=Bonjour%20zizo%20aura%2C%20je%20souhaite%20commander"
-                   target="_blank"
-                   rel="noopener noreferrer"
-                   class="btn-card-pill w-full py-3.5 text-xs font-extrabold uppercase tracking-wider bg-emerald-600 hover:bg-emerald-700 hover:border-emerald-700 hover:shadow-[0_8px_20px_rgba(16,185,129,0.3)]">
-                    <i class="uil uil-whatsapp text-lg"></i>
-                    <span>Commander via WhatsApp</span>
-                </a>
+                <div class="grid grid-cols-2 gap-2">
+                    <!-- Route 1: WhatsApp -->
+                    <a id="cart-whatsapp-btn"
+                       href="https://wa.me/212682787594?text=Bonjour%20zizo%20aura%2C%20je%20souhaite%20commander"
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       class="btn-card-pill w-full !py-3 !px-2 text-[11px] font-black uppercase tracking-wider bg-emerald-600 hover:bg-emerald-700 hover:border-emerald-700 flex items-center justify-center gap-1.5 shadow-sm text-center">
+                        <i class="uil uil-whatsapp text-base shrink-0"></i>
+                        <span class="truncate">WhatsApp</span>
+                    </a>
+
+                    <!-- Route 2: Online Order Form Modal -->
+                    <button type="button"
+                            id="cart-online-checkout-btn"
+                            class="btn-card-pill w-full !py-3 !px-2 text-[11px] font-black uppercase tracking-wider bg-zinc-900 hover:bg-black hover:border-black flex items-center justify-center gap-1.5 shadow-sm text-center cursor-pointer">
+                        <i class="uil uil-shopping-cart text-base shrink-0 text-pink-400"></i>
+                        <span class="truncate">Commander</span>
+                    </button>
+                </div>
 
                 <button type="button"
                         id="cart-continue-shopping-btn"
-                        class="w-full py-2.5 text-center text-xs font-bold text-zinc-500 hover:text-black transition-colors block cursor-pointer">
+                        class="w-full py-2 text-center text-xs font-bold text-zinc-500 hover:text-black transition-colors block cursor-pointer">
                     Continuer mes achats &rarr;
                 </button>
             </div>

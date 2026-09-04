@@ -43,6 +43,9 @@
     <!-- Slide-over Cart Drawer -->
     <x-cart-drawer />
 
+    <!-- Online Order Checkout Modal -->
+    <x-checkout-modal />
+
     <!-- Toast Notification with IconScout Unicons -->
     <div id="app-toast" class="app-toast toast-hismile" role="status" aria-live="polite">
         <i class="uis uis-check-circle text-emerald-400 text-lg"></i>
