@@ -54,6 +54,10 @@
                         <span>Rituals Coffrets</span>
                         <i class="uil uil-angle-right text-xs opacity-0 group-hover/item:opacity-100 -translate-x-1 group-hover/item:translate-x-0 transition-all text-pink-600"></i>
                     </a>
+                    <a href="{{ route('shop.index', ['category' => 'the-ordinary']) }}" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold text-zinc-800 hover:bg-pink-50 hover:text-pink-600 transition-colors group/item">
+                        <span>The Ordinary Soins</span>
+                        <i class="uil uil-angle-right text-xs opacity-0 group-hover/item:opacity-100 -translate-x-1 group-hover/item:translate-x-0 transition-all text-pink-600"></i>
+                    </a>
                 </div>
             </div>
 
@@ -161,7 +165,7 @@
                                 class="w-full flex items-center justify-between px-4 py-3 text-xs font-extrabold uppercase tracking-wider text-zinc-900 hover:text-pink-600 transition-colors cursor-pointer">
                             <span class="flex items-center gap-2">
                                 <span>Boutique</span>
-                                <span class="px-1.5 py-0.5 rounded-full bg-pink-100 text-pink-600 text-[10px] font-black">16</span>
+                                <span class="px-1.5 py-0.5 rounded-full bg-pink-100 text-pink-600 text-[10px] font-black">{{ count(\App\Http\Controllers\ShopController::catalogProducts()) }}</span>
                             </span>
                             <i id="mobile-boutique-chevron" class="uil uil-angle-down text-xs transition-transform duration-200 {{ request()->routeIs('shop.*') ? 'rotate-180' : '' }}"></i>
                         </button>
@@ -181,6 +185,10 @@
                             </a>
                             <a href="{{ route('shop.index', ['category' => 'rituals']) }}" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold text-zinc-800 hover:bg-pink-50 hover:text-pink-600 transition-colors group/item">
                                 <span>Rituals Coffrets</span>
+                                <i class="uil uil-angle-right text-xs text-pink-600"></i>
+                            </a>
+                            <a href="{{ route('shop.index', ['category' => 'the-ordinary']) }}" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold text-zinc-800 hover:bg-pink-50 hover:text-pink-600 transition-colors group/item">
+                                <span>The Ordinary Soins</span>
                                 <i class="uil uil-angle-right text-xs text-pink-600"></i>
                             </a>
                         </div>

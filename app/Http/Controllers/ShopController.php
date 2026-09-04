@@ -448,16 +448,153 @@ class ShopController extends Controller
                     ['name' => 'Glow Prestige Edition', 'color' => '#e11d48'],
                 ]
             ],
+            // ==================== THE ORDINARY ====================
+            [
+                'id' => 'ordinary-1',
+                'slug' => 'the-ordinary-niacinamide-10-zinc-1-serum',
+                'brand' => 'The Ordinary',
+                'name' => 'The Ordinary — Niacinamide 10% + Zinc 1%',
+                'subtitle' => 'Sérum Anti-Imperfections & Contrôle de Sébum (30ml)',
+                'discount' => '-20%',
+                'badge' => 'N°1 Mondial Sérums',
+                'badge_color' => 'bg-zinc-900 text-white',
+                'price' => '130',
+                'original_price' => '165',
+                'raw_price' => 130,
+                'image' => '/images/ordinary_niacinamide.png',
+                'gallery' => ['/images/ordinary_niacinamide.png', '/images/ordinary_hyaluronic.png', '/images/ordinary_peeling.png'],
+                'category' => 'the-ordinary',
+                'category_label' => 'The Ordinary',
+                'rating' => 4.9,
+                'review_count' => 5420,
+                'sizes' => ['Format Standard (30 ml)', 'Grand Format (60 ml)'],
+                'description' => 'Le sérum culte formulé avec 10% de Niacinamide pure (Vitamine B3) et 1% de Zinc PCA. Il réduit visiblement l\'apparence des imperfections, resserre les pores dilatés et régule l\'excès de sébum pour un teint net, uniforme et matifié.',
+                'ingredients' => 'Aqua (Water), Niacinamide 10%, Pentylene Glycol, Zinc PCA 1%, Dimethyl Isosorbide, Tamarindus Indica Seed Gum, Xanthan Gum, Isoceteth-20, Ethoxydiglycol, Phenoxyethanol, Chlorphenesin.',
+                'olfactory' => 'Texture : Sérum fluide translucide à absorption rapide, sans parfum synthétique, fini non gras et matifiant.',
+                'usage' => 'Appliquez quelques gouttes matin et soir sur l\'ensemble du visage propre avant les crèmes plus épaisses. Ne pas associer directement avec la Vitamine C pure.',
+                'flavors' => [
+                    ['name' => 'Formule Originelle Pure', 'color' => '#18181b'],
+                ]
+            ],
+            [
+                'id' => 'ordinary-2',
+                'slug' => 'the-ordinary-hyaluronic-acid-2-b5-serum',
+                'brand' => 'The Ordinary',
+                'name' => 'The Ordinary — Hyaluronic Acid 2% + B5',
+                'subtitle' => 'Sérum Hydratant Repulpant Multi-Moléculaire (30ml)',
+                'discount' => '-20%',
+                'badge' => 'Hydratation Culte',
+                'badge_color' => 'bg-sky-500 text-white',
+                'price' => '140',
+                'original_price' => '175',
+                'raw_price' => 140,
+                'image' => '/images/ordinary_hyaluronic.png',
+                'gallery' => ['/images/ordinary_hyaluronic.png', '/images/ordinary_niacinamide.png', '/images/ordinary_caffeine.png'],
+                'category' => 'the-ordinary',
+                'category_label' => 'The Ordinary',
+                'rating' => 4.9,
+                'review_count' => 3890,
+                'sizes' => ['Format Standard (30 ml)', 'Grand Format (60 ml)'],
+                'description' => 'Une formule hydratante avancée combinant 3 poids moléculaires d\'acide hyaluronique pur et de la Provitamine B5 pour une hydratation en profondeur et en surface. Repulpe instantanément la peau et lisse les ridules de déshydratation.',
+                'ingredients' => 'Aqua (Water), Sodium Hyaluronate (Acide Hyaluronique 2%), Sodium Hyaluronate Crosspolymer, Panthenol (Provitamine B5), Ahnfeltia Concinna Extract, Glycerin, Pentylene Glycol, Citric Acid.',
+                'olfactory' => 'Texture : Gel aqueux frais et léger, pénétration instantanée, sans film collant, sans parfum.',
+                'usage' => 'Appliquez quelques gouttes sur peau légèrement humide matin et soir avant votre crème hydratante pour sceller l\'hydratation.',
+                'flavors' => [
+                    ['name' => 'Hydratation B5 Intense', 'color' => '#0284c7'],
+                ]
+            ],
+            [
+                'id' => 'ordinary-3',
+                'slug' => 'the-ordinary-aha-30-bha-2-peeling-solution',
+                'brand' => 'The Ordinary',
+                'name' => 'The Ordinary — AHA 30% + BHA 2% Peeling Solution',
+                'subtitle' => 'Masque Exfoliant Peeling Rouge Éclat & Grain de Peau (30ml)',
+                'discount' => '-25%',
+                'badge' => 'Culte & Viral',
+                'badge_color' => 'bg-rose-600 text-white',
+                'price' => '150',
+                'original_price' => '195',
+                'raw_price' => 150,
+                'image' => '/images/ordinary_peeling.png',
+                'gallery' => ['/images/ordinary_peeling.png', '/images/ordinary_glycolic.png', '/images/ordinary_niacinamide.png'],
+                'category' => 'the-ordinary',
+                'category_label' => 'The Ordinary',
+                'rating' => 4.8,
+                'review_count' => 4750,
+                'sizes' => ['Flacon Goutte 30 ml'],
+                'description' => 'Le soin peeling viral rouge rubis qui transforme le grain de peau en 10 minutes. Les AHA (30%) exfolient la surface pour un éclat radieux, tandis que les BHA (2%) désobstruent les pores en profondeur. Enrichi en Poivre de Tasmanie apaisant.',
+                'ingredients' => 'Glycolic Acid (AHA), Aqua, Aloe Barbadensis Leaf Water, Sodium Hydroxide, Daucus Carota Sativa Root, Propanediol, Salicylic Acid (BHA 2%), Lactic Acid, Tartaric Acid, Citric Acid, Tasmannia Lanceolata Fruit Extract.',
+                'olfactory' => 'Texture : Solution liquide pourpre intense, sans parfum, rinçage facile à l\'eau tiède.',
+                'usage' => 'À utiliser 1 à 2 fois par semaine maximum, exclusivement le soir sur peau parfaitement sèche. Laisser poser 10 minutes maximum puis rincer abondamment à l\'eau tiède. Utilisez impérativement une protection solaire SPF en journée.',
+                'flavors' => [
+                    ['name' => 'Peeling Ruby Intense', 'color' => '#e11d48'],
+                ]
+            ],
+            [
+                'id' => 'ordinary-4',
+                'slug' => 'the-ordinary-glycolic-acid-7-exfoliating-toner',
+                'brand' => 'The Ordinary',
+                'name' => 'The Ordinary — Glycolic Acid 7% Toning Solution',
+                'subtitle' => 'Lotion Tonique Exfoliante Éclat & Clarté Teint (240ml)',
+                'discount' => '-20%',
+                'badge' => 'Grand Format 240ml',
+                'badge_color' => 'bg-amber-500 text-white',
+                'price' => '180',
+                'original_price' => '225',
+                'raw_price' => 180,
+                'image' => '/images/ordinary_glycolic.png',
+                'gallery' => ['/images/ordinary_glycolic.png', '/images/ordinary_peeling.png', '/images/ordinary_hyaluronic.png'],
+                'category' => 'the-ordinary',
+                'category_label' => 'The Ordinary',
+                'rating' => 4.9,
+                'review_count' => 3100,
+                'sizes' => ['Grand Flacon 240 ml'],
+                'description' => 'Une solution exfoliante douce à base de 7% d\'Acide Glycolique qui améliore la texture de la peau et restaure son éclat naturel. Formule enrichie en dérivés de baie de poivre de Tasmanie, racine de ginseng et eau de bleuet pour apaiser la peau.',
+                'ingredients' => 'Aqua (Water), Glycolic Acid 7%, Rosa Damascena Flower Water, Centaurea Cyanus Flower Water, Aloe Barbadensis Leaf Water, Propanediol, Glycerin, Tasmannia Lanceolata Fruit/Leaf Extract, Panax Ginseng Root Extract.',
+                'olfactory' => 'Texture : Tonique limpide rafraîchissant, fini soyeux et non collant.',
+                'usage' => 'À appliquer le soir uniquement à l\'aide d\'un coton sur le visage et le cou propres, en évitant le contour des yeux. Ne pas rincer. Idéal également sur les zones du corps (coudes, décolleté).',
+                'flavors' => [
+                    ['name' => 'Éclat Glycolic 7%', 'color' => '#f59e0b'],
+                ]
+            ],
+            [
+                'id' => 'ordinary-5',
+                'slug' => 'the-ordinary-caffeine-solution-5-egcg-eye-serum',
+                'brand' => 'The Ordinary',
+                'name' => 'The Ordinary — Caffeine Solution 5% + EGCG',
+                'subtitle' => 'Sérum Contour des Yeux Anti-Cernes & Anti-Poches (30ml)',
+                'discount' => '-20%',
+                'badge' => 'Regard Reposé',
+                'badge_color' => 'bg-emerald-600 text-white',
+                'price' => '140',
+                'original_price' => '175',
+                'raw_price' => 140,
+                'image' => '/images/ordinary_caffeine.png',
+                'gallery' => ['/images/ordinary_caffeine.png', '/images/ordinary_niacinamide.png', '/images/ordinary_hyaluronic.png'],
+                'category' => 'the-ordinary',
+                'category_label' => 'The Ordinary',
+                'rating' => 4.8,
+                'review_count' => 2840,
+                'sizes' => ['Flacon Pipette 30 ml'],
+                'description' => 'Une formule ultraconcentrée combinant 5% de caféine pure et de l\'EGCG purifié issu de feuilles de thé vert. Cible efficacement les cernes pigmentaires, réduit les poches et réveille le contour du regard fatigué.',
+                'ingredients' => 'Aqua (Water), Caffeine 5%, Maltodextrin, Glycerin, Propanediol, Epigallocatechin Gallatyl Glucoside (EGCG), Gallyl Glucoside, Hyaluronic Acid, Melanin, Glycine Soja Seed Extract, Hydroxyethylcellulose.',
+                'olfactory' => 'Texture : Sérum fluide ambré ultraléger, pénètre en quelques secondes sans graisser.',
+                'usage' => 'Massez délicatement une petite quantité sur le contour des yeux matin et soir sur peau propre.',
+                'flavors' => [
+                    ['name' => 'Énergie Caféine 5%', 'color' => '#059669'],
+                ]
+            ],
         ];
     }
 
     public static function getCategories()
     {
         return [
-            ['slug' => 'all', 'name' => 'Tous les packs & produits', 'count' => 16],
+            ['slug' => 'all', 'name' => 'Tous les packs & produits', 'count' => 21],
             ['slug' => 'sol-de-janeiro', 'name' => 'Sol de Janeiro Packs', 'count' => 5],
             ['slug' => 'victorias-secret', 'name' => 'Victoria\'s Secret Duos', 'count' => 6],
             ['slug' => 'rituals', 'name' => 'Rituals Coffrets', 'count' => 5],
+            ['slug' => 'the-ordinary', 'name' => 'The Ordinary Soins', 'count' => 5],
         ];
     }
 
@@ -506,6 +643,11 @@ class ShopController extends Controller
         $categories = self::catalogCategories();
 
         $selectedCategory = $category ?? $request->query('category', 'all');
+        if ($selectedCategory === 'ordinary') {
+            $selectedCategory = 'the-ordinary';
+        } elseif ($selectedCategory === 'victoria-secret') {
+            $selectedCategory = 'victorias-secret';
+        }
         $sortBy = $request->query('sort', 'popular');
         $searchQuery = trim($request->query('q', ''));
 

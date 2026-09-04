@@ -7,7 +7,7 @@
         </a>
 
         <p class="text-xs text-zinc-400 font-medium max-w-sm mb-6">
-            Votre destination beauté &amp; rituels solaires : Victoria's Secret, Rituals, Sol de Janeiro.
+            Votre destination beauté &amp; soins d'exception : Sol de Janeiro, Rituals, Victoria's Secret, The Ordinary.
         </p>
 
         <!-- Social Media Icons: Instagram & TikTok -->
@@ -43,6 +43,8 @@
                 <a href="{{ route('shop.index', ['category' => 'victorias-secret']) }}" class="hover:text-black transition-colors">Victoria's Secret</a>
                 <span>&bull;</span>
                 <a href="{{ route('shop.index', ['category' => 'rituals']) }}" class="hover:text-black transition-colors">Rituals</a>
+                <span>&bull;</span>
+                <a href="{{ route('shop.index', ['category' => 'the-ordinary']) }}" class="hover:text-black transition-colors">The Ordinary</a>
             </div>
             <p>&copy; {{ date('Y') }} zizo aura. Tous droits réservés.</p>
         </div>

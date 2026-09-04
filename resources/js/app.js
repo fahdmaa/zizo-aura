@@ -1540,10 +1540,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // Touch / Drag Gesture
+        let hasDragged = false;
+
         const handleDragStart = (e) => {
             startX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
             currentX = startX;
             isDragging = true;
+            hasDragged = false;
             track.style.transition = 'none';
         };
 
@@ -1551,6 +1554,9 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!isDragging) return;
             currentX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
             const deltaX = currentX - startX;
+            if (Math.abs(deltaX) > 8) {
+                hasDragged = true;
+            }
             const baseOffset = -(currentIndex * 100);
             const dragPercent = (deltaX / stage.offsetWidth) * 100;
             track.style.transform = `translateX(${baseOffset + dragPercent}%)`;
@@ -1571,6 +1577,15 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             startAutoplay();
         };
+
+        // Prevent accidental link navigation if user dragged
+        track.addEventListener('click', (e) => {
+            if (hasDragged) {
+                e.preventDefault();
+                e.stopPropagation();
+                hasDragged = false;
+            }
+        }, true);
 
         stage.addEventListener('touchstart', handleDragStart, { passive: true });
         stage.addEventListener('touchmove', handleDragMove, { passive: true });

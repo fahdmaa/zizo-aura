@@ -7,40 +7,40 @@
         <div id="heroCarouselTrack" class="flex w-full h-full will-change-transform transition-transform duration-700 ease-[cubic-bezier(0.25,1,0.5,1)]">
             
             <!-- Slide 1: Sol de Janeiro -->
-            <div class="hero-slide w-full h-full shrink-0 relative" data-index="0" data-brand="sol-de-janeiro" role="group" aria-roledescription="slide" aria-label="1 sur 4 : Sol de Janeiro">
+            <a href="{{ route('shop.index', ['category' => 'sol-de-janeiro']) }}" class="hero-slide w-full h-full shrink-0 relative block cursor-pointer" data-index="0" data-brand="sol-de-janeiro" role="group" aria-roledescription="slide" aria-label="1 sur 4 : Sol de Janeiro">
                 <img src="/images/hero-carousel/sol-de-janeiro.png"
                      alt="Sol de Janeiro Collection - zizo aura"
                      class="w-full h-full object-cover object-center select-none pointer-events-none"
                      loading="eager"
                      draggable="false" />
-            </div>
+            </a>
 
             <!-- Slide 2: Rituals -->
-            <div class="hero-slide w-full h-full shrink-0 relative" data-index="1" data-brand="rituals" role="group" aria-roledescription="slide" aria-label="2 sur 4 : Rituals">
+            <a href="{{ route('shop.index', ['category' => 'rituals']) }}" class="hero-slide w-full h-full shrink-0 relative block cursor-pointer" data-index="1" data-brand="rituals" role="group" aria-roledescription="slide" aria-label="2 sur 4 : Rituals">
                 <img src="/images/hero-carousel/rituals.png"
                      alt="Rituals Collection - zizo aura"
                      class="w-full h-full object-cover object-center select-none pointer-events-none"
                      loading="eager"
                      draggable="false" />
-            </div>
+            </a>
 
             <!-- Slide 3: Victoria's Secret -->
-            <div class="hero-slide w-full h-full shrink-0 relative" data-index="2" data-brand="victoria-secret" role="group" aria-roledescription="slide" aria-label="3 sur 4 : Victoria's Secret">
+            <a href="{{ route('shop.index', ['category' => 'victorias-secret']) }}" class="hero-slide w-full h-full shrink-0 relative block cursor-pointer" data-index="2" data-brand="victorias-secret" role="group" aria-roledescription="slide" aria-label="3 sur 4 : Victoria's Secret">
                 <img src="/images/hero-carousel/victoria-secret.png"
                      alt="Victoria's Secret Collection - zizo aura"
                      class="w-full h-full object-cover object-center select-none pointer-events-none"
                      loading="lazy"
                      draggable="false" />
-            </div>
+            </a>
 
             <!-- Slide 4: The Ordinary -->
-            <div class="hero-slide w-full h-full shrink-0 relative" data-index="3" data-brand="ordinary" role="group" aria-roledescription="slide" aria-label="4 sur 4 : The Ordinary">
+            <a href="{{ route('shop.index', ['category' => 'the-ordinary']) }}" class="hero-slide w-full h-full shrink-0 relative block cursor-pointer" data-index="3" data-brand="the-ordinary" role="group" aria-roledescription="slide" aria-label="4 sur 4 : The Ordinary">
                 <img src="/images/hero-carousel/ordinary.png"
                      alt="The Ordinary Clinical Skincare - zizo aura"
                      class="w-full h-full object-cover object-center select-none pointer-events-none"
                      loading="lazy"
                      draggable="false" />
-            </div>
+            </a>
 
         </div>
 
