@@ -117,7 +117,7 @@
                                     {{ $product['discount'] }}
                                 </span>
                                 <span class="watermark-discount text-zinc-200/70 text-right font-black tracking-tighter">
-                                    off
+                                    remise
                                 </span>
                             </div>
                         @endif
