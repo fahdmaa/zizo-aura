@@ -31,6 +31,127 @@
         $seoTitle = $pName . ' Maroc (' . $price . ' DH) — Prix en Dirhams & Livraison Rapide | Zizo Aura';
         $metaDesc = 'Achetez ' . $pName . ' au meilleur prix au Maroc (' . $price . ' DH). Produit 100% original, livraison 24-48h et paiement à la livraison.';
     }
+    $imageUrls = array_values(array_map(fn($img) => str_starts_with($img, 'http') ? $img : url($img), $allImages));
+
+    $productSchema = [
+        '@context' => 'https://schema.org',
+        '@graph' => [
+            [
+                '@type' => 'Product',
+                '@id' => route('shop.product', $product['slug']) . '#product',
+                'name' => $product['name'],
+                'image' => $imageUrls,
+                'description' => $cleanDesc,
+                'sku' => 'ZA-' . ($product['id'] ?? $product['slug']),
+                'brand' => [
+                    '@type' => 'Brand',
+                    'name' => $brandName,
+                ],
+                'category' => $product['category_label'] ?? 'Cosmétiques',
+                'offers' => [
+                    '@type' => 'Offer',
+                    'url' => route('shop.product', $product['slug']),
+                    'priceCurrency' => 'MAD',
+                    'price' => (string) $product['price'],
+                    'priceValidUntil' => date('Y-12-31'),
+                    'itemCondition' => 'https://schema.org/NewCondition',
+                    'availability' => ($product['in_stock'] ?? true) ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+                    'seller' => [
+                        '@type' => 'Organization',
+                        'name' => 'Zizo Aura',
+                    ],
+                    'shippingDetails' => [
+                        '@type' => 'OfferShippingDetails',
+                        'shippingRate' => [
+                            '@type' => 'MonetaryAmount',
+                            'value' => '35',
+                            'currency' => 'MAD',
+                        ],
+                        'shippingDestination' => [
+                            '@type' => 'DefinedRegion',
+                            'addressCountry' => 'MA',
+                        ],
+                        'deliveryTime' => [
+                            '@type' => 'ShippingDeliveryTime',
+                            'transitTime' => [
+                                '@type' => 'QuantitativeValue',
+                                'minValue' => 1,
+                                'maxValue' => 2,
+                                'unitCode' => 'DAY',
+                            ],
+                        ],
+                    ],
+                ],
+                'aggregateRating' => [
+                    '@type' => 'AggregateRating',
+                    'ratingValue' => (string) ($product['rating'] ?? 4.9),
+                    'reviewCount' => (int) ($product['review_count'] ?? 120),
+                    'bestRating' => '5',
+                    'worstRating' => '1',
+                ],
+            ],
+            [
+                '@type' => 'BreadcrumbList',
+                '@id' => route('shop.product', $product['slug']) . '#breadcrumb',
+                'itemListElement' => [
+                    [
+                        '@type' => 'ListItem',
+                        'position' => 1,
+                        'name' => 'Accueil',
+                        'item' => url('/'),
+                    ],
+                    [
+                        '@type' => 'ListItem',
+                        'position' => 2,
+                        'name' => 'Boutique',
+                        'item' => route('shop.index'),
+                    ],
+                    [
+                        '@type' => 'ListItem',
+                        'position' => 3,
+                        'name' => $product['category_label'] ?? 'Catalogue',
+                        'item' => route('shop.index', ['category' => $product['category']]),
+                    ],
+                    [
+                        '@type' => 'ListItem',
+                        'position' => 4,
+                        'name' => $product['name'],
+                        'item' => route('shop.product', $product['slug']),
+                    ],
+                ],
+            ],
+            [
+                '@type' => 'FAQPage',
+                '@id' => route('shop.product', $product['slug']) . '#faq',
+                'mainEntity' => [
+                    [
+                        '@type' => 'Question',
+                        'name' => "Quel est le prix de {$product['name']} au Maroc ?",
+                        'acceptedAnswer' => [
+                            '@type' => 'Answer',
+                            'text' => "Le prix de {$product['name']} est de {$product['price']} DH sur la boutique officielle Zizo Aura Maroc, avec des échantillons de luxe offerts dans chaque commande.",
+                        ],
+                    ],
+                    [
+                        '@type' => 'Question',
+                        'name' => 'Comment se passe la livraison et le paiement au Maroc ?',
+                        'acceptedAnswer' => [
+                            '@type' => 'Answer',
+                            'text' => 'La livraison est effectuée sous 24 à 48 heures dans toutes les villes du Maroc (Casablanca, Rabat, Marrakech, Tanger, Fès, Agadir, Oujda, Meknès...). Vous payez en espèces à la livraison (Cash on Delivery) après réception de votre colis.',
+                        ],
+                    ],
+                    [
+                        '@type' => 'Question',
+                        'name' => "Le produit {$product['name']} est-il 100% original ?",
+                        'acceptedAnswer' => [
+                            '@type' => 'Answer',
+                            'text' => "Oui, tous les produits {$brandName} proposés par Zizo Aura sont 100% originaux, authentiques et garantis neufs.",
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ];
 @endphp
 
 @extends('layouts.app')
@@ -54,129 +175,7 @@
 
 @section('schema')
 <script type="application/ld+json">
-{
-    "{{ '@' }}context": "https://schema.org",
-    "{{ '@' }}graph": [
-        {
-            "{{ '@' }}type": "Product",
-            "{{ '@' }}id": "{{ route('shop.product', $product['slug']) }}#product",
-            "name": "{{ $product['name'] }}",
-            "image": [
-                @foreach($allImages as $idx => $img)
-                    "{{ str_starts_with($img, 'http') ? $img : url($img) }}"{{ $loop->last ? '' : ',' }}
-                @endforeach
-            ],
-            "description": "{{ addslashes($cleanDesc) }}",
-            "sku": "ZA-{{ $product['id'] ?? $product['slug'] }}",
-            "brand": {
-                "{{ '@' }}type": "Brand",
-                "name": "{{ addslashes($brandName) }}"
-            },
-            "category": "{{ addslashes($product['category_label'] ?? 'Cosmétiques') }}",
-            "offers": {
-                "{{ '@' }}type": "Offer",
-                "url": "{{ route('shop.product', $product['slug']) }}",
-                "priceCurrency": "MAD",
-                "price": "{{ $product['price'] }}",
-                "priceValidUntil": "{{ date('Y-12-31') }}",
-                "itemCondition": "https://schema.org/NewCondition",
-                "availability": "{{ ($product['in_stock'] ?? true) ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock' }}",
-                "seller": {
-                    "{{ '@' }}type": "Organization",
-                    "name": "Zizo Aura"
-                },
-                "shippingDetails": {
-                    "{{ '@' }}type": "OfferShippingDetails",
-                    "shippingRate": {
-                        "{{ '@' }}type": "MonetaryAmount",
-                        "value": "35",
-                        "currency": "MAD"
-                    },
-                    "shippingDestination": {
-                        "{{ '@' }}type": "DefinedRegion",
-                        "addressCountry": "MA"
-                    },
-                    "deliveryTime": {
-                        "{{ '@' }}type": "ShippingDeliveryTime",
-                        "transitTime": {
-                            "{{ '@' }}type": "QuantitativeValue",
-                            "minValue": 1,
-                            "maxValue": 2,
-                            "unitCode": "DAY"
-                        }
-                    }
-                }
-            },
-            "aggregateRating": {
-                "{{ '@' }}type": "AggregateRating",
-                "ratingValue": "{{ $product['rating'] ?? 4.9 }}",
-                "reviewCount": "{{ $product['review_count'] ?? 120 }}",
-                "bestRating": "5",
-                "worstRating": "1"
-            }
-        },
-        {
-            "{{ '@' }}type": "BreadcrumbList",
-            "{{ '@' }}id": "{{ route('shop.product', $product['slug']) }}#breadcrumb",
-            "itemListElement": [
-                {
-                    "{{ '@' }}type": "ListItem",
-                    "position": 1,
-                    "name": "Accueil",
-                    "item": "{{ url('/') }}"
-                },
-                {
-                    "{{ '@' }}type": "ListItem",
-                    "position": 2,
-                    "name": "Boutique",
-                    "item": "{{ route('shop.index') }}"
-                },
-                {
-                    "{{ '@' }}type": "ListItem",
-                    "position": 3,
-                    "name": "{{ addslashes($product['category_label'] ?? 'Catalogue') }}",
-                    "item": "{{ route('shop.index', ['category' => $product['category']]) }}"
-                },
-                {
-                    "{{ '@' }}type": "ListItem",
-                    "position": 4,
-                    "name": "{{ addslashes($product['name']) }}",
-                    "item": "{{ route('shop.product', $product['slug']) }}"
-                }
-            ]
-        },
-        {
-            "{{ '@' }}type": "FAQPage",
-            "{{ '@' }}id": "{{ route('shop.product', $product['slug']) }}#faq",
-            "mainEntity": [
-                {
-                    "{{ '@' }}type": "Question",
-                    "name": "Quel est le prix de {{ addslashes($product['name']) }} au Maroc ?",
-                    "acceptedAnswer": {
-                        "{{ '@' }}type": "Answer",
-                        "text": "Le prix de {{ addslashes($product['name']) }} est de {{ $product['price'] }} DH sur la boutique officielle Zizo Aura Maroc, avec des échantillons de luxe offerts dans chaque commande."
-                    }
-                },
-                {
-                    "{{ '@' }}type": "Question",
-                    "name": "Comment se passe la livraison et le paiement au Maroc ?",
-                    "acceptedAnswer": {
-                        "{{ '@' }}type": "Answer",
-                        "text": "La livraison est effectuée sous 24 à 48 heures dans toutes les villes du Maroc (Casablanca, Rabat, Marrakech, Tanger, Fès, Agadir, Oujda, Meknès...). Vous payez en espèces à la livraison (Cash on Delivery) après réception de votre colis."
-                    }
-                },
-                {
-                    "{{ '@' }}type": "Question",
-                    "name": "Le produit {{ addslashes($product['name']) }} est-il 100% original ?",
-                    "acceptedAnswer": {
-                        "{{ '@' }}type": "Answer",
-                        "text": "Oui, tous les produits {{ addslashes($brandName) }} proposés par Zizo Aura sont 100% originaux, authentiques et garantis neufs."
-                    }
-                }
-            ]
-        }
-    ]
-}
+{!! json_encode($productSchema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}
 </script>
 @endsection
 

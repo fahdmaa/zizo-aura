@@ -86,6 +86,62 @@
     $canonicalUrl = $selectedCategory && $selectedCategory !== 'all'
         ? route('shop.category', $selectedCategory)
         : route('shop.index');
+
+    $breadcrumbItems = [
+        [
+            '@type' => 'ListItem',
+            'position' => 1,
+            'name' => 'Accueil',
+            'item' => url('/'),
+        ],
+        [
+            '@type' => 'ListItem',
+            'position' => 2,
+            'name' => 'Boutique',
+            'item' => route('shop.index'),
+        ],
+    ];
+
+    if ($currentCategory && $selectedCategory !== 'all') {
+        $breadcrumbItems[] = [
+            '@type' => 'ListItem',
+            'position' => 3,
+            'name' => $currentCategory['name'],
+            'item' => $canonicalUrl,
+        ];
+    }
+
+    $faqMainEntity = array_map(function ($faq) {
+        return [
+            '@type' => 'Question',
+            'name' => $faq['q'],
+            'acceptedAnswer' => [
+                '@type' => 'Answer',
+                'text' => $faq['a'],
+            ],
+        ];
+    }, $faqItems);
+
+    $indexSchema = [
+        '@context' => 'https://schema.org',
+        '@graph' => [
+            [
+                '@type' => 'CollectionPage',
+                'name' => $seoTitle,
+                'description' => $seoDescription,
+                'url' => $canonicalUrl,
+                'breadcrumb' => [
+                    '@type' => 'BreadcrumbList',
+                    'itemListElement' => $breadcrumbItems,
+                ],
+            ],
+            [
+                '@type' => 'FAQPage',
+                '@id' => $canonicalUrl . '#faq',
+                'mainEntity' => $faqMainEntity,
+            ],
+        ],
+    ];
 @endphp
 
 @extends('layouts.app')
@@ -103,58 +159,7 @@
 
 @section('schema')
 <script type="application/ld+json">
-{
-    "{{ '@' }}context": "https://schema.org",
-    "{{ '@' }}graph": [
-        {
-            "{{ '@' }}type": "CollectionPage",
-            "name": "{{ $seoTitle }}",
-            "description": "{{ $seoDescription }}",
-            "url": "{{ $canonicalUrl }}",
-            "breadcrumb": {
-                "{{ '@' }}type": "BreadcrumbList",
-                "itemListElement": [
-                    {
-                        "{{ '@' }}type": "ListItem",
-                        "position": 1,
-                        "name": "Accueil",
-                        "item": "{{ url('/') }}"
-                    },
-                    {
-                        "{{ '@' }}type": "ListItem",
-                        "position": 2,
-                        "name": "Boutique",
-                        "item": "{{ route('shop.index') }}"
-                    }
-                    @if($currentCategory && $selectedCategory !== 'all')
-                    ,{
-                        "{{ '@' }}type": "ListItem",
-                        "position": 3,
-                        "name": "{{ $currentCategory['name'] }}",
-                        "item": "{{ $canonicalUrl }}"
-                    }
-                    @endif
-                ]
-            }
-        },
-        {
-            "{{ '@' }}type": "FAQPage",
-            "{{ '@' }}id": "{{ $canonicalUrl }}#faq",
-            "mainEntity": [
-                @foreach($faqItems as $idx => $faq)
-                {
-                    "{{ '@' }}type": "Question",
-                    "name": "{{ addslashes($faq['q']) }}",
-                    "acceptedAnswer": {
-                        "{{ '@' }}type": "Answer",
-                        "text": "{{ addslashes($faq['a']) }}"
-                    }
-                }{{ $loop->last ? '' : ',' }}
-                @endforeach
-            ]
-        }
-    ]
-}
+{!! json_encode($indexSchema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}
 </script>
 @endsection
 
