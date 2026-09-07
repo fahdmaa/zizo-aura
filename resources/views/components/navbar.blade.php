@@ -42,20 +42,24 @@
                         <span>Tous les packs &amp; produits</span>
                         <i class="uil uil-angle-right text-xs opacity-0 group-hover/item:opacity-100 -translate-x-1 group-hover/item:translate-x-0 transition-all text-pink-600"></i>
                     </a>
-                    <a href="{{ route('shop.index', ['category' => 'sol-de-janeiro']) }}" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold text-zinc-800 hover:bg-pink-50 hover:text-pink-600 transition-colors group/item">
-                        <span>Sol de Janeiro Packs</span>
-                        <i class="uil uil-angle-right text-xs opacity-0 group-hover/item:opacity-100 -translate-x-1 group-hover/item:translate-x-0 transition-all text-pink-600"></i>
-                    </a>
-                    <a href="{{ route('shop.index', ['category' => 'victorias-secret']) }}" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold text-zinc-800 hover:bg-pink-50 hover:text-pink-600 transition-colors group/item">
-                        <span>Victoria's Secret Duos</span>
-                        <i class="uil uil-angle-right text-xs opacity-0 group-hover/item:opacity-100 -translate-x-1 group-hover/item:translate-x-0 transition-all text-pink-600"></i>
-                    </a>
                     <a href="{{ route('shop.index', ['category' => 'rituals']) }}" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold text-zinc-800 hover:bg-pink-50 hover:text-pink-600 transition-colors group/item">
-                        <span>Rituals Coffrets</span>
+                        <span>Rituals Packs &amp; Rituels</span>
+                        <i class="uil uil-angle-right text-xs opacity-0 group-hover/item:opacity-100 -translate-x-1 group-hover/item:translate-x-0 transition-all text-pink-600"></i>
+                    </a>
+                    <a href="{{ route('shop.index', ['category' => 'sol-de-janeiro']) }}" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold text-zinc-800 hover:bg-pink-50 hover:text-pink-600 transition-colors group/item">
+                        <span>Sol de Janeiro Brumes</span>
                         <i class="uil uil-angle-right text-xs opacity-0 group-hover/item:opacity-100 -translate-x-1 group-hover/item:translate-x-0 transition-all text-pink-600"></i>
                     </a>
                     <a href="{{ route('shop.index', ['category' => 'the-ordinary']) }}" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold text-zinc-800 hover:bg-pink-50 hover:text-pink-600 transition-colors group/item">
                         <span>The Ordinary Soins</span>
+                        <i class="uil uil-angle-right text-xs opacity-0 group-hover/item:opacity-100 -translate-x-1 group-hover/item:translate-x-0 transition-all text-pink-600"></i>
+                    </a>
+                    <a href="{{ route('shop.index', ['category' => 'victorias-secret']) }}" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold text-zinc-800 hover:bg-pink-50 hover:text-pink-600 transition-colors group/item">
+                        <span>Victoria's Secret Brumes (Promo)</span>
+                        <i class="uil uil-angle-right text-xs opacity-0 group-hover/item:opacity-100 -translate-x-1 group-hover/item:translate-x-0 transition-all text-pink-600"></i>
+                    </a>
+                    <a href="{{ route('shop.index', ['category' => 'garden-bouquet']) }}" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold text-zinc-800 hover:bg-pink-50 hover:text-pink-600 transition-colors group/item">
+                        <span>Garden Bouquet Coffret</span>
                         <i class="uil uil-angle-right text-xs opacity-0 group-hover/item:opacity-100 -translate-x-1 group-hover/item:translate-x-0 transition-all text-pink-600"></i>
                     </a>
                 </div>
@@ -175,20 +179,24 @@
                                 <span>Tous les packs &amp; produits</span>
                                 <i class="uil uil-angle-right text-xs text-pink-600"></i>
                             </a>
+                            <a href="{{ route('shop.index', ['category' => 'rituals']) }}" class="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-bold text-zinc-700 hover:text-pink-600 hover:bg-pink-50/60 transition-colors">
+                                <span>Rituals Packs &amp; Rituels</span>
+                                <i class="uil uil-angle-right text-xs text-pink-600"></i>
+                            </a>
                             <a href="{{ route('shop.index', ['category' => 'sol-de-janeiro']) }}" class="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-bold text-zinc-700 hover:text-pink-600 hover:bg-pink-50/60 transition-colors">
-                                <span>Sol de Janeiro Packs</span>
+                                <span>Sol de Janeiro Brumes</span>
                                 <i class="uil uil-angle-right text-xs text-pink-600"></i>
                             </a>
-                            <a href="{{ route('shop.index', ['category' => 'victorias-secret']) }}" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold text-zinc-800 hover:bg-pink-50 hover:text-pink-600 transition-colors group/item">
-                                <span>Victoria's Secret Duos</span>
-                                <i class="uil uil-angle-right text-xs text-pink-600"></i>
-                            </a>
-                            <a href="{{ route('shop.index', ['category' => 'rituals']) }}" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold text-zinc-800 hover:bg-pink-50 hover:text-pink-600 transition-colors group/item">
-                                <span>Rituals Coffrets</span>
-                                <i class="uil uil-angle-right text-xs text-pink-600"></i>
-                            </a>
-                            <a href="{{ route('shop.index', ['category' => 'the-ordinary']) }}" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold text-zinc-800 hover:bg-pink-50 hover:text-pink-600 transition-colors group/item">
+                            <a href="{{ route('shop.index', ['category' => 'the-ordinary']) }}" class="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-bold text-zinc-700 hover:text-pink-600 hover:bg-pink-50/60 transition-colors">
                                 <span>The Ordinary Soins</span>
+                                <i class="uil uil-angle-right text-xs text-pink-600"></i>
+                            </a>
+                            <a href="{{ route('shop.index', ['category' => 'victorias-secret']) }}" class="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-bold text-zinc-700 hover:text-pink-600 hover:bg-pink-50/60 transition-colors">
+                                <span>Victoria's Secret Brumes (Promo)</span>
+                                <i class="uil uil-angle-right text-xs text-pink-600"></i>
+                            </a>
+                            <a href="{{ route('shop.index', ['category' => 'garden-bouquet']) }}" class="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-bold text-zinc-700 hover:text-pink-600 hover:bg-pink-50/60 transition-colors">
+                                <span>Garden Bouquet Coffret</span>
                                 <i class="uil uil-angle-right text-xs text-pink-600"></i>
                             </a>
                         </div>

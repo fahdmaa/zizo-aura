@@ -5,10 +5,10 @@
         <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
             <div>
                 <h2 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-black tracking-tight">
-                    Nos 8 Meilleures Offres &amp; Réductions
+                    Nos Meilleurs Produits &amp; Offres
                 </h2>
                 <p class="text-xs sm:text-sm text-zinc-500 font-medium mt-1">
-                    Jusqu'à -35% de réduction immédiate sur nos duos et coffrets les plus convoités.
+                    Découvrez notre sélection exclusive de parfums, coffrets rituels et soins iconiques.
                 </p>
             </div>
 

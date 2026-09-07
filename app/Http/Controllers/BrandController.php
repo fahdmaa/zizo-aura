@@ -11,22 +11,23 @@ class BrandController extends Controller
     {
         $allProducts = ShopController::catalogProducts();
 
-        // Sort by discount percentage descending and take top 8
-        $discountProducts = $allProducts;
-        usort($discountProducts, function ($a, $b) {
-            $discA = abs((int) filter_var($a['discount'], FILTER_SANITIZE_NUMBER_INT));
-            $discB = abs((int) filter_var($b['discount'], FILTER_SANITIZE_NUMBER_INT));
-            return $discB <=> $discA;
+        // Sort by discount percentage descending, then by review count / rating
+        $sortedProducts = $allProducts;
+        usort($sortedProducts, function ($a, $b) {
+            $discA = abs((int) filter_var($a['discount'] ?? 0, FILTER_SANITIZE_NUMBER_INT));
+            $discB = abs((int) filter_var($b['discount'] ?? 0, FILTER_SANITIZE_NUMBER_INT));
+            if ($discB !== $discA) {
+                return $discB <=> $discA;
+            }
+            return ($b['review_count'] ?? 0) <=> ($a['review_count'] ?? 0);
         });
-
-        $top8Discounts = array_slice($discountProducts, 0, 8);
 
         // Visible reviews
         $reviews = Review::visible()->orderBy('sort_order', 'asc')->orderBy('created_at', 'desc')->get();
 
         return view('brand', [
-            'top8Discounts' => $top8Discounts,
-            'products' => $top8Discounts,
+            'top8Discounts' => $sortedProducts,
+            'products' => $sortedProducts,
             'reviews' => $reviews,
         ]);
     }

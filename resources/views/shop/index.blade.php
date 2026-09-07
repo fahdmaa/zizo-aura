@@ -3,18 +3,18 @@
     $categorySlug = $selectedCategory ?? 'all';
 
     if ($categorySlug === 'rituals') {
-        $seoTitle = 'Coffrets Rituals Maroc — Coffrets Cadeaux Sakura, Ayurveda & Karma en DH | Zizo Aura';
+        $seoTitle = 'Coffrets Rituals Maroc — Coffrets Cadeaux Ayurveda, Sakura, Karma & Yozakura en DH | Zizo Aura';
         $seoHeading = 'Coffrets Cadeaux Rituals Maroc';
-        $seoDescription = 'Achetez votre coffret Rituals authentique au Maroc : The Ritual of Sakura, Ayurveda, Karma, Mehr et Jing. Prix en DH (390 DH), livraison express 24-48h et paiement à la livraison (Cash on Delivery).';
+        $seoDescription = 'Achetez votre coffret Rituals authentique au Maroc : The Ritual of Sakura, Ayurveda, Karma et Yozakura (Packs XS, S, M et Mini). Prix en DH (dès 150 DH), livraison express 24-48h et paiement à la livraison (Cash on Delivery).';
         $seoIntro = 'Explorez notre collection exclusive de coffrets cadeaux Rituals au Maroc. Mousse de douche onctueuse, gommages exfoliants et crèmes hydratantes aux senteurs iconiques. 100% Originaux avec livraison 24-48h et paiement à la livraison.';
         $faqItems = [
             [
                 'q' => 'Où acheter un coffret Rituals original au Maroc ?',
-                'a' => 'Sur la boutique officielle Zizo Aura Maroc, vous retrouvez les coffrets originaux The Ritual of Sakura, Ayurveda, Karma, Mehr et Jing avec livraison sous 24-48h et paiement à la livraison partout au Maroc.'
+                'a' => 'Sur la boutique officielle Zizo Aura Maroc, vous retrouvez les coffrets originaux The Ritual of Sakura, Ayurveda, Karma et Yozakura avec livraison sous 24-48h et paiement à la livraison partout au Maroc.'
             ],
             [
                 'q' => 'Quel est le prix d\'un coffret Rituals au Maroc ?',
-                'a' => 'Les coffrets cadeaux Rituals grand format (mousse de douche, gommage, crème corps, brume d\'oreiller) sont proposés au prix de 390 DH avec échantillons offerts.'
+                'a' => 'Les coffrets cadeaux Rituals sont proposés en différents formats : Pack XS à 250 DH, Pack S à 360 DH, Pack M à 520 DH et Mini Coffret Karma à 150 DH.'
             ],
             [
                 'q' => 'Quels sont les délais de livraison pour les coffrets Rituals au Maroc ?',
@@ -22,55 +22,70 @@
             ]
         ];
     } elseif ($categorySlug === 'sol-de-janeiro') {
-        $seoTitle = 'Sol de Janeiro Maroc — Brazilian Bum Bum Cream, Brumes Cheirosa & Jet Sets | Zizo Aura';
+        $seoTitle = 'Sol de Janeiro Maroc — Brumes Parfumées Cheirosa 62, 68, 40 & 59 (90ml) | Zizo Aura';
         $seoHeading = 'Sol de Janeiro Maroc';
-        $seoDescription = 'Retrouvez toute la gamme Sol de Janeiro au Maroc : Brazilian Bum Bum Cream, brumes Cheirosa 68, 62, 59, 40 et Jet Sets voyage. 100% Originaux, prix en DH et livraison express à domicile avec paiement à la livraison.';
-        $seoIntro = 'Sublimez votre peau avec les soins iconiques Sol de Janeiro au Maroc. Crèmes raffermissantes au beurre de Cupuaçu et brumes parfumées gourmandes. Livraison 24-48h partout au Royaume.';
+        $seoDescription = 'Retrouvez toute la gamme de brumes Sol de Janeiro au Maroc : Cheirosa 62, 68, 40 et 59 (90ml). 100% Originaux, prix en DH (340 DH) et livraison express à domicile avec paiement à la livraison.';
+        $seoIntro = 'Sublimez votre sillage avec les brumes parfumées iconiques Sol de Janeiro Cheirosa au Maroc. Des notes gourmandes et solaires irrésistibles. 100% Authentiques, livraison 24-48h partout au Royaume.';
         $faqItems = [
             [
-                'q' => 'Où trouver les brumes et crèmes Sol de Janeiro au Maroc ?',
-                'a' => 'Zizo Aura propose les soins et brumes Sol de Janeiro 100% originaux au Maroc au meilleur prix en Dirhams avec livraison rapide.'
+                'q' => 'Où trouver les brumes Sol de Janeiro au Maroc ?',
+                'a' => 'Zizo Aura propose les brumes Sol de Janeiro 100% originales au Maroc au meilleur prix en Dirhams (Cheirosa 62, 68, 40, 59) avec livraison rapide.'
             ],
             [
-                'q' => 'Quel est le prix des coffrets Jet Set Sol de Janeiro au Maroc ?',
-                'a' => 'Les coffrets Jet Set (Bum Bum, Beija Flor, Bom Dia Bright, Delícia Drench) sont à 320 DH avec livraison express 24-48h.'
+                'q' => 'Quel est le prix des brumes Sol de Janeiro au Maroc ?',
+                'a' => 'Les brumes parfumées corps & cheveux Sol de Janeiro Cheirosa 90ml sont proposées au prix de 340 DH.'
             ]
         ];
     } elseif ($categorySlug === 'victorias-secret') {
-        $seoTitle = 'Brumes & Coffrets Victoria\'s Secret Maroc — Bare Vanilla, Pure Seduction (250ml) | Zizo Aura';
-        $seoHeading = 'Brumes & Coffrets Victoria\'s Secret Maroc';
-        $seoDescription = 'Achetez vos brumes parfumées et packs duos Victoria\'s Secret originaux au Maroc (Bare Vanilla, Pure Seduction, Velvet Petals, Love Spell). Prix en DH & paiement à la livraison.';
-        $seoIntro = 'Découvrez les brumes corporelles 250ml et coffrets de luxe Victoria\'s Secret au Maroc. Parfums irrésistibles, formules originales et livraison express 24-48h dans toutes les villes.';
+        $seoTitle = 'Brumes Victoria\'s Secret Maroc — Bare Vanilla, Love Spell, Aqua Kiss & Amber Romance | Zizo Aura';
+        $seoHeading = 'Brumes Parfumées Victoria\'s Secret Maroc (En Promotion)';
+        $seoDescription = 'Achetez vos brumes parfumées Victoria\'s Secret 250ml originales au Maroc en promotion : 240 DH au lieu de 280 DH (Bare Vanilla, Love Spell, Aqua Kiss, Amber Romance). Paiement à la livraison.';
+        $seoIntro = 'Profitez de notre offre spéciale sur les brumes corporelles 250ml Victoria\'s Secret au Maroc : 240 DH au lieu de 280 DH. Parfums irrésistibles, formules originales et livraison express 24-48h dans toutes les villes.';
         $faqItems = [
             [
                 'q' => 'Combien coûte une brume Victoria\'s Secret originale au Maroc ?',
-                'a' => 'Nos brumes standard 250ml Victoria\'s Secret sont proposées à 195 DH au lieu de 280 DH avec garantie d\'authenticité absolue.'
+                'a' => 'Nos brumes 250ml Victoria\'s Secret sont actuellement en promotion à 240 DH au lieu de 280 DH avec garantie d\'authenticité absolue.'
             ],
             [
-                'q' => 'Quelles sont les meilleures brumes Victoria\'s Secret au Maroc ?',
-                'a' => 'Les best-sellers incontournables sont Bare Vanilla (vanille & cachemire), Pure Seduction (prune rouge & freesia) et Velvet Petals (fleurs douces & amande).'
+                'q' => 'Quelles sont les fragrances Victoria\'s Secret disponibles ?',
+                'a' => 'Nous proposons les 4 fragrances phares : Bare Vanilla, Love Spell, Aqua Kiss et Amber Romance.'
             ]
         ];
     } elseif ($categorySlug === 'the-ordinary') {
-        $seoTitle = 'The Ordinary Maroc — Sérums Niacinamide, Acide Hyaluronique & Peeling Rouge | Zizo Aura';
+        $seoTitle = 'The Ordinary Maroc — Sérums Niacinamide & Tonique Acide Glycolique | Zizo Aura';
         $seoHeading = 'Sérums & Soins The Ordinary Maroc';
-        $seoDescription = 'Retrouvez les sérums The Ordinary 100% authentiques au Maroc : Niacinamide 10%, Peeling Rouge AHA 30%, Acide Hyaluronique 2%, Acide Glycolique 7%. Prix en DH et livraison rapide.';
-        $seoIntro = 'Traitements dermatologiques ultra-ciblés The Ordinary au Maroc. Corrigez les imperfections, sublimez votre grain de peau et hydratez intensément avec nos formules certifiées originales.';
+        $seoDescription = 'Retrouvez les soins The Ordinary 100% authentiques au Maroc : Sérum Niacinamide 10% + Zinc 1% (30ml & 60ml) et Tonique Acide Glycolique 7% (100ml & 240ml). Prix en DH et livraison rapide.';
+        $seoIntro = 'Traitements dermatologiques ultra-ciblés The Ordinary au Maroc. Corrigez les imperfections et sublimez l\'éclat de votre peau avec nos formules certifiées originales.';
         $faqItems = [
             [
                 'q' => 'Comment être sûr que les produits The Ordinary sont originaux au Maroc ?',
-                'a' => 'Tous les sérums The Ordinary chez Zizo Aura sont importés des distributeurs officiels certifiés avec packaging intact et numéro de lot vérifié.'
+                'a' => 'Tous les produits The Ordinary chez Zizo Aura sont importés des distributeurs officiels certifiés avec packaging intact et numéro de lot vérifié.'
             ],
             [
-                'q' => 'Quel est le prix du sérum Niacinamide The Ordinary au Maroc ?',
-                'a' => 'Le sérum Niacinamide 10% + Zinc 1% (30ml) est disponible à 140 DH sur Zizo Aura Maroc.'
+                'q' => 'Quels sont les prix des produits The Ordinary au Maroc ?',
+                'a' => 'Le sérum Niacinamide 10% est à 160 DH (30ml) et 240 DH (60ml). Le tonique Acide Glycolique 7% est à 160 DH (100ml) et 220 DH (240ml).'
+            ]
+        ];
+    } elseif ($categorySlug === 'garden-bouquet') {
+        $seoTitle = 'Garden Bouquet Maroc — Coffret Cadeau Soins & Parfum | Zizo Aura';
+        $seoHeading = 'Coffret Cadeau Garden Bouquet Maroc';
+        $seoDescription = 'Découvrez le coffret cadeau Garden Bouquet au Maroc : une sélection délicate de soins floraux au prix doux de 120 DH. Idéal pour offrir ou se faire plaisir.';
+        $seoIntro = 'Craquez pour la fraîcheur florale du coffret cadeau Garden Bouquet. Une idée cadeau raffinée et accessible avec livraison express 24-48h partout au Maroc.';
+        $faqItems = [
+            [
+                'q' => 'Quel est le contenu et le prix du coffret Garden Bouquet ?',
+                'a' => 'Le coffret cadeau Garden Bouquet est proposé au prix de 120 DH, combinant senteurs florales délicates et soins doux.'
+            ],
+            [
+                'q' => 'Quels sont les délais de livraison pour Garden Bouquet ?',
+                'a' => 'Livraison rapide en 24h à 48h partout au Maroc avec paiement en espèces à la réception.'
             ]
         ];
     } else {
         $seoTitle = 'Boutique Cosmétiques & Parfums Maroc — Sol de Janeiro, Rituals, Victoria\'s Secret | Zizo Aura';
-        $seoHeading = 'Nos Formules, Coffrets & Soins Solaires';
-        $seoDescription = 'Boutique en ligne officielle de soins, brumes et coffrets de luxe au Maroc : Sol de Janeiro, Victoria\'s Secret, Rituals, The Ordinary. 100% Originaux, livraison express 24-48h et paiement à la livraison.';
-        $seoIntro = 'Découvrez nos brumes Cheirosa emblématiques, coffrets cadeaux Rituals, crèmes raffermissantes et élixirs botaniques formulés pour sublimer chaque peau.';
+        $seoHeading = 'Nos Formules, Coffrets & Brumes d\'Exception';
+        $seoDescription = 'Boutique en ligne officielle de soins, brumes et coffrets de luxe au Maroc : Sol de Janeiro, Victoria\'s Secret, Rituals, The Ordinary, Garden Bouquet. 100% Originaux, livraison express 24-48h et paiement à la livraison.';
+        $seoIntro = 'Découvrez nos brumes Cheirosa emblématiques, coffrets cadeaux Rituals, brumes Victoria\'s Secret et soins The Ordinary formulés pour sublimer chaque routine.';
         $faqItems = [
             [
                 'q' => 'Quelles sont les conditions de livraison partout au Maroc ?',

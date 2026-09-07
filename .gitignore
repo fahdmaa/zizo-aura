@@ -33,3 +33,4 @@ Thumbs.db
 .agents/mcp_config.json
 .neon
 
+.agentsroom/fork-context-*.txt

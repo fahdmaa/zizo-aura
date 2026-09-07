@@ -9,45 +9,121 @@ use Illuminate\Support\Facades\DB;
 
 class CatalogSeeder extends Seeder
 {
-    /** Import the legacy visual catalog into the admin-managed database. */
+    /** Import the visual catalog into the database. */
     public function run(): void
     {
         $legacyProducts = ShopController::getProducts();
         $now = now();
         $categories = collect($legacyProducts)->unique('category')->values();
 
+        // 1. Upsert Categories
         DB::table('categories')->upsert(
             $categories->map(fn (array $product, int $index) => [
-                'name' => $product['category_label'], 'slug' => $product['category'], 'is_active' => true,
-                'sort_order' => $index, 'created_at' => $now, 'updated_at' => $now,
+                'name' => $product['category_label'],
+                'slug' => $product['category'],
+                'is_active' => true,
+                'sort_order' => $index,
+                'created_at' => $now,
+                'updated_at' => $now,
             ])->all(),
-            ['slug'], ['name', 'is_active', 'sort_order', 'updated_at']
+            ['slug'],
+            ['name', 'is_active', 'sort_order', 'updated_at']
         );
-        $categoryIds = DB::table('categories')->whereIn('slug', $categories->pluck('category'))->pluck('id', 'slug');
 
+        $categoryIds = DB::table('categories')->pluck('id', 'slug');
+        $validSlugs = collect($legacyProducts)->pluck('slug')->all();
+
+        // 2. Deactivate & Soft-delete any old products not in the new list
+        DB::table('products')
+            ->whereNotIn('slug', $validSlugs)
+            ->update([
+                'is_active' => false,
+                'in_stock' => false,
+                'deleted_at' => $now,
+                'updated_at' => $now,
+            ]);
+
+        // 3. Upsert New Active Products
         DB::table('products')->upsert(
             collect($legacyProducts)->map(fn (array $legacy, int $position) => [
-                'category_id' => $categoryIds[$legacy['category']], 'name' => $legacy['name'], 'subtitle' => $legacy['subtitle'], 'slug' => $legacy['slug'],
-                'description' => $legacy['description'], 'ingredients' => $legacy['ingredients'], 'olfactory' => $legacy['olfactory'], 'usage' => $legacy['usage'],
-                'price' => $legacy['original_price'], 'discounted_price' => $legacy['raw_price'] < $legacy['original_price'] ? $legacy['raw_price'] : null,
-                'image' => $legacy['image'], 'gallery' => json_encode($legacy['gallery'] ?? [$legacy['image']]), 'badge' => $legacy['badge'], 'badge_color' => $legacy['badge_color'], 'rating' => $legacy['rating'], 'review_count' => $legacy['review_count'],
-                'is_new' => false, 'is_bestseller' => false, 'in_stock' => true, 'is_active' => true, 'stock_quantity' => null,
-                'has_sizes' => ! empty($legacy['sizes']), 'has_flavors' => ! empty($legacy['flavors']), 'sort_order' => $position, 'created_at' => $now, 'updated_at' => $now, 'deleted_at' => null,
+                'category_id' => $categoryIds[$legacy['category']],
+                'name' => $legacy['name'],
+                'subtitle' => $legacy['subtitle'],
+                'slug' => $legacy['slug'],
+                'description' => $legacy['description'],
+                'ingredients' => $legacy['ingredients'],
+                'olfactory' => $legacy['olfactory'],
+                'usage' => $legacy['usage'],
+                'price' => $legacy['original_price'],
+                'discounted_price' => $legacy['raw_price'] < $legacy['original_price'] ? $legacy['raw_price'] : null,
+                'image' => $legacy['image'],
+                'gallery' => json_encode($legacy['gallery'] ?? [$legacy['image']]),
+                'badge' => $legacy['badge'],
+                'badge_color' => $legacy['badge_color'],
+                'rating' => $legacy['rating'],
+                'review_count' => $legacy['review_count'],
+                'is_new' => false,
+                'is_bestseller' => false,
+                'in_stock' => true,
+                'is_active' => true,
+                'stock_quantity' => null,
+                'has_sizes' => ! empty($legacy['sizes']),
+                'has_flavors' => ! empty($legacy['flavors']),
+                'sort_order' => $position,
+                'created_at' => $now,
+                'updated_at' => $now,
+                'deleted_at' => null,
             ])->all(),
-            ['slug'], ['category_id', 'name', 'subtitle', 'description', 'ingredients', 'olfactory', 'usage', 'price', 'discounted_price', 'image', 'gallery', 'badge', 'badge_color', 'rating', 'review_count', 'is_new', 'is_bestseller', 'in_stock', 'is_active', 'stock_quantity', 'has_sizes', 'has_flavors', 'sort_order', 'updated_at', 'deleted_at']
+            ['slug'],
+            ['category_id', 'name', 'subtitle', 'description', 'ingredients', 'olfactory', 'usage', 'price', 'discounted_price', 'image', 'gallery', 'badge', 'badge_color', 'rating', 'review_count', 'is_new', 'is_bestseller', 'in_stock', 'is_active', 'stock_quantity', 'has_sizes', 'has_flavors', 'sort_order', 'updated_at', 'deleted_at']
         );
 
-        $productIds = DB::table('products')->whereIn('slug', collect($legacyProducts)->pluck('slug'))->pluck('id', 'slug');
+        // 4. Update Product Sizes & Flavors
+        $productIds = DB::table('products')->whereIn('slug', $validSlugs)->pluck('id', 'slug');
         DB::table('product_sizes')->whereIn('product_id', $productIds->values())->delete();
         DB::table('product_flavors')->whereIn('product_id', $productIds->values())->delete();
-        $sizes = []; $flavors = [];
-        foreach ($legacyProducts as $legacy) {
-            foreach ($legacy['sizes'] as $index => $label) $sizes[] = ['product_id' => $productIds[$legacy['slug']], 'label' => $label, 'price' => null, 'in_stock' => true, 'sort_order' => $index, 'created_at' => $now, 'updated_at' => $now];
-            foreach ($legacy['flavors'] as $index => $flavor) $flavors[] = ['product_id' => $productIds[$legacy['slug']], 'label' => $flavor['name'], 'color_hex' => $flavor['color'], 'in_stock' => true, 'sort_order' => $index, 'created_at' => $now, 'updated_at' => $now];
-        }
-        if ($sizes) DB::table('product_sizes')->insert($sizes);
-        if ($flavors) DB::table('product_flavors')->insert($flavors);
 
+        $sizes = [];
+        $flavors = [];
+        foreach ($legacyProducts as $legacy) {
+            $pId = $productIds[$legacy['slug']] ?? null;
+            if (! $pId) {
+                continue;
+            }
+
+            foreach ($legacy['sizes'] ?? [] as $index => $label) {
+                $sizes[] = [
+                    'product_id' => $pId,
+                    'label' => $label,
+                    'price' => null,
+                    'in_stock' => true,
+                    'sort_order' => $index,
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ];
+            }
+
+            foreach ($legacy['flavors'] ?? [] as $index => $flavor) {
+                $flavors[] = [
+                    'product_id' => $pId,
+                    'label' => $flavor['name'],
+                    'color_hex' => $flavor['color'],
+                    'in_stock' => true,
+                    'sort_order' => $index,
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ];
+            }
+        }
+
+        if ($sizes) {
+            DB::table('product_sizes')->insert($sizes);
+        }
+        if ($flavors) {
+            DB::table('product_flavors')->insert($flavors);
+        }
+
+        // 5. Coupons
         DB::table('coupons')->upsert([
             [
                 'code' => 'SUMMER20',
@@ -99,13 +175,14 @@ class CatalogSeeder extends Seeder
             ],
         ], ['code'], ['type', 'value', 'min_order_amount', 'max_uses', 'is_active', 'updated_at']);
 
+        // 6. Reviews
         DB::table('reviews')->upsert([
             [
                 'id' => 1,
                 'author_name' => 'Sarah Laurent',
-                'author_role' => 'Cliente vérifiée • Bare Vanilla Duo',
+                'author_role' => 'Cliente vérifiée • Bare Vanilla 250ml',
                 'rating' => 5,
-                'comment' => 'Commande reçue en 48h chrono ! Le pack Bare Vanilla est absolument divin et 100% authentique. Les petits échantillons offerts dans le colis sont une délicate attention.',
+                'comment' => 'Commande reçue en 48h chrono ! La brume Bare Vanilla est absolument divine et 100% authentique. Les petits échantillons offerts dans le colis sont une délicate attention.',
                 'avatar' => '/images/reviews/sarah.jpg',
                 'badge' => 'Achat vérifié',
                 'ring_color' => 'pink',
@@ -117,9 +194,9 @@ class CatalogSeeder extends Seeder
             [
                 'id' => 2,
                 'author_name' => 'Yasmine Benali',
-                'author_role' => 'Cliente vérifiée • The Ritual of Sakura',
+                'author_role' => 'Cliente vérifiée • Coffret Rituals Pack M',
                 'rating' => 5,
-                'comment' => 'L\'emballage origami The Ritual of Sakura est splendide, prêt à être offert ! La mousse de douche est tellement onctueuse et le parfum de fleur de cerisier tient toute la journée.',
+                'comment' => 'L\'emballage origami Rituals est splendide, prêt à être offert ! La mousse de douche est tellement onctueuse et le parfum tient toute la journée.',
                 'avatar' => '/images/reviews/yasmine.jpg',
                 'badge' => 'Achat vérifié',
                 'ring_color' => 'amber',
@@ -131,9 +208,9 @@ class CatalogSeeder extends Seeder
             [
                 'id' => 3,
                 'author_name' => 'Camille Moreau',
-                'author_role' => 'Cliente vérifiée • Bum Bum Jet Set',
+                'author_role' => 'Cliente vérifiée • Cheirosa 62',
                 'rating' => 5,
-                'comment' => 'Le Bum Bum Jet Set est un indispensable de l\'été ! L\'odeur de pistache et caramel salé est complètement addictive. Prix super avantageux avec la réduction.',
+                'comment' => 'La brume Cheirosa 62 est un indispensable ! L\'odeur de pistache et caramel salé est complètement addictive. Livraison super rapide.',
                 'avatar' => '/images/reviews/camille.jpg',
                 'badge' => 'Achat vérifié',
                 'ring_color' => 'rose',
@@ -145,9 +222,9 @@ class CatalogSeeder extends Seeder
             [
                 'id' => 4,
                 'author_name' => 'Léa Dubois',
-                'author_role' => 'Cliente vérifiée • VS Bombshell Prestige',
+                'author_role' => 'Cliente vérifiée • Niacinamide The Ordinary',
                 'rating' => 5,
-                'comment' => 'Le flacon Bombshell en cristal avec son nœud satiné est une merveille. La crème pour le corps sublime la peau et fait tenir le parfum toute la soirée.',
+                'comment' => 'Le sérum Niacinamide The Ordinary a transformé ma peau en 2 semaines. Moins d\'imperfections, pores resserrés. 100% authentique.',
                 'avatar' => '/images/reviews/lea.jpg',
                 'badge' => 'Achat vérifié',
                 'ring_color' => 'purple',
@@ -159,9 +236,9 @@ class CatalogSeeder extends Seeder
             [
                 'id' => 5,
                 'author_name' => 'Nadia Fourati',
-                'author_role' => 'Cliente vérifiée • The Ritual of Ayurveda',
+                'author_role' => 'Cliente vérifiée • Coffret Garden Bouquet',
                 'rating' => 5,
-                'comment' => 'The Ritual of Ayurveda est mon rituel réconfortant préféré. L\'accord rose indienne et amande douce laisse la peau nourrie et satinée. Colis très bien sécurisé.',
+                'comment' => 'Le coffret Garden Bouquet 6 pièces est une pure merveille pour le prix (120 DH). Très joliment emballé et odeur florale divine.',
                 'avatar' => '/images/reviews/nadia.jpg',
                 'badge' => 'Achat vérifié',
                 'ring_color' => 'emerald',
@@ -173,9 +250,9 @@ class CatalogSeeder extends Seeder
             [
                 'id' => 6,
                 'author_name' => 'Emma Vidal',
-                'author_role' => 'Cliente vérifiée • Beija Flor Jet Set',
+                'author_role' => 'Cliente vérifiée • The Ritual of Karma Mini',
                 'rating' => 5,
-                'comment' => 'Le Beija Flor Jet Set avec la brume 68 sent divinement bon les fleurs fraîches et les vacances. Ma peau est visiblement plus rebondie avec la crème.',
+                'comment' => 'Le set mini Karma est parfait pour les voyages ou le sac à main. L\'odeur de lotus blanc et thé blanc sent les vacances.',
                 'avatar' => '/images/reviews/emma.jpg',
                 'badge' => 'Achat vérifié',
                 'ring_color' => 'teal',
