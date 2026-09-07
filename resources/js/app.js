@@ -1264,30 +1264,50 @@ document.addEventListener('DOMContentLoaded', () => {
     const reviewsSlider = document.getElementById('reviews-slider');
     const prevBtn = document.getElementById('review-prev');
     const nextBtn = document.getElementById('review-next');
+    const reviewCounter = document.getElementById('review-counter');
+    const reviewProgressBar = document.getElementById('review-progress-bar');
 
     if (reviewsSlider && prevBtn && nextBtn) {
+        const cards = reviewsSlider.querySelectorAll('.review-slide-card');
+        const totalCards = cards.length || 1;
+
         const getScrollStep = () => {
-            const firstCard = reviewsSlider.querySelector('.review-slide-card');
+            const firstCard = cards[0];
             return firstCard ? firstCard.offsetWidth + 24 : 360;
         };
 
-        const updateArrowStates = () => {
-            const maxScroll = reviewsSlider.scrollWidth - reviewsSlider.clientWidth;
-            const atStart = reviewsSlider.scrollLeft <= 5;
-            const atEnd = reviewsSlider.scrollLeft >= maxScroll - 5;
+        const updateSliderState = () => {
+            const maxScroll = Math.max(1, reviewsSlider.scrollWidth - reviewsSlider.clientWidth);
+            const scrollLeft = reviewsSlider.scrollLeft;
+            const atStart = scrollLeft <= 5;
+            const atEnd = scrollLeft >= maxScroll - 5;
 
+            // Update button opacity & cursor
             if (atStart) {
                 prevBtn.classList.add('opacity-40', 'cursor-not-allowed');
-                prevBtn.classList.remove('hover:border-pink-600', 'hover:text-pink-600');
             } else {
                 prevBtn.classList.remove('opacity-40', 'cursor-not-allowed');
-                prevBtn.classList.add('hover:border-pink-600', 'hover:text-pink-600');
             }
 
             if (atEnd) {
                 nextBtn.classList.add('opacity-40', 'cursor-not-allowed');
             } else {
                 nextBtn.classList.remove('opacity-40', 'cursor-not-allowed');
+            }
+
+            // Estimate current active card index
+            const step = getScrollStep();
+            const activeIndex = Math.min(totalCards, Math.max(1, Math.round(scrollLeft / step) + 1));
+
+            if (reviewCounter) {
+                const currentFormatted = String(activeIndex).padStart(2, '0');
+                const totalFormatted = String(totalCards).padStart(2, '0');
+                reviewCounter.textContent = `${currentFormatted} / ${totalFormatted}`;
+            }
+
+            if (reviewProgressBar) {
+                const percent = Math.min(100, Math.max(10, (activeIndex / totalCards) * 100));
+                reviewProgressBar.style.width = `${percent}%`;
             }
         };
 
@@ -1299,9 +1319,9 @@ document.addEventListener('DOMContentLoaded', () => {
             reviewsSlider.scrollBy({ left: getScrollStep(), behavior: 'smooth' });
         });
 
-        reviewsSlider.addEventListener('scroll', updateArrowStates, { passive: true });
-        window.addEventListener('resize', updateArrowStates);
-        updateArrowStates();
+        reviewsSlider.addEventListener('scroll', updateSliderState, { passive: true });
+        window.addEventListener('resize', updateSliderState);
+        updateSliderState();
     }
 
     // =========================================================================

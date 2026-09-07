@@ -15,9 +15,9 @@ class ReviewSeeder extends Seeder
         $reviews = [
             [
                 'author_name' => 'Sarah Laurent',
-                'author_role' => 'Cliente vérifiée • Bare Vanilla Duo',
+                'author_role' => 'Cliente vérifiée • Bare Vanilla 250ml',
                 'rating' => 5,
-                'comment' => 'Commande reçue en 48h chrono ! Le pack Bare Vanilla est absolument divin et 100% authentique. Les petits échantillons offerts dans le colis sont une délicate attention.',
+                'comment' => 'Commande reçue en 48h chrono ! La brume Bare Vanilla est absolument divine et 100% authentique. Les petits échantillons offerts dans le colis sont une délicate attention.',
                 'avatar' => '/images/reviews/sarah.jpg',
                 'badge' => 'Achat vérifié',
                 'ring_color' => 'pink',
@@ -26,9 +26,9 @@ class ReviewSeeder extends Seeder
             ],
             [
                 'author_name' => 'Yasmine Benali',
-                'author_role' => 'Cliente vérifiée • The Ritual of Sakura',
+                'author_role' => 'Cliente vérifiée • Coffret Rituals Pack M',
                 'rating' => 5,
-                'comment' => 'L\'emballage origami The Ritual of Sakura est splendide, prêt à être offert ! La mousse de douche est tellement onctueuse et le parfum de fleur de cerisier tient toute la journée.',
+                'comment' => 'L\'emballage origami Rituals est splendide, prêt à être offert ! La mousse de douche est tellement onctueuse et le parfum tient toute la journée.',
                 'avatar' => '/images/reviews/yasmine.jpg',
                 'badge' => 'Achat vérifié',
                 'ring_color' => 'amber',
@@ -37,9 +37,9 @@ class ReviewSeeder extends Seeder
             ],
             [
                 'author_name' => 'Camille Moreau',
-                'author_role' => 'Cliente vérifiée • Bum Bum Jet Set',
+                'author_role' => 'Cliente vérifiée • Cheirosa 62',
                 'rating' => 5,
-                'comment' => 'Le Bum Bum Jet Set est un indispensable de l\'été ! L\'odeur de pistache et caramel salé est complètement addictive. Prix super avantageux avec la réduction.',
+                'comment' => 'La brume Cheirosa 62 est un indispensable ! L\'odeur de pistache et caramel salé est complètement addictive. Livraison super rapide.',
                 'avatar' => '/images/reviews/camille.jpg',
                 'badge' => 'Achat vérifié',
                 'ring_color' => 'rose',
@@ -48,9 +48,9 @@ class ReviewSeeder extends Seeder
             ],
             [
                 'author_name' => 'Léa Dubois',
-                'author_role' => 'Cliente vérifiée • VS Bombshell Prestige',
+                'author_role' => 'Cliente vérifiée • Niacinamide 10% + Zinc 1%',
                 'rating' => 5,
-                'comment' => 'Le flacon Bombshell en cristal avec son nœud satiné est une merveille. La crème pour le corps sublime la peau et fait tenir le parfum toute la soirée.',
+                'comment' => 'Le sérum Niacinamide a transformé ma peau en 2 semaines. Moins d\'imperfections, grain de peau affiné et 100% authentique.',
                 'avatar' => '/images/reviews/lea.jpg',
                 'badge' => 'Achat vérifié',
                 'ring_color' => 'purple',
