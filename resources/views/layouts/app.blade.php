@@ -106,11 +106,6 @@
     <!-- Footer with Social Media Accounts -->
     <x-footer />
 
-    <!-- Promo Popup Modal (Landing Page Only) -->
-    @if(request()->routeIs('home') || request()->routeIs('brand.*') || request()->is('/') || request()->is('marques*'))
-        <x-promo-modal />
-    @endif
-
     <!-- Slide-over Cart Drawer -->
     <x-cart-drawer />
 

@@ -27,6 +27,9 @@
     } elseif ($catSlug === 'the-ordinary' || str_contains(strtolower($brandName), 'ordinary')) {
         $seoTitle = $pName . ' The Ordinary Maroc (' . $price . ' DH) — Sérum Visage Original';
         $metaDesc = 'Achetez ' . $pName . ' The Ordinary authentique au Maroc (' . $price . ' DH). Formule concentrée haute efficacité, livraison express partout au Maroc et paiement à la livraison.';
+    } elseif ($catSlug === 'garden-bouquet' || str_contains(strtolower($pName), 'garden bouquet')) {
+        $seoTitle = $pName . ' Maroc (' . $price . ' DH) — Coffret Cadeau Soins & Bain Original | Zizo Aura';
+        $metaDesc = 'Achetez ' . $pName . ' au meilleur prix au Maroc (' . $price . ' DH). Coffret cadeau soins & bain floraux d\'exception, livraison rapide 24-48h partout au Maroc et paiement à la livraison.';
     } else {
         $seoTitle = $pName . ' Maroc (' . $price . ' DH) — Prix en Dirhams & Livraison Rapide | Zizo Aura';
         $metaDesc = 'Achetez ' . $pName . ' au meilleur prix au Maroc (' . $price . ' DH). Produit 100% original, livraison 24-48h et paiement à la livraison.';
@@ -110,7 +113,7 @@
                         '@type' => 'ListItem',
                         'position' => 3,
                         'name' => $product['category_label'] ?? 'Catalogue',
-                        'item' => route('shop.index', ['category' => $product['category']]),
+                        'item' => route('shop.category', $product['category']),
                     ],
                     [
                         '@type' => 'ListItem',
@@ -189,7 +192,7 @@
             <i class="uil uil-angle-right text-[10px]"></i>
             <a href="{{ route('shop.index') }}" class="hover:text-black transition-colors">Boutique</a>
             <i class="uil uil-angle-right text-[10px]"></i>
-            <a href="{{ route('shop.index', ['category' => $product['category']]) }}" class="hover:text-black transition-colors">
+            <a href="{{ route('shop.category', $product['category']) }}" class="hover:text-black transition-colors">
                 {{ $product['category_label'] }}
             </a>
             <i class="uil uil-angle-right text-[10px]"></i>

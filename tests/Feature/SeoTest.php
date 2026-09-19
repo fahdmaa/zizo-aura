@@ -130,4 +130,30 @@ class SeoTest extends TestCase
         $this->assertStringContainsString('+212682787594', $content);
         $this->assertStringContainsString('<link rel="canonical" href="' . route('contact') . '">', $content);
     }
+
+    public function test_query_param_category_redirects_301_to_canonical_route(): void
+    {
+        Category::create(['name' => 'Victoria Secret', 'slug' => 'victorias-secret', 'is_active' => true]);
+
+        $response = $this->get('/boutique?category=victorias-secret');
+        $response->assertStatus(301);
+        $response->assertRedirect(route('shop.category', 'victorias-secret'));
+
+        $responseAll = $this->get('/boutique?category=all');
+        $responseAll->assertStatus(301);
+        $responseAll->assertRedirect(route('shop.index'));
+    }
+
+    public function test_shop_aliases_redirect_301_to_boutique_routes(): void
+    {
+        Category::create(['name' => 'Rituals', 'slug' => 'rituals', 'is_active' => true]);
+
+        $responseShop = $this->get('/shop');
+        $responseShop->assertStatus(301);
+        $responseShop->assertRedirect('/boutique');
+
+        $responseCat = $this->get('/shop/rituals');
+        $responseCat->assertStatus(301);
+        $responseCat->assertRedirect(route('shop.category', 'rituals'));
+    }
 }

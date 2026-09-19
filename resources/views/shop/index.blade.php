@@ -3,14 +3,14 @@
     $categorySlug = $selectedCategory ?? 'all';
 
     if ($categorySlug === 'rituals') {
-        $seoTitle = 'Coffrets Rituals Maroc — Coffrets Cadeaux Ayurveda, Sakura, Karma & Yozakura en DH | Zizo Aura';
+        $seoTitle = 'Coffrets Rituals Maroc — Sakura, Ayurveda, Karma & Mehr Originaux en DH | Zizo Aura';
         $seoHeading = 'Coffrets Cadeaux Rituals Maroc';
-        $seoDescription = 'Achetez votre coffret Rituals authentique au Maroc : The Ritual of Sakura, Ayurveda, Karma et Yozakura (Packs XS, S, M et Mini). Prix en DH (dès 150 DH), livraison express 24-48h et paiement à la livraison (Cash on Delivery).';
+        $seoDescription = 'Achetez votre coffret Rituals 100% authentique au Maroc : The Ritual of Sakura, Ayurveda, Karma et Mehr (Packs XS, S, M). Prix en DH (dès 150 DH), livraison express 24-48h et paiement à la livraison (COD).';
         $seoIntro = 'Explorez notre collection exclusive de coffrets cadeaux Rituals au Maroc. Mousse de douche onctueuse, gommages exfoliants et crèmes hydratantes aux senteurs iconiques. 100% Originaux avec livraison 24-48h et paiement à la livraison.';
         $faqItems = [
             [
                 'q' => 'Où acheter un coffret Rituals original au Maroc ?',
-                'a' => 'Sur la boutique officielle Zizo Aura Maroc, vous retrouvez les coffrets originaux The Ritual of Sakura, Ayurveda, Karma et Yozakura avec livraison sous 24-48h et paiement à la livraison partout au Maroc.'
+                'a' => 'Sur la boutique officielle Zizo Aura Maroc, vous retrouvez les coffrets originaux The Ritual of Sakura, Ayurveda, Karma et Mehr avec livraison sous 24-48h et paiement à la livraison partout au Maroc.'
             ],
             [
                 'q' => 'Quel est le prix d\'un coffret Rituals au Maroc ?',
@@ -22,9 +22,9 @@
             ]
         ];
     } elseif ($categorySlug === 'sol-de-janeiro') {
-        $seoTitle = 'Sol de Janeiro Maroc — Brumes Parfumées Cheirosa 62, 68, 40 & 59 (90ml) | Zizo Aura';
-        $seoHeading = 'Sol de Janeiro Maroc';
-        $seoDescription = 'Retrouvez toute la gamme de brumes Sol de Janeiro au Maroc : Cheirosa 62, 68, 40 et 59 (90ml). 100% Originaux, prix en DH (340 DH) et livraison express à domicile avec paiement à la livraison.';
+        $seoTitle = 'Sol de Janeiro Maroc Officiel — Brumes Cheirosa 62, 68, 59 & Bum Bum en DH | Zizo Aura';
+        $seoHeading = 'Brumes & Soins Sol de Janeiro Maroc';
+        $seoDescription = 'Retrouvez toute la gamme Sol de Janeiro au Maroc : Brumes Cheirosa 62, 68, 40, 59 (90ml) et soins Bum Bum. 100% Originaux, prix en DH (340 DH) et livraison express 24-48h avec paiement à la livraison.';
         $seoIntro = 'Sublimez votre sillage avec les brumes parfumées iconiques Sol de Janeiro Cheirosa au Maroc. Des notes gourmandes et solaires irrésistibles. 100% Authentiques, livraison 24-48h partout au Royaume.';
         $faqItems = [
             [
@@ -37,9 +37,9 @@
             ]
         ];
     } elseif ($categorySlug === 'victorias-secret') {
-        $seoTitle = 'Brumes Victoria\'s Secret Maroc — Bare Vanilla, Love Spell, Aqua Kiss & Amber Romance | Zizo Aura';
+        $seoTitle = 'Brumes Victoria\'s Secret Maroc Originales (Promo 240 DH) — Bare Vanilla, Midnight Bloom | Zizo Aura';
         $seoHeading = 'Brumes Parfumées Victoria\'s Secret Maroc (En Promotion)';
-        $seoDescription = 'Achetez vos brumes parfumées Victoria\'s Secret 250ml originales au Maroc en promotion : 240 DH au lieu de 280 DH (Bare Vanilla, Love Spell, Aqua Kiss, Amber Romance). Paiement à la livraison.';
+        $seoDescription = 'Achetez vos brumes corporelles Victoria\'s Secret 250ml 100% originales au Maroc en promotion : 240 DH au lieu de 280 DH (Bare Vanilla, Midnight Bloom, Aqua Kiss, Amber Romance). Livraison express 24-48h et paiement à la livraison.';
         $seoIntro = 'Profitez de notre offre spéciale sur les brumes corporelles 250ml Victoria\'s Secret au Maroc : 240 DH au lieu de 280 DH. Parfums irrésistibles, formules originales et livraison express 24-48h dans toutes les villes.';
         $faqItems = [
             [
@@ -52,10 +52,10 @@
             ]
         ];
     } elseif ($categorySlug === 'the-ordinary') {
-        $seoTitle = 'The Ordinary Maroc — Sérums Niacinamide & Tonique Acide Glycolique | Zizo Aura';
-        $seoHeading = 'Sérums & Soins The Ordinary Maroc';
-        $seoDescription = 'Retrouvez les soins The Ordinary 100% authentiques au Maroc : Sérum Niacinamide 10% + Zinc 1% (30ml & 60ml) et Tonique Acide Glycolique 7% (100ml & 240ml). Prix en DH et livraison rapide.';
-        $seoIntro = 'Traitements dermatologiques ultra-ciblés The Ordinary au Maroc. Corrigez les imperfections et sublimez l\'éclat de votre peau avec nos formules certifiées originales.';
+        $seoTitle = 'The Ordinary Maroc Original — Sérum Niacinamide & Acide Glycolique en DH | Zizo Aura';
+        $seoHeading = 'Sérums & Soins The Ordinary Maroc (100% Authentiques)';
+        $seoDescription = 'Retrouvez les soins The Ordinary 100% authentiques au Maroc : Sérum Niacinamide 10% + Zinc 1% (30ml & 60ml) et Tonique Acide Glycolique 7% (100ml & 240ml). Prix en Dirhams (dès 160 DH), livraison rapide 24/48h partout au Maroc et paiement cash à la livraison.';
+        $seoIntro = 'Traitements dermatologiques ultra-ciblés The Ordinary au Maroc. Corrigez les imperfections et sublimez l\'éclat de votre peau avec nos formules certifiées 100% originales importées.';
         $faqItems = [
             [
                 'q' => 'Comment être sûr que les produits The Ordinary sont originaux au Maroc ?',
@@ -67,14 +67,14 @@
             ]
         ];
     } elseif ($categorySlug === 'garden-bouquet') {
-        $seoTitle = 'Garden Bouquet Maroc — Coffret Cadeau Soins & Parfum | Zizo Aura';
-        $seoHeading = 'Coffret Cadeau Garden Bouquet Maroc';
-        $seoDescription = 'Découvrez le coffret cadeau Garden Bouquet au Maroc : une sélection délicate de soins floraux au prix doux de 120 DH. Idéal pour offrir ou se faire plaisir.';
-        $seoIntro = 'Craquez pour la fraîcheur florale du coffret cadeau Garden Bouquet. Une idée cadeau raffinée et accessible avec livraison express 24-48h partout au Maroc.';
+        $seoTitle = 'Coffrets Garden Bouquet Maroc — Soins & Bain Floraux (Dès 120 DH) | Zizo Aura';
+        $seoHeading = 'Coffrets Cadeaux Garden Bouquet Maroc';
+        $seoDescription = 'Découvrez les coffrets cadeaux Garden Bouquet au Maroc : une sélection délicate de soins floraux pour le bain et le corps (dès 120 DH). Idée cadeau raffinée, livraison express 24-48h et paiement à la livraison partout au Maroc.';
+        $seoIntro = 'Craquez pour la fraîcheur florale des coffrets cadeaux Garden Bouquet. Une idée cadeau raffinée et accessible avec livraison express 24-48h partout au Maroc.';
         $faqItems = [
             [
                 'q' => 'Quel est le contenu et le prix du coffret Garden Bouquet ?',
-                'a' => 'Le coffret cadeau Garden Bouquet est proposé au prix de 120 DH, combinant senteurs florales délicates et soins doux.'
+                'a' => 'Le coffret cadeau Garden Bouquet est proposé à partir de 120 DH, combinant senteurs florales délicates et soins doux pour le bain et le corps.'
             ],
             [
                 'q' => 'Quels sont les délais de livraison pour Garden Bouquet ?',
@@ -217,22 +217,27 @@
                     <!-- Custom Floating Dropdown Panel -->
                     <div id="sort-dropdown-panel"
                          class="absolute right-0 top-full mt-2 w-52 bg-white/95 backdrop-blur-md rounded-2xl shadow-[0_15px_35px_rgba(0,0,0,0.12)] border border-zinc-100 p-1.5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                        <a href="{{ route('shop.index', ['category' => $selectedCategory, 'sort' => 'popular']) }}"
+                        @php
+                            $isCleanCat = ($selectedCategory && $selectedCategory !== 'all');
+                            $sortBaseRoute = $isCleanCat ? 'shop.category' : 'shop.index';
+                            $sortCatParam = $isCleanCat ? ['category' => $selectedCategory] : [];
+                        @endphp
+                        <a href="{{ route($sortBaseRoute, array_merge($sortCatParam, array_filter(['sort' => 'popular', 'q' => $searchQuery ?: null]))) }}"
                            class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all {{ $sortBy === 'popular' ? 'bg-pink-50 text-pink-600' : 'text-zinc-700 hover:bg-zinc-50 hover:text-black' }}">
                             <span>Popularité</span>
                             @if($sortBy === 'popular') <i class="uil uil-check text-xs"></i> @endif
                         </a>
-                        <a href="{{ route('shop.index', ['category' => $selectedCategory, 'sort' => 'rating']) }}"
+                        <a href="{{ route($sortBaseRoute, array_merge($sortCatParam, array_filter(['sort' => 'rating', 'q' => $searchQuery ?: null]))) }}"
                            class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all {{ $sortBy === 'rating' ? 'bg-pink-50 text-pink-600' : 'text-zinc-700 hover:bg-zinc-50 hover:text-black' }}">
                             <span>Mieux notés</span>
                             @if($sortBy === 'rating') <i class="uil uil-check text-xs"></i> @endif
                         </a>
-                        <a href="{{ route('shop.index', ['category' => $selectedCategory, 'sort' => 'price-asc']) }}"
+                        <a href="{{ route($sortBaseRoute, array_merge($sortCatParam, array_filter(['sort' => 'price-asc', 'q' => $searchQuery ?: null]))) }}"
                            class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all {{ $sortBy === 'price-asc' ? 'bg-pink-50 text-pink-600' : 'text-zinc-700 hover:bg-zinc-50 hover:text-black' }}">
                             <span>Prix croissant</span>
                             @if($sortBy === 'price-asc') <i class="uil uil-check text-xs"></i> @endif
                         </a>
-                        <a href="{{ route('shop.index', ['category' => $selectedCategory, 'sort' => 'price-desc']) }}"
+                        <a href="{{ route($sortBaseRoute, array_merge($sortCatParam, array_filter(['sort' => 'price-desc', 'q' => $searchQuery ?: null]))) }}"
                            class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all {{ $sortBy === 'price-desc' ? 'bg-pink-50 text-pink-600' : 'text-zinc-700 hover:bg-zinc-50 hover:text-black' }}">
                             <span>Prix décroissant</span>
                             @if($sortBy === 'price-desc') <i class="uil uil-check text-xs"></i> @endif
@@ -245,7 +250,13 @@
         <!-- Category Filter Pills Bar -->
         <div class="flex items-center gap-2 overflow-x-auto pb-4 mb-6 no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0 scroll-smooth">
             @foreach($categories as $cat)
-                <a href="{{ route('shop.index', array_filter(['category' => $cat['slug'], 'sort' => $sortBy, 'q' => $searchQuery ?? null])) }}"
+                @php
+                    $isCatAll = empty($cat['slug']) || $cat['slug'] === 'all';
+                    $pillUrl = $isCatAll
+                        ? route('shop.index', array_filter(['sort' => $sortBy !== 'popular' ? $sortBy : null, 'q' => $searchQuery ?: null]))
+                        : route('shop.category', array_merge(['category' => $cat['slug']], array_filter(['sort' => $sortBy !== 'popular' ? $sortBy : null, 'q' => $searchQuery ?: null])));
+                @endphp
+                <a href="{{ $pillUrl }}"
                    class="px-5 py-2 rounded-full text-xs font-extrabold uppercase tracking-wider whitespace-nowrap transition-all duration-200 shrink-0 {{ $selectedCategory === $cat['slug'] ? 'bg-black text-white shadow-md' : 'bg-zinc-100 text-zinc-700 hover:bg-zinc-200 active:scale-95' }}">
                     {{ $cat['name'] }}
                 </a>
@@ -269,7 +280,7 @@
                     </div>
                 </div>
 
-                <a href="{{ route('shop.index', ['category' => $selectedCategory !== 'all' ? $selectedCategory : null]) }}"
+                <a href="{{ ($selectedCategory && $selectedCategory !== 'all') ? route('shop.category', $selectedCategory) : route('shop.index') }}"
                    class="btn-pill-secondary btn-pill-sm">
                     <i class="uil uil-multiply text-xs"></i>
                     <span>Effacer la recherche</span>

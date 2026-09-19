@@ -36,10 +36,10 @@ Route::post('/api/cart/coupon', [CartController::class, 'coupon']);
 Route::post('/api/coupon/validate', [CartController::class, 'validateCoupon']);
 Route::post('/api/checkout', [CheckoutController::class, 'store'])->middleware('throttle:checkout');
 
-// Aliases
-Route::get('/shop', [ShopController::class, 'index']);
-Route::get('/shop/product/{slug}', [ShopController::class, 'showProduct']);
-Route::get('/shop/{category}', [ShopController::class, 'index']);
+// Aliases & Permanent SEO 301 Redirects
+Route::redirect('/shop', '/boutique', 301);
+Route::get('/shop/product/{slug}', fn ($slug) => redirect()->route('shop.product', ['slug' => $slug], 301));
+Route::get('/shop/{category}', fn ($category) => redirect()->route('shop.category', ['category' => $category], 301));
 
 // Contact Routes
 Route::get('/contact', [ContactController::class, 'show'])->name('contact');

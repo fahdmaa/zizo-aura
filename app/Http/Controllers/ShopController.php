@@ -543,15 +543,37 @@ class ShopController extends Controller
 
     public function index(Request $request, $category = null)
     {
+        // 301 Permanent Redirect for ?category=... to canonical clean URL /boutique/{category}
+        if ($category === null && $request->has('category')) {
+            $catParam = trim((string) $request->query('category'));
+            if ($catParam === 'ordinary') {
+                $catParam = 'the-ordinary';
+            } elseif ($catParam === 'victoria-secret') {
+                $catParam = 'victorias-secret';
+            }
+
+            $extraParams = $request->except('category');
+
+            if (empty($catParam) || $catParam === 'all') {
+                return redirect()->route('shop.index', $extraParams, 301);
+            }
+
+            return redirect()->route('shop.category', array_merge(['category' => $catParam], $extraParams), 301);
+        }
+
+        // 301 Permanent Redirect for legacy category aliases in URL path
+        if ($category === 'ordinary') {
+            return redirect()->route('shop.category', array_merge(['category' => 'the-ordinary'], $request->query()), 301);
+        } elseif ($category === 'victoria-secret') {
+            return redirect()->route('shop.category', array_merge(['category' => 'victorias-secret'], $request->query()), 301);
+        } elseif ($category === 'all') {
+            return redirect()->route('shop.index', $request->query(), 301);
+        }
+
         $allProducts = self::catalogProducts();
         $categories = self::catalogCategories();
 
-        $selectedCategory = $category ?? $request->query('category', 'all');
-        if ($selectedCategory === 'ordinary') {
-            $selectedCategory = 'the-ordinary';
-        } elseif ($selectedCategory === 'victoria-secret') {
-            $selectedCategory = 'victorias-secret';
-        }
+        $selectedCategory = $category ?? 'all';
         $sortBy = $request->query('sort', 'popular');
         $searchQuery = trim($request->query('q', ''));
 

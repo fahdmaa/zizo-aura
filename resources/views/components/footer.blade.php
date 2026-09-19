@@ -38,15 +38,15 @@
                 <span>&bull;</span>
                 <a href="{{ route('contact') }}" class="hover:text-black transition-colors">Contact</a>
                 <span>&bull;</span>
-                <a href="{{ route('shop.index', ['category' => 'sol-de-janeiro']) }}" class="hover:text-black transition-colors">Sol de Janeiro</a>
+                <a href="{{ route('shop.category', 'sol-de-janeiro') }}" class="hover:text-black transition-colors">Sol de Janeiro</a>
                 <span>&bull;</span>
-                <a href="{{ route('shop.index', ['category' => 'victorias-secret']) }}" class="hover:text-black transition-colors">Victoria's Secret</a>
+                <a href="{{ route('shop.category', 'victorias-secret') }}" class="hover:text-black transition-colors">Victoria's Secret</a>
                 <span>&bull;</span>
-                <a href="{{ route('shop.index', ['category' => 'rituals']) }}" class="hover:text-black transition-colors">Rituals</a>
+                <a href="{{ route('shop.category', 'rituals') }}" class="hover:text-black transition-colors">Rituals</a>
                 <span>&bull;</span>
-                <a href="{{ route('shop.index', ['category' => 'the-ordinary']) }}" class="hover:text-black transition-colors">The Ordinary</a>
+                <a href="{{ route('shop.category', 'the-ordinary') }}" class="hover:text-black transition-colors">The Ordinary</a>
                 <span>&bull;</span>
-                <a href="{{ route('shop.index', ['category' => 'garden-bouquet']) }}" class="hover:text-black transition-colors">Garden Bouquet</a>
+                <a href="{{ route('shop.category', 'garden-bouquet') }}" class="hover:text-black transition-colors">Garden Bouquet</a>
             </div>
             <p>&copy; {{ date('Y') }} zizo aura. Tous droits réservés.</p>
         </div>

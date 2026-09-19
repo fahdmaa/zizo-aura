@@ -405,7 +405,11 @@ class CommerceApiTest extends TestCase
     public function test_shop_category_route_alias(): void
     {
         $res = $this->get('/shop/victorias-secret');
-        $res->assertOk();
+        $res->assertStatus(301);
+        $res->assertRedirect(route('shop.category', 'victorias-secret'));
+
+        $followRes = $this->get('/boutique/victorias-secret');
+        $followRes->assertOk();
     }
 }
 
