@@ -156,4 +156,32 @@ class SeoTest extends TestCase
         $responseCat->assertStatus(301);
         $responseCat->assertRedirect(route('shop.category', 'rituals'));
     }
+
+    public function test_homepage_has_h1_and_fr_lang(): void
+    {
+        $response = $this->get('/');
+        $response->assertStatus(200);
+        $content = $response->getContent();
+
+        $this->assertStringContainsString('<html lang="fr"', $content);
+        $this->assertStringContainsString('<h1', $content);
+    }
+
+    public function test_legacy_product_slugs_redirect_301(): void
+    {
+        Category::create(['name' => 'The Ordinary', 'slug' => 'the-ordinary', 'is_active' => true]);
+        Category::create(['name' => 'Victoria Secret', 'slug' => 'victorias-secret', 'is_active' => true]);
+
+        $res1 = $this->get('/boutique/produit/the-ordinary-niacinamide-10-zinc-1-serum');
+        $res1->assertStatus(301);
+        $res1->assertRedirect(route('shop.product', 'the-ordinary-niacinamide-10-zinc-1-30ml'));
+
+        $res2 = $this->get('/boutique/produit/victorias-secret-bare-vanilla-pack-duo');
+        $res2->assertStatus(301);
+        $res2->assertRedirect(route('shop.product', 'victorias-secret-bare-vanilla-brume-parfumee'));
+
+        $res3 = $this->get('/boutique/produit/the-ordinary-caffeine-solution-5-egcg-eye-serum');
+        $res3->assertStatus(301);
+        $res3->assertRedirect(route('shop.category', 'the-ordinary'));
+    }
 }

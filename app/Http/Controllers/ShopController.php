@@ -657,6 +657,71 @@ class ShopController extends Controller
         ]);
     }
 
+    public static function getLegacyProductRedirect(string $slug): ?string
+    {
+        $explicitMap = [
+            // The Ordinary legacy slugs
+            'the-ordinary-niacinamide-10-zinc-1-serum' => route('shop.product', 'the-ordinary-niacinamide-10-zinc-1-30ml'),
+            'the-ordinary-caffeine-solution-5-egcg-eye-serum' => route('shop.category', 'the-ordinary'),
+            'the-ordinary-aha-30-bha-2-peeling-solution' => route('shop.category', 'the-ordinary'),
+            'the-ordinary-hyaluronic-acid-2-b5-serum' => route('shop.category', 'the-ordinary'),
+            'the-ordinary-glycolic-acid-7-toning-solution' => route('shop.product', 'the-ordinary-glycolic-acid-7-100ml'),
+
+            // Victoria's Secret legacy slugs
+            'victorias-secret-bare-vanilla-pack-duo' => route('shop.product', 'victorias-secret-bare-vanilla-brume-parfumee'),
+            'victorias-secret-aqua-kiss-pack-duo' => route('shop.product', 'victorias-secret-aqua-kiss-brume-parfumee'),
+            'victorias-secret-amber-romance-pack-duo' => route('shop.product', 'victorias-secret-amber-romance-brume-parfumee'),
+            'victorias-secret-love-spell-pack-duo' => route('shop.product', 'victorias-secret-love-spell-brume-parfumee'),
+            'victorias-secret-midnight-bloom-pack-duo' => route('shop.category', 'victorias-secret'),
+            'victorias-secret-midnight-bloom-brume-parfumee' => route('shop.category', 'victorias-secret'),
+            'victorias-secret-pure-seduction-pack-duo' => route('shop.category', 'victorias-secret'),
+            'victorias-secret-pure-seduction-brume-parfumee' => route('shop.category', 'victorias-secret'),
+            'victorias-secret-coconut-passion-brume-parfumee' => route('shop.category', 'victorias-secret'),
+            'victorias-secret-coconut-passion-pack-duo' => route('shop.category', 'victorias-secret'),
+            'victorias-secret-rush-brume-parfumee' => route('shop.category', 'victorias-secret'),
+            'victorias-secret-velvet-petals-brume-parfumee' => route('shop.category', 'victorias-secret'),
+            'victorias-secret-tease-prestige-gift-set' => route('shop.category', 'victorias-secret'),
+            'victorias-secret-bombshell-prestige-gift-set' => route('shop.category', 'victorias-secret'),
+            'victorias-secret-bombshell-fine-fragrance-mist' => route('shop.category', 'victorias-secret'),
+
+            // Rituals legacy slugs
+            'rituals-the-ritual-of-ayurveda-gift-set' => route('shop.product', 'rituals-pack-s'),
+            'rituals-the-ritual-of-mehr-gift-set' => route('shop.product', 'rituals-pack-m'),
+            'rituals-the-ritual-of-sakura-gift-set' => route('shop.product', 'rituals-pack-s'),
+            'rituals-the-ritual-of-karma-gift-set' => route('shop.product', 'rituals-mini-the-ritual-of-karma'),
+            'rituals-the-ritual-of-jing-gift-set' => route('shop.product', 'rituals-pack-s'),
+
+            // Sol de Janeiro legacy slugs
+            'sol-de-janeiro-ultimate-summer-glow-pack' => route('shop.category', 'sol-de-janeiro'),
+            'sol-de-janeiro-beija-flor-jet-set' => route('shop.product', 'sol-de-janeiro-cheirosa-68-beija-flor-brume-parfumee'),
+            'sol-de-janeiro-delicia-drench-set' => route('shop.product', 'sol-de-janeiro-cheirosa-59-delicia-drench-brume-parfumee'),
+            'sol-de-janeiro-cheirosa-59-delicia-drench-set' => route('shop.product', 'sol-de-janeiro-cheirosa-59-delicia-drench-brume-parfumee'),
+        ];
+
+        if (isset($explicitMap[$slug])) {
+            return $explicitMap[$slug];
+        }
+
+        // Generic intelligent fallback by brand prefix
+        if (str_starts_with($slug, 'victorias-secret') || str_starts_with($slug, 'victoria-secret')) {
+            return route('shop.category', 'victorias-secret');
+        }
+        if (str_starts_with($slug, 'sol-de-janeiro')) {
+            return route('shop.category', 'sol-de-janeiro');
+        }
+        if (str_starts_with($slug, 'the-ordinary') || str_starts_with($slug, 'ordinary')) {
+            return route('shop.category', 'the-ordinary');
+        }
+        if (str_starts_with($slug, 'rituals')) {
+            return route('shop.category', 'rituals');
+        }
+        if (str_starts_with($slug, 'garden-bouquet')) {
+            return route('shop.category', 'garden-bouquet');
+        }
+
+        return null;
+    }
+
     public function showProduct($slug)
     {
         $allProducts = self::catalogProducts();
@@ -670,6 +735,11 @@ class ShopController extends Controller
         }
 
         if (!$product) {
+            $redirectUrl = self::getLegacyProductRedirect($slug);
+            if ($redirectUrl) {
+                return redirect($redirectUrl, 301);
+            }
+
             abort(404, 'Produit introuvable');
         }
 

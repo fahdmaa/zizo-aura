@@ -3,9 +3,9 @@
     $categorySlug = $selectedCategory ?? 'all';
 
     if ($categorySlug === 'rituals') {
-        $seoTitle = 'Coffrets Rituals Maroc — Sakura, Ayurveda, Karma & Mehr Originaux en DH | Zizo Aura';
+        $seoTitle = 'Coffrets Rituals Maroc — Sakura, Ayurveda & Karma en DH';
         $seoHeading = 'Coffrets Cadeaux Rituals Maroc';
-        $seoDescription = 'Achetez votre coffret Rituals 100% authentique au Maroc : The Ritual of Sakura, Ayurveda, Karma et Mehr (Packs XS, S, M). Prix en DH (dès 150 DH), livraison express 24-48h et paiement à la livraison (COD).';
+        $seoDescription = 'Coffrets Rituals 100% authentiques au Maroc dès 150 DH : The Ritual of Sakura, Ayurveda, Karma et Mehr. Livraison rapide 24-48h et paiement à la livraison.';
         $seoIntro = 'Explorez notre collection exclusive de coffrets cadeaux Rituals au Maroc. Mousse de douche onctueuse, gommages exfoliants et crèmes hydratantes aux senteurs iconiques. 100% Originaux avec livraison 24-48h et paiement à la livraison.';
         $faqItems = [
             [
@@ -22,9 +22,9 @@
             ]
         ];
     } elseif ($categorySlug === 'sol-de-janeiro') {
-        $seoTitle = 'Sol de Janeiro Maroc Officiel — Brumes Cheirosa 62, 68, 59 & Bum Bum en DH | Zizo Aura';
+        $seoTitle = 'Sol de Janeiro Maroc — Brumes Cheirosa 62, 68 & 59';
         $seoHeading = 'Brumes & Soins Sol de Janeiro Maroc';
-        $seoDescription = 'Retrouvez toute la gamme Sol de Janeiro au Maroc : Brumes Cheirosa 62, 68, 40, 59 (90ml) et soins Bum Bum. 100% Originaux, prix en DH (340 DH) et livraison express 24-48h avec paiement à la livraison.';
+        $seoDescription = 'Brumes Sol de Janeiro Cheirosa et soins Bum Bum au Maroc (340 DH). Produits 100% authentiques, livraison express 24-48h et paiement sécurisé à la livraison.';
         $seoIntro = 'Sublimez votre sillage avec les brumes parfumées iconiques Sol de Janeiro Cheirosa au Maroc. Des notes gourmandes et solaires irrésistibles. 100% Authentiques, livraison 24-48h partout au Royaume.';
         $faqItems = [
             [
@@ -37,9 +37,9 @@
             ]
         ];
     } elseif ($categorySlug === 'victorias-secret') {
-        $seoTitle = 'Brumes Victoria\'s Secret Maroc Originales (Promo 240 DH) — Bare Vanilla, Midnight Bloom | Zizo Aura';
+        $seoTitle = 'Brumes Victoria\'s Secret Maroc — Bare Vanilla (240 DH)';
         $seoHeading = 'Brumes Parfumées Victoria\'s Secret Maroc (En Promotion)';
-        $seoDescription = 'Achetez vos brumes corporelles Victoria\'s Secret 250ml 100% originales au Maroc en promotion : 240 DH au lieu de 280 DH (Bare Vanilla, Midnight Bloom, Aqua Kiss, Amber Romance). Livraison express 24-48h et paiement à la livraison.';
+        $seoDescription = 'Brumes Victoria\'s Secret 250ml originales en promo à 240 DH : Bare Vanilla, Velvet Petals, Aqua Kiss, Amber Romance. Livraison express partout au Maroc.';
         $seoIntro = 'Profitez de notre offre spéciale sur les brumes corporelles 250ml Victoria\'s Secret au Maroc : 240 DH au lieu de 280 DH. Parfums irrésistibles, formules originales et livraison express 24-48h dans toutes les villes.';
         $faqItems = [
             [
@@ -52,9 +52,9 @@
             ]
         ];
     } elseif ($categorySlug === 'the-ordinary') {
-        $seoTitle = 'The Ordinary Maroc Original — Sérum Niacinamide & Acide Glycolique en DH | Zizo Aura';
+        $seoTitle = 'The Ordinary Maroc — Sérum Niacinamide & Acide Glycolique';
         $seoHeading = 'Sérums & Soins The Ordinary Maroc (100% Authentiques)';
-        $seoDescription = 'Retrouvez les soins The Ordinary 100% authentiques au Maroc : Sérum Niacinamide 10% + Zinc 1% (30ml & 60ml) et Tonique Acide Glycolique 7% (100ml & 240ml). Prix en Dirhams (dès 160 DH), livraison rapide 24/48h partout au Maroc et paiement cash à la livraison.';
+        $seoDescription = 'Soins The Ordinary 100% authentiques au Maroc dès 160 DH : Niacinamide 10% et Acide Glycolique 7%. Livraison express 24-48h et paiement cash à la livraison.';
         $seoIntro = 'Traitements dermatologiques ultra-ciblés The Ordinary au Maroc. Corrigez les imperfections et sublimez l\'éclat de votre peau avec nos formules certifiées 100% originales importées.';
         $faqItems = [
             [
@@ -67,9 +67,9 @@
             ]
         ];
     } elseif ($categorySlug === 'garden-bouquet') {
-        $seoTitle = 'Coffrets Garden Bouquet Maroc — Soins & Bain Floraux (Dès 120 DH) | Zizo Aura';
+        $seoTitle = 'Coffret Garden Bouquet Maroc — Soins & Bain (120 DH)';
         $seoHeading = 'Coffrets Cadeaux Garden Bouquet Maroc';
-        $seoDescription = 'Découvrez les coffrets cadeaux Garden Bouquet au Maroc : une sélection délicate de soins floraux pour le bain et le corps (dès 120 DH). Idée cadeau raffinée, livraison express 24-48h et paiement à la livraison partout au Maroc.';
+        $seoDescription = 'Coffret cadeau Garden Bouquet au Maroc à 120 DH : soins floraux doux pour le corps et le bain. Idée cadeau idéale, livraison express 24-48h et paiement COD.';
         $seoIntro = 'Craquez pour la fraîcheur florale des coffrets cadeaux Garden Bouquet. Une idée cadeau raffinée et accessible avec livraison express 24-48h partout au Maroc.';
         $faqItems = [
             [
@@ -82,9 +82,9 @@
             ]
         ];
     } else {
-        $seoTitle = 'Boutique Cosmétiques & Parfums Maroc — Sol de Janeiro, Rituals, Victoria\'s Secret | Zizo Aura';
+        $seoTitle = 'Boutique Cosmétiques & Parfums Maroc | Zizo Aura';
         $seoHeading = 'Nos Formules, Coffrets & Brumes d\'Exception';
-        $seoDescription = 'Boutique en ligne officielle de soins, brumes et coffrets de luxe au Maroc : Sol de Janeiro, Victoria\'s Secret, Rituals, The Ordinary, Garden Bouquet. 100% Originaux, livraison express 24-48h et paiement à la livraison.';
+        $seoDescription = 'Boutique officielle au Maroc : soins, brumes et coffrets Sol de Janeiro, Victoria\'s Secret, Rituals, The Ordinary. Livraison 24-48h et paiement à la livraison.';
         $seoIntro = 'Découvrez nos brumes Cheirosa emblématiques, coffrets cadeaux Rituals, brumes Victoria\'s Secret et soins The Ordinary formulés pour sublimer chaque routine.';
         $faqItems = [
             [

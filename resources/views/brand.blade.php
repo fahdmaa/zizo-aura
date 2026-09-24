@@ -1,12 +1,13 @@
 @extends('layouts.app')
 
-@section('title', 'Sol de Janeiro Maroc — Bum Bum Cream & Brumes Cheirosa Originales | Zizo Aura')
-@section('meta_description', 'Découvrez la collection officielle Sol de Janeiro au Maroc : Brazilian Bum Bum Cream, brumes parfumées Cheirosa 68, 62, 59 & 40. Produits 100% authentiques, livraison express partout au Maroc et paiement à la livraison.')
-@section('og_title', 'Sol de Janeiro Maroc — Bum Bum Cream & Brumes Cheirosa | Zizo Aura')
-@section('og_description', 'Boutique Sol de Janeiro officielle au Maroc. Brumes Cheirosa & soins corps iconiques. Livraison 24-48h partout au Maroc & paiement à la livraison.')
+@section('title', 'Zizo Aura Maroc — Boutique Cosmétiques & Brumes de Luxe')
+@section('meta_description', 'Boutique officielle au Maroc : brumes et soins Sol de Janeiro, Victoria\'s Secret, Rituals. 100% originaux, livraison express 24-48h et paiement à la livraison.')
+@section('og_title', 'Zizo Aura Maroc — Boutique Cosmétiques & Brumes de Luxe')
+@section('og_description', 'Boutique officielle au Maroc : brumes et soins Sol de Janeiro, Victoria\'s Secret, Rituals. 100% originaux, livraison express 24-48h et paiement à la livraison.')
 @section('canonical', url('/'))
 
 @section('content')
+    <h1 class="sr-only">Zizo Aura Maroc — Boutique Cosmétiques, Brumes Parfumées & Soins de Luxe Authentiques</h1>
     <x-hero-hismile />
 
     <!-- Moving Line: Best 8 Discount Offers -->

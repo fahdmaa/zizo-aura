@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Service Client & Contact Maroc — Support WhatsApp & Email | zizo aura')
+@section('title', 'Contact & Service Client Maroc — WhatsApp & Support | Zizo Aura')
 @section('meta_description', "Besoin d'aide pour votre commande ou un conseil beauté au Maroc ? Contactez l'équipe zizo aura par WhatsApp (+212 682 787 594) ou formulaire. Réponse sous 24h.")
 @section('canonical', route('contact'))
 @section('og_type', 'website')

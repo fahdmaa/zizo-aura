@@ -14,25 +14,35 @@
     $pName = $product['name'] ?? '';
     $price = $product['price'] ?? '0';
 
-    // High Intent Search Engine Title & Meta Description Generator for Morocco Market (#1 Ranking Target)
+    // High Intent Search Engine Title (< 65 chars) & Meta Description (< 160 chars)
+    $cleanShortTitle = preg_replace('/\s*—.*$/u', '', $pName);
+    if (mb_strlen($cleanShortTitle) < 15) {
+        $cleanShortTitle = $pName;
+    }
+
+    $seoTitle = $cleanShortTitle . ' (' . $price . ' DH) — ' . $brandName . ' Maroc';
+    if (mb_strlen($seoTitle) > 65) {
+        $seoTitle = $cleanShortTitle . ' (' . $price . ' DH) | Zizo Aura';
+    }
+    if (mb_strlen($seoTitle) > 65) {
+        $seoTitle = mb_substr($cleanShortTitle, 0, 48) . '… (' . $price . ' DH)';
+    }
+
     if ($catSlug === 'rituals' || str_contains(strtolower($brandName), 'rituals')) {
-        $seoTitle = (str_contains(strtolower($pName), 'coffret') ? $pName : 'Coffret ' . $pName) . ' — Rituals Maroc Prix ' . $price . ' DH | Zizo Aura';
-        $metaDesc = 'Achetez ' . (str_contains(strtolower($pName), 'coffret') ? $pName : 'le coffret ' . $pName) . ' Rituals officiel au Maroc (' . $price . ' DH). Coffret cadeau luxe avec mousse de douche & soins, livraison 24-48h et paiement à la livraison.';
+        $metaDesc = 'Achetez ' . $cleanShortTitle . ' Rituals officiel au Maroc (' . $price . ' DH). Coffret cadeau luxe avec mousse & soins. Livraison 24-48h et paiement à la livraison.';
     } elseif ($catSlug === 'victorias-secret' || str_contains(strtolower($brandName), 'victoria')) {
-        $seoTitle = $pName . ' Victoria\'s Secret Maroc (' . $price . ' DH) — Brume & Coffret Original';
-        $metaDesc = 'Commandez ' . $pName . ' Victoria\'s Secret 100% originale au Maroc au prix de ' . $price . ' DH. Sillage longue tenue, livraison rapide partout au Maroc et paiement cash à la livraison.';
+        $metaDesc = 'Commandez ' . $cleanShortTitle . ' Victoria\'s Secret 100% originale au Maroc (' . $price . ' DH). Sillage longue tenue, livraison express 24h & paiement COD.';
     } elseif ($catSlug === 'sol-de-janeiro' || str_contains(strtolower($brandName), 'sol de janeiro')) {
-        $seoTitle = $pName . ' Sol de Janeiro Maroc (' . $price . ' DH) — Bum Bum & Cheirosa';
-        $metaDesc = 'Découvrez ' . $pName . ' Sol de Janeiro au meilleur prix au Maroc (' . $price . ' DH). Soin corps gourmand & brume parfumée originale, livraison 24-48h et paiement à la livraison (COD).';
+        $metaDesc = 'Achetez ' . $cleanShortTitle . ' Sol de Janeiro au Maroc (' . $price . ' DH). Soin corps & brume authentique. Livraison 24-48h et paiement à la livraison.';
     } elseif ($catSlug === 'the-ordinary' || str_contains(strtolower($brandName), 'ordinary')) {
-        $seoTitle = $pName . ' The Ordinary Maroc (' . $price . ' DH) — Sérum Visage Original';
-        $metaDesc = 'Achetez ' . $pName . ' The Ordinary authentique au Maroc (' . $price . ' DH). Formule concentrée haute efficacité, livraison express partout au Maroc et paiement à la livraison.';
+        $metaDesc = 'Achetez ' . $cleanShortTitle . ' The Ordinary original au Maroc (' . $price . ' DH). Formule haute efficacité certifiée, livraison 24-48h et paiement COD.';
     } elseif ($catSlug === 'garden-bouquet' || str_contains(strtolower($pName), 'garden bouquet')) {
-        $seoTitle = $pName . ' Maroc (' . $price . ' DH) — Coffret Cadeau Soins & Bain Original | Zizo Aura';
-        $metaDesc = 'Achetez ' . $pName . ' au meilleur prix au Maroc (' . $price . ' DH). Coffret cadeau soins & bain floraux d\'exception, livraison rapide 24-48h partout au Maroc et paiement à la livraison.';
+        $metaDesc = 'Achetez ' . $cleanShortTitle . ' au Maroc (' . $price . ' DH). Coffret cadeau soins floraux d\'exception pour le bain. Livraison express et paiement à la livraison.';
     } else {
-        $seoTitle = $pName . ' Maroc (' . $price . ' DH) — Prix en Dirhams & Livraison Rapide | Zizo Aura';
-        $metaDesc = 'Achetez ' . $pName . ' au meilleur prix au Maroc (' . $price . ' DH). Produit 100% original, livraison 24-48h et paiement à la livraison.';
+        $metaDesc = 'Achetez ' . $cleanShortTitle . ' au Maroc (' . $price . ' DH). Produit 100% original garanti, livraison express 24-48h et paiement à la livraison partout au Maroc.';
+    }
+    if (mb_strlen($metaDesc) > 160) {
+        $metaDesc = mb_substr($metaDesc, 0, 157) . '...';
     }
     $imageUrls = array_values(array_map(fn($img) => str_starts_with($img, 'http') ? $img : url($img), $allImages));
 
