@@ -7,7 +7,7 @@ error_reporting(E_ALL);
 
 // Check if pdo_pgsql is available
 $hasPgsql = extension_loaded('pdo_pgsql');
-$neonUrl = 'postgresql://neondb_owner:npg_mytqdzT3sn2f@ep-rough-snow-aezarrgy-pooler.c-2.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require';
+$neonUrl = getenv('DATABASE_URL') ?: 'postgresql://neondb_owner:npg_TGLh9FbN0uWP@ep-rapid-butterfly-b53mv6l7-pooler.c-7.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require';
 $dbConnection = ($hasPgsql && (!empty(getenv('DATABASE_URL')) || !empty(getenv('DB_HOST')) || !empty($neonUrl))) ? 'pgsql' : 'sqlite';
 
 // Ensure essential serverless environment variables are populated
@@ -21,9 +21,9 @@ $serverlessEnv = [
     'APP_PACKAGES_CACHE' => '/tmp/packages.php',
     'APP_ROUTES_CACHE' => '/tmp/routes.php',
     'APP_EVENTS_CACHE' => '/tmp/events.php',
-    'CACHE_STORE' => 'database',
-    'CACHE_DRIVER' => 'database',
-    'SESSION_DRIVER' => 'database',
+    'CACHE_STORE' => 'array',
+    'CACHE_DRIVER' => 'array',
+    'SESSION_DRIVER' => 'cookie',
     'LOG_CHANNEL' => 'stderr',
     'APP_MAINTENANCE_DRIVER' => 'file',
     'APP_MAINTENANCE_STORE' => 'array',
