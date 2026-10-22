@@ -32,5 +32,6 @@ Thumbs.db
 .claude/
 .agents/mcp_config.json
 .neon
+graphify-out/
 
 .agentsroom/fork-context-*.txt

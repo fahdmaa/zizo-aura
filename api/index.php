@@ -23,7 +23,7 @@ $serverlessEnv = [
     'APP_EVENTS_CACHE' => '/tmp/events.php',
     'CACHE_STORE' => 'array',
     'CACHE_DRIVER' => 'array',
-    'SESSION_DRIVER' => 'cookie',
+    'SESSION_DRIVER' => ($dbConnection === 'pgsql') ? 'database' : 'cookie',
     'LOG_CHANNEL' => 'stderr',
     'APP_MAINTENANCE_DRIVER' => 'file',
     'APP_MAINTENANCE_STORE' => 'array',

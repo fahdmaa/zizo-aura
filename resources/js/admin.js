@@ -45,6 +45,16 @@
                     window.location.href = '/admin/login';
                     return null;
                 }
+                if (response.status === 494) {
+                    const error = new Error('En-têtes ou cookies trop volumineux (494). Veuillez vider les cookies du site dans votre navigateur.');
+                    error.status = 494;
+                    throw error;
+                }
+                if (response.status === 413) {
+                    const error = new Error('Le contenu envoyé (image ou payload) dépasse la taille maximale autorisée (413).');
+                    error.status = 413;
+                    throw error;
+                }
                 const data = await response.json().catch(() => ({}));
                 if (!response.ok) {
                     const message = data.message || (data.errors ? Object.values(data.errors).flat().join(' ') : 'Une erreur est survenue.');
