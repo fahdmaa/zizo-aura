@@ -1,6 +1,8 @@
 import '../css/app.css';
+import { initStoreAnalytics } from './store-analytics.js';
 
 document.addEventListener('DOMContentLoaded', () => {
+    initStoreAnalytics({ document, window, fetch });
     // =========================================================================
     // 1. Toast Notification System
     // =========================================================================

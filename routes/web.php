@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\CouponController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\AdminApiController;
 use App\Http\Controllers\SitemapController;
+use App\Http\Controllers\StoreAnalyticsController;
 
 Route::get('/', [BrandController::class, 'show'])->name('home');
 Route::get('/marques/de-a-a-z/sol-de-janeiro-janei', [BrandController::class, 'show'])->name('brand.show');
@@ -35,6 +36,7 @@ Route::delete('/api/cart/items/{cartItem}', [CartController::class, 'destroy']);
 Route::post('/api/cart/coupon', [CartController::class, 'coupon']);
 Route::post('/api/coupon/validate', [CartController::class, 'validateCoupon']);
 Route::post('/api/checkout', [CheckoutController::class, 'store'])->middleware('throttle:checkout');
+Route::post('/api/analytics/events', [StoreAnalyticsController::class, 'store'])->middleware('throttle:60,1');
 
 // Aliases & Permanent SEO 301 Redirects
 Route::redirect('/shop', '/boutique', 301);
@@ -82,6 +84,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
 Route::prefix('api/admin')->middleware('admin.auth')->group(function () {
     Route::get('/dashboard', [AdminApiController::class, 'dashboard']);
+    Route::get('/analytics', [AdminApiController::class, 'analytics']);
     Route::get('/products', [AdminApiController::class, 'products']);
     Route::post('/products', [AdminApiController::class, 'storeProduct']);
     Route::get('/products/{product}', [AdminApiController::class, 'product']);

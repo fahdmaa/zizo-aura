@@ -160,7 +160,7 @@
          BOTTOM FLOATING NAVBAR (Pill Dock with Clean Color Transitions)
          ═══════════════════════════════════════════════════════════════════════════ -->
     <div class="fixed bottom-3 sm:bottom-6 left-0 right-0 z-40 flex justify-center px-2 sm:px-3 pointer-events-none">
-        <nav id="admin-bottom-dock" class="pointer-events-auto relative bg-white/95 backdrop-blur-md border border-zinc-200/90 rounded-[32px] shadow-[0_12px_40px_rgba(0,0,0,0.1)] w-full max-w-xl md:max-w-2xl px-1.5 sm:px-3 py-1.5 sm:py-2 flex items-center justify-between">
+        <nav id="admin-bottom-dock" class="pointer-events-auto relative bg-white/95 backdrop-blur-md border border-zinc-200/90 rounded-[32px] shadow-[0_12px_40px_rgba(0,0,0,0.1)] w-full max-w-xl md:max-w-3xl px-1.5 sm:px-3 py-1.5 sm:py-2 flex items-center justify-between" aria-label="Navigation d’administration">
             
             <!-- 1. Accueil / Dashboard -->
             <a href="#dashboard" data-view="dashboard" class="admin-dock-tab relative flex-1 min-w-0 flex flex-col items-center justify-center py-1 px-0.5 sm:px-1 rounded-2xl group cursor-pointer text-zinc-600 hover:text-zinc-900 select-none">
@@ -171,6 +171,17 @@
                     </svg>
                 </div>
                 <span class="tab-label text-[9.5px] sm:text-[11px] font-medium tracking-tight mt-1 transition-colors duration-200 truncate max-w-full">Accueil</span>
+            </a>
+
+            <!-- Performance -->
+            <a href="#performance" data-view="performance" aria-label="Performance" title="Performance" class="admin-dock-tab relative flex-1 min-w-0 flex flex-col items-center justify-center py-1 px-0.5 sm:px-1 rounded-2xl group cursor-pointer text-zinc-600 hover:text-zinc-900 select-none">
+                <div class="tab-icon text-zinc-700">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M3 3v18h18"></path>
+                        <path d="m19 9-5 5-4-4-5 5"></path>
+                    </svg>
+                </div>
+                <span class="tab-label text-[9.5px] sm:text-[11px] font-medium tracking-tight mt-1 transition-colors duration-200 truncate max-w-full">Perf.</span>
             </a>
 
             <!-- 2. Produits -->

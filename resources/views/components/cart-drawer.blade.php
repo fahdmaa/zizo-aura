@@ -91,6 +91,7 @@
                 <div class="grid grid-cols-2 gap-2">
                     <!-- Route 1: WhatsApp -->
                     <a id="cart-whatsapp-btn"
+                       data-store-analytics="whatsapp_order_click"
                        href="https://wa.me/212682787594?text=Bonjour%20zizo%20aura%2C%20je%20souhaite%20commander"
                        target="_blank"
                        rel="noopener noreferrer"
@@ -102,6 +103,7 @@
                     <!-- Route 2: Online Order Form Modal -->
                     <button type="button"
                             id="cart-online-checkout-btn"
+                            data-store-analytics="web_checkout_click"
                             class="btn-card-pill w-full !py-3 !px-2 text-[11px] font-black uppercase tracking-wider bg-zinc-900 hover:bg-black hover:border-black flex items-center justify-center gap-1.5 shadow-sm text-center cursor-pointer">
                         <i class="uil uil-shopping-cart text-base shrink-0 text-white"></i>
                         <span class="truncate">Commander</span>

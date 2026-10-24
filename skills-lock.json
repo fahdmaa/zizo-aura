@@ -12,6 +12,12 @@
       "sourceType": "github",
       "skillPath": "skills/neon-postgres/SKILL.md",
       "computedHash": "9386efb7f97bd96f01d0c84f467e8e6e41be54f73cc1ece9c92f4f1dbd76f10f"
+    },
+    "laravel-best-practices": {
+      "source": "AsyrafHussin/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/laravel-best-practices/SKILL.md",
+      "computedHash": "e8ca3f7f09723ad17c5ed4c21eb115828be653aaa0c6131a7e3ded738183d0c0"
     }
   }
 }

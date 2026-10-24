@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreAnalyticsReportRequest;
 use App\Models\Category;
 use App\Models\ContactMessage;
 use App\Models\Coupon;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Review;
+use App\Services\StoreAnalyticsReport;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -31,6 +33,12 @@ class AdminApiController extends Controller
             ],
             'recent_orders' => Order::with('items')->latest()->limit(5)->get(),
         ]);
+    }
+
+    public function analytics(StoreAnalyticsReportRequest $request, StoreAnalyticsReport $report): JsonResponse
+    {
+        return response()->json($report->make($request->integer('days', 30)))
+            ->header('Cache-Control', 'no-store, private');
     }
 
     public function products(Request $request): JsonResponse

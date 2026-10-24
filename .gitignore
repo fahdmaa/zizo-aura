@@ -29,6 +29,11 @@ Thumbs.db
 .agentsroom/handoff-transcript-*.txt
 .agentsroom/handoff-summary-*.md
 .agents/
+!.agents/
+!.agents/skills/
+.agents/skills/*
+!.agents/skills/laravel-best-practices/
+!.agents/skills/laravel-best-practices/**
 .claude/
 .agents/mcp_config.json
 .neon

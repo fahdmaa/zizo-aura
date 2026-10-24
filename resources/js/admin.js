@@ -416,6 +416,7 @@
         reviewsData: null,
         reviewsFilter: { search: '', status: '' },
         reviewsViewMode: localStorage.getItem('admin_reviews_view_mode') || 'cards',
+        analyticsDays: 30,
         unreadMessagesCount: 0,
         pendingOrdersCount: 0,
     };
@@ -548,6 +549,9 @@
             switch (view) {
                 case 'dashboard':
                     await this.renderDashboard();
+                    break;
+                case 'performance':
+                    await this.renderPerformance();
                     break;
                 case 'products':
                     if (param === 'create') {
@@ -897,6 +901,102 @@
                 }
             } catch (err) {
                 console.warn('Could not refresh global notification badges', err);
+            }
+        },
+
+        async renderPerformance(days = appState.analyticsDays) {
+            appState.analyticsDays = [7, 30, 90].includes(Number(days)) ? Number(days) : 30;
+            this.root.innerHTML = `
+                <div class="flex items-center justify-center py-24" role="status">
+                    <div class="flex flex-col items-center gap-3">
+                        <div class="w-10 h-10 border-3 border-pink-500/20 border-t-pink-500 rounded-full animate-spin"></div>
+                        <span class="text-xs font-bold text-zinc-400">Chargement des performances...</span>
+                    </div>
+                </div>`;
+
+            try {
+                const report = await api.get(`/api/admin/analytics?days=${appState.analyticsDays}`);
+                const metrics = report.metrics || {};
+                const series = report.series || [];
+                const max = Math.max(1, ...series.map(point => Number(point.visitors) || 0));
+                const width = 760, height = 220, pad = 18;
+                const points = series.map((point, index) => {
+                    const x = pad + (series.length < 2 ? 0 : index * (width - pad * 2) / (series.length - 1));
+                    const y = height - pad - ((Number(point.visitors) || 0) / max) * (height - pad * 2);
+                    return { x, y, date: point.date, visitors: Number(point.visitors) || 0 };
+                });
+                const line = points.map(point => `${point.x},${point.y}`).join(' ');
+                const firstDate = report.period?.from ? new Date(`${report.period.from}T12:00:00`).toLocaleDateString('fr-MA', { day: 'numeric', month: 'short' }) : '';
+                const lastDate = report.period?.to ? new Date(`${report.period.to}T12:00:00`).toLocaleDateString('fr-MA', { day: 'numeric', month: 'short' }) : '';
+                const cards = [
+                    { label: 'GMV estimé', value: formatDH(metrics.gmv), note: 'Commandes non annulées', icon: 'ti-currency-dirham', color: 'bg-emerald-50 text-emerald-600' },
+                    { label: 'Commandes', value: Number(metrics.orders || 0).toLocaleString('fr-FR'), note: 'Annulations incluses', icon: 'ti-shopping-bag', color: 'bg-sky-50 text-sky-600' },
+                    { label: 'Pages vues', value: Number(metrics.page_views || 0).toLocaleString('fr-FR'), note: 'Chargements des pages publiques', icon: 'ti-eye', color: 'bg-violet-50 text-violet-600' },
+                    { label: 'Clics boutique', value: Number(metrics.store_clicks || 0).toLocaleString('fr-FR'), note: 'Clics sur les liens et boutons', icon: 'ti-pointer', color: 'bg-amber-50 text-amber-600' },
+                    { label: 'Visiteurs', value: Number(metrics.visitors || 0).toLocaleString('fr-FR'), note: 'Visiteurs uniques par session', icon: 'ti-users', color: 'bg-pink-50 text-pink-600' },
+                    { label: 'Choix WhatsApp', value: Number(metrics.whatsapp_clicks || 0).toLocaleString('fr-FR'), note: 'Sessions ayant choisi WhatsApp', icon: 'ti-brand-whatsapp', color: 'bg-emerald-50 text-emerald-600' },
+                    { label: 'Commande web', value: Number(metrics.web_checkout_clicks || 0).toLocaleString('fr-FR'), note: 'Sessions ayant choisi le web', icon: 'ti-shopping-cart', color: 'bg-zinc-100 text-zinc-700' },
+                ];
+
+                this.root.innerHTML = `
+                    <div class="space-y-6 animate-fadeIn">
+                        <header class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+                            <div>
+                                <p class="text-xs font-bold uppercase tracking-[0.16em] text-pink-600">Zizo Aura · Activité</p>
+                                <h1 class="mt-1 text-2xl md:text-3xl font-black tracking-tight text-zinc-950">Performance de la boutique</h1>
+                                <p class="mt-1 text-sm text-zinc-500">Ventes, visites et choix de commande sur votre boutique.</p>
+                            </div>
+                            <div class="flex items-center gap-1 rounded-2xl border border-zinc-200 bg-white p-1" role="group" aria-label="Période du rapport">
+                                ${[7, 30, 90].map(period => `<button type="button" data-analytics-days="${period}" aria-pressed="${appState.analyticsDays === period}" class="rounded-xl px-3 py-2 text-xs font-bold transition ${appState.analyticsDays === period ? 'bg-zinc-950 text-white' : 'text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900'}">${period} j</button>`).join('')}
+                            </div>
+                        </header>
+
+                        <section class="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-7" aria-label="Indicateurs de performance">
+                            ${cards.map(card => `
+                                <article class="min-w-0 rounded-2xl border border-zinc-200/80 bg-white p-4 shadow-sm sm:rounded-3xl sm:p-5">
+                                    <div class="flex items-center justify-between gap-2">
+                                        <h2 class="text-[11px] font-bold uppercase tracking-wide text-zinc-500">${card.label}</h2>
+                                        <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl ${card.color}"><i class="ti ${card.icon} text-base" aria-hidden="true"></i></span>
+                                    </div>
+                                    <p class="mt-4 truncate text-xl font-black tracking-tight text-zinc-950 sm:text-2xl" title="${card.value}">${card.value}</p>
+                                    <p class="mt-1 min-h-8 text-[10px] leading-4 text-zinc-400">${card.note}</p>
+                                </article>`).join('')}
+                        </section>
+
+                        <section class="rounded-3xl border border-zinc-200/80 bg-white p-5 shadow-sm sm:p-7" aria-labelledby="performance-visitors-title">
+                            <div class="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
+                                <div>
+                                    <h2 id="performance-visitors-title" class="text-base font-black text-zinc-950">Visiteurs uniques</h2>
+                                    <p class="mt-1 text-xs text-zinc-500">Personnes distinctes par session, jour après jour.</p>
+                                </div>
+                                <span class="text-xs font-semibold text-zinc-400">${escapeHtml(firstDate)} – ${escapeHtml(lastDate)}</span>
+                            </div>
+                            <div class="mt-5 overflow-hidden" role="img" aria-label="Évolution quotidienne du nombre de visiteurs uniques">
+                                <svg viewBox="0 0 ${width} ${height}" class="h-44 w-full sm:h-56" preserveAspectRatio="none" aria-hidden="true">
+                                    <line x1="${pad}" y1="${height - pad}" x2="${width - pad}" y2="${height - pad}" stroke="#e4e4e7" stroke-width="1" />
+                                    <line x1="${pad}" y1="${height / 2}" x2="${width - pad}" y2="${height / 2}" stroke="#f4f4f5" stroke-width="1" />
+                                    <polyline points="${line}" fill="none" stroke="#db2777" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+                                    ${points.map(point => `<circle cx="${point.x}" cy="${point.y}" r="3.5" fill="#db2777"><title>${escapeHtml(point.date)} : ${point.visitors} visiteur${point.visitors > 1 ? 's' : ''}</title></circle>`).join('')}
+                                </svg>
+                                <div class="flex justify-between px-1 text-[10px] font-medium text-zinc-400"><span>${escapeHtml(firstDate)}</span><span>${escapeHtml(lastDate)}</span></div>
+                            </div>
+                            ${Number(metrics.visitors || 0) === 0 ? `<p class="mt-4 rounded-2xl bg-zinc-50 px-4 py-3 text-xs text-zinc-500">Les statistiques de visites et de clics commencent à partir de l’activation du suivi.</p>` : ''}
+                            <p class="mt-3 text-[10px] leading-4 text-zinc-400">Le GMV est une estimation basée sur la valeur des commandes non annulées. Les clics WhatsApp et web comptent les sessions ayant choisi chaque option.</p>
+                        </section>
+                    </div>`;
+
+                this.root.querySelectorAll('[data-analytics-days]').forEach(button => {
+                    button.addEventListener('click', () => this.renderPerformance(button.dataset.analyticsDays));
+                });
+            } catch (err) {
+                this.root.innerHTML = `
+                    <div class="mx-auto mt-12 max-w-lg rounded-3xl border border-red-200 bg-red-50 p-8 text-center">
+                        <div class="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-red-100 text-2xl text-red-600"><i class="ti ti-alert-circle" aria-hidden="true"></i></div>
+                        <h2 class="text-base font-bold text-red-900">Impossible de charger les performances</h2>
+                        <p class="mt-1 text-xs text-red-600">${escapeHtml(err.message)}</p>
+                        <button type="button" id="performance-retry" class="mt-4 rounded-xl bg-red-600 px-4 py-2 text-xs font-bold text-white hover:bg-red-700">Réessayer</button>
+                    </div>`;
+                document.getElementById('performance-retry')?.addEventListener('click', () => this.renderPerformance());
             }
         },
 
