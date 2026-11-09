@@ -7,7 +7,7 @@ error_reporting(E_ALL);
 
 // Check if pdo_pgsql is available
 $hasPgsql = extension_loaded('pdo_pgsql');
-$neonUrl = getenv('DATABASE_URL') ?: 'postgresql://neondb_owner:npg_TGLh9FbN0uWP@ep-rapid-butterfly-b53mv6l7-pooler.c-7.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require';
+$neonUrl = getenv('DATABASE_URL') ?: 'postgresql://neondb_owner:npg_mytqdzT3sn2f@ep-rough-snow-aezarrgy-pooler.c-2.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require';
 $dbConnection = ($hasPgsql && (!empty(getenv('DATABASE_URL')) || !empty(getenv('DB_HOST')) || !empty($neonUrl))) ? 'pgsql' : 'sqlite';
 
 // Ensure essential serverless environment variables are populated
