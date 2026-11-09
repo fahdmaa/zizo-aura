@@ -127,7 +127,7 @@ class SeoTest extends TestCase
         $content = $response->getContent();
 
         $this->assertStringContainsString('"@type": "ContactPage"', $content);
-        $this->assertStringContainsString('+212682787594', $content);
+        $this->assertStringContainsString('+212704231498', $content);
         $this->assertStringContainsString('<link rel="canonical" href="' . route('contact') . '">', $content);
     }
 

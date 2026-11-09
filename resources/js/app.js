@@ -216,7 +216,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     msg += `*Code promo (${appliedCoupon.code}) :* -${discountAmount} DH\n`;
                 }
                 msg += `*Livraison :* ${shippingCostText}\n*Total à payer :* ${finalTotal} DH\n\nMerci de me confirmer la commande !`;
-                cartWhatsappBtn.href = `https://wa.me/212682787594?text=${encodeURIComponent(msg)}`;
+                cartWhatsappBtn.href = `https://wa.me/212704231498?text=${encodeURIComponent(msg)}`;
                 cartWhatsappBtn.classList.remove('opacity-50', 'pointer-events-none');
             } else {
                 cartWhatsappBtn.href = '#';

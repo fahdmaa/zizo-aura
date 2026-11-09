@@ -56,7 +56,7 @@
                 "logo": "{{ url('/images/logo.png') }}",
                 "image": "{{ url('/images/popup_summer_sale.png') }}",
                 "description": "Boutique en ligne officielle de soins et cosmétiques authentiques au Maroc.",
-                "telephone": "+212682787594",
+                "telephone": "+212704231498",
                 "priceRange": "150 DH - 700 DH",
                 "currenciesAccepted": "MAD",
                 "paymentAccepted": "Cash on Delivery",

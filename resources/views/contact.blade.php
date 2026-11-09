@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Contact & Service Client Maroc — WhatsApp & Support | Zizo Aura')
-@section('meta_description', "Besoin d'aide pour votre commande ou un conseil beauté au Maroc ? Contactez l'équipe zizo aura par WhatsApp (+212 682 787 594) ou formulaire. Réponse sous 24h.")
+@section('meta_description', "Besoin d'aide pour votre commande ou un conseil beauté au Maroc ? Contactez l'équipe zizo aura par WhatsApp (+212 704-231498) ou formulaire. Réponse sous 24h.")
 @section('canonical', route('contact'))
 @section('og_type', 'website')
 @section('og_title', 'Service Client & Contact — zizo aura Maroc')
@@ -19,7 +19,7 @@
     "mainEntity": {
         "{{ '@' }}type": "Organization",
         "name": "Zizo Aura Maroc",
-        "telephone": "+212682787594",
+        "telephone": "+212704231498",
         "email": "contact@zizoaura.store",
         "areaServed": "Morocco"
     }
@@ -222,8 +222,8 @@
                     <div>
                         <h3 class="text-sm font-bold text-zinc-900 mb-1 group-hover:text-pink-600 transition-colors">Téléphone &amp; WhatsApp</h3>
                         <p class="text-xs text-zinc-500 mb-2">Du Lundi au Samedi : 9h00 – 19h30 (Maroc)</p>
-                        <a href="https://wa.me/212682787594" target="_blank" rel="noopener noreferrer" class="text-sm font-bold text-zinc-900 hover:text-pink-600 transition-colors">
-                            +212 682-787594
+                        <a href="https://wa.me/212704231498" target="_blank" rel="noopener noreferrer" class="text-sm font-bold text-zinc-900 hover:text-pink-600 transition-colors">
+                            +212 704-231498
                         </a>
                     </div>
                 </div>

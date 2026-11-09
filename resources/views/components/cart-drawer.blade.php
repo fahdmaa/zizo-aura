@@ -92,7 +92,7 @@
                     <!-- Route 1: WhatsApp -->
                     <a id="cart-whatsapp-btn"
                        data-store-analytics="whatsapp_order_click"
-                       href="https://wa.me/212682787594?text=Bonjour%20zizo%20aura%2C%20je%20souhaite%20commander"
+                       href="https://wa.me/212704231498?text=Bonjour%20zizo%20aura%2C%20je%20souhaite%20commander"
                        target="_blank"
                        rel="noopener noreferrer"
                        class="btn-card-pill w-full !py-3 !px-2 text-[11px] font-black uppercase tracking-wider bg-emerald-600 hover:bg-emerald-700 hover:border-emerald-700 flex items-center justify-center gap-1.5 shadow-sm text-center">
