@@ -1067,7 +1067,7 @@
                                 </div>
                                 <div class="flex items-center gap-2">
                                     <span class="text-[11px] font-semibold text-zinc-400 bg-zinc-50 border border-zinc-200/70 rounded-xl px-3 py-1.5">
-                                        Pic max : <strong class="text-zinc-900">${currentConfig.format(max)}</strong>
+                                        Pic max : <strong class="text-zinc-900">${currentConfig.format(rawMax)}</strong>
                                     </span>
                                 </div>
                             </div>
