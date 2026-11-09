@@ -906,95 +906,370 @@
 
         async renderPerformance(days = appState.analyticsDays) {
             appState.analyticsDays = [7, 30, 90].includes(Number(days)) ? Number(days) : 30;
+            if (!appState.analyticsMetric) {
+                appState.analyticsMetric = 'visitors';
+            }
+
             this.root.innerHTML = `
-                <div class="flex items-center justify-center py-24" role="status">
-                    <div class="flex flex-col items-center gap-3">
-                        <div class="w-10 h-10 border-3 border-pink-500/20 border-t-pink-500 rounded-full animate-spin"></div>
-                        <span class="text-xs font-bold text-zinc-400">Chargement des performances...</span>
+                <div class="space-y-6 animate-pulse">
+                    <div class="h-16 bg-zinc-200/60 rounded-2xl w-1/3"></div>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
+                        ${Array(7).fill(0).map(() => '<div class="h-28 bg-zinc-200/60 rounded-3xl"></div>').join('')}
                     </div>
+                    <div class="h-80 bg-zinc-200/60 rounded-3xl"></div>
                 </div>`;
 
             try {
                 const report = await api.get(`/api/admin/analytics?days=${appState.analyticsDays}`);
                 const metrics = report.metrics || {};
                 const series = report.series || [];
-                const max = Math.max(1, ...series.map(point => Number(point.visitors) || 0));
-                const width = 760, height = 220, pad = 18;
+                const activeMetric = appState.analyticsMetric || 'visitors';
+
+                const metricConfigs = {
+                    visitors: { label: 'Visiteurs uniques', color: '#db2777', bgGradient: 'from-pink-500/10 to-transparent', strokeColor: '#db2777', unit: '', format: n => Number(n || 0).toLocaleString('fr-FR') },
+                    page_views: { label: 'Pages vues', color: '#8b5cf6', bgGradient: 'from-violet-500/10 to-transparent', strokeColor: '#8b5cf6', unit: '', format: n => Number(n || 0).toLocaleString('fr-FR') },
+                    store_clicks: { label: 'Clics boutique', color: '#f59e0b', bgGradient: 'from-amber-500/10 to-transparent', strokeColor: '#f59e0b', unit: '', format: n => Number(n || 0).toLocaleString('fr-FR') },
+                    orders: { label: 'Commandes', color: '#0284c7', bgGradient: 'from-sky-500/10 to-transparent', strokeColor: '#0284c7', unit: '', format: n => Number(n || 0).toLocaleString('fr-FR') },
+                    gmv: { label: 'GMV estimé', color: '#059669', bgGradient: 'from-emerald-500/10 to-transparent', strokeColor: '#059669', unit: ' DH', format: n => formatDH(n) },
+                    whatsapp_clicks: { label: 'Clics WhatsApp', color: '#10b981', bgGradient: 'from-emerald-500/10 to-transparent', strokeColor: '#10b981', unit: '', format: n => Number(n || 0).toLocaleString('fr-FR') },
+                    web_checkout_clicks: { label: 'Commande web', color: '#6366f1', bgGradient: 'from-indigo-500/10 to-transparent', strokeColor: '#6366f1', unit: '', format: n => Number(n || 0).toLocaleString('fr-FR') },
+                };
+
+                const currentConfig = metricConfigs[activeMetric] || metricConfigs.visitors;
+                const metricValues = series.map(p => Number(p[activeMetric]) || 0);
+                const max = Math.max(1, ...metricValues);
+                const width = 860, height = 240, padX = 28, padY = 24;
+
                 const points = series.map((point, index) => {
-                    const x = pad + (series.length < 2 ? 0 : index * (width - pad * 2) / (series.length - 1));
-                    const y = height - pad - ((Number(point.visitors) || 0) / max) * (height - pad * 2);
-                    return { x, y, date: point.date, visitors: Number(point.visitors) || 0 };
+                    const x = padX + (series.length < 2 ? 0 : index * (width - padX * 2) / (series.length - 1));
+                    const val = Number(point[activeMetric]) || 0;
+                    const y = height - padY - (val / max) * (height - padY * 2);
+                    return { x, y, date: point.date, val };
                 });
-                const line = points.map(point => `${point.x},${point.y}`).join(' ');
+
+                const linePath = points.map(p => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ');
+                const areaPath = points.length > 0 
+                    ? `M ${points[0].x.toFixed(1)} ${height - padY} L ${points.map(p => `${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(' L ')} L ${points[points.length - 1].x.toFixed(1)} ${height - padY} Z`
+                    : '';
+
                 const firstDate = report.period?.from ? new Date(`${report.period.from}T12:00:00`).toLocaleDateString('fr-MA', { day: 'numeric', month: 'short' }) : '';
                 const lastDate = report.period?.to ? new Date(`${report.period.to}T12:00:00`).toLocaleDateString('fr-MA', { day: 'numeric', month: 'short' }) : '';
+
+                // Conversion rates & AOV calculation
+                const visitorsCount = Number(metrics.visitors || 0);
+                const ordersCount = Number(metrics.orders || 0);
+                const gmvTotal = Number(metrics.gmv || 0);
+                const waClicks = Number(metrics.whatsapp_clicks || 0);
+                const webClicks = Number(metrics.web_checkout_clicks || 0);
+                const totalOrderIntent = waClicks + webClicks;
+
+                const conversionRate = visitorsCount > 0 ? ((ordersCount / visitorsCount) * 100).toFixed(1) : '0.0';
+                const intentRate = visitorsCount > 0 ? ((totalOrderIntent / visitorsCount) * 100).toFixed(1) : '0.0';
+                const aov = ordersCount > 0 ? (gmvTotal / ordersCount).toFixed(0) : '0';
+
                 const cards = [
-                    { label: 'GMV estimé', value: formatDH(metrics.gmv), note: 'Commandes non annulées', icon: 'ti-currency-dirham', color: 'bg-emerald-50 text-emerald-600' },
-                    { label: 'Commandes', value: Number(metrics.orders || 0).toLocaleString('fr-FR'), note: 'Annulations incluses', icon: 'ti-shopping-bag', color: 'bg-sky-50 text-sky-600' },
-                    { label: 'Pages vues', value: Number(metrics.page_views || 0).toLocaleString('fr-FR'), note: 'Chargements des pages publiques', icon: 'ti-eye', color: 'bg-violet-50 text-violet-600' },
-                    { label: 'Clics boutique', value: Number(metrics.store_clicks || 0).toLocaleString('fr-FR'), note: 'Clics sur les liens et boutons', icon: 'ti-pointer', color: 'bg-amber-50 text-amber-600' },
-                    { label: 'Visiteurs', value: Number(metrics.visitors || 0).toLocaleString('fr-FR'), note: 'Visiteurs uniques par session', icon: 'ti-users', color: 'bg-pink-50 text-pink-600' },
-                    { label: 'Choix WhatsApp', value: Number(metrics.whatsapp_clicks || 0).toLocaleString('fr-FR'), note: 'Sessions ayant choisi WhatsApp', icon: 'ti-brand-whatsapp', color: 'bg-emerald-50 text-emerald-600' },
-                    { label: 'Commande web', value: Number(metrics.web_checkout_clicks || 0).toLocaleString('fr-FR'), note: 'Sessions ayant choisi le web', icon: 'ti-shopping-cart', color: 'bg-zinc-100 text-zinc-700' },
+                    { key: 'gmv', label: 'GMV estimé', value: formatDH(metrics.gmv), note: 'Commandes non annulées', icon: 'ti-currency-dirham', color: 'bg-emerald-50 text-emerald-600', ring: 'ring-emerald-400' },
+                    { key: 'orders', label: 'Commandes', value: Number(metrics.orders || 0).toLocaleString('fr-FR'), note: 'Toutes les commandes', icon: 'ti-shopping-bag', color: 'bg-sky-50 text-sky-600', ring: 'ring-sky-400' },
+                    { key: 'page_views', label: 'Pages vues', value: Number(metrics.page_views || 0).toLocaleString('fr-FR'), note: 'Affichages boutique', icon: 'ti-eye', color: 'bg-violet-50 text-violet-600', ring: 'ring-violet-400' },
+                    { key: 'visitors', label: 'Visiteurs', value: Number(metrics.visitors || 0).toLocaleString('fr-FR'), note: 'Sessions uniques', icon: 'ti-users', color: 'bg-pink-50 text-pink-600', ring: 'ring-pink-400' },
+                    { key: 'store_clicks', label: 'Clics boutique', value: Number(metrics.store_clicks || 0).toLocaleString('fr-FR'), note: 'Interactions totales', icon: 'ti-pointer', color: 'bg-amber-50 text-amber-600', ring: 'ring-amber-400' },
+                    { key: 'whatsapp_clicks', label: 'Choix WhatsApp', value: Number(metrics.whatsapp_clicks || 0).toLocaleString('fr-FR'), note: 'Clics commande WhatsApp', icon: 'ti-brand-whatsapp', color: 'bg-emerald-50 text-emerald-600', ring: 'ring-emerald-400' },
+                    { key: 'web_checkout_clicks', label: 'Commande web', value: Number(metrics.web_checkout_clicks || 0).toLocaleString('fr-FR'), note: 'Clics panier en ligne', icon: 'ti-shopping-cart', color: 'bg-indigo-50 text-indigo-600', ring: 'ring-indigo-400' },
                 ];
 
                 this.root.innerHTML = `
-                    <div class="space-y-6 animate-fadeIn">
+                    <div class="space-y-6 animate-fadeIn pb-12">
+                        <!-- Header with Period Switcher -->
                         <header class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
                             <div>
-                                <p class="text-xs font-bold uppercase tracking-[0.16em] text-pink-600">Zizo Aura · Activité</p>
-                                <h1 class="mt-1 text-2xl md:text-3xl font-black tracking-tight text-zinc-950">Performance de la boutique</h1>
-                                <p class="mt-1 text-sm text-zinc-500">Ventes, visites et choix de commande sur votre boutique.</p>
+                                <div class="flex items-center gap-2">
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-pink-100 text-pink-700">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-pink-500 animate-pulse"></span>
+                                        Analytique Boutique
+                                    </span>
+                                </div>
+                                <h1 class="mt-2 text-2xl md:text-3xl font-black tracking-tight text-zinc-950">Performance de la boutique</h1>
+                                <p class="mt-1 text-xs md:text-sm text-zinc-500">Suivi en direct des ventes, de l'acquisition et du tunnel de conversion.</p>
                             </div>
-                            <div class="flex items-center gap-1 rounded-2xl border border-zinc-200 bg-white p-1" role="group" aria-label="Période du rapport">
-                                ${[7, 30, 90].map(period => `<button type="button" data-analytics-days="${period}" aria-pressed="${appState.analyticsDays === period}" class="rounded-xl px-3 py-2 text-xs font-bold transition ${appState.analyticsDays === period ? 'bg-zinc-950 text-white' : 'text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900'}">${period} j</button>`).join('')}
+                            
+                            <div class="flex items-center gap-1.5 rounded-2xl border border-zinc-200/90 bg-white p-1.5 shadow-sm" role="group" aria-label="Période du rapport">
+                                ${[7, 30, 90].map(period => `
+                                    <button type="button" 
+                                        data-analytics-days="${period}" 
+                                        aria-pressed="${appState.analyticsDays === period}" 
+                                        class="cursor-pointer rounded-xl px-3.5 py-2 text-xs font-bold transition-all duration-200 ${appState.analyticsDays === period ? 'bg-zinc-950 text-white shadow-sm' : 'text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900'}">
+                                        ${period} jours
+                                    </button>`).join('')}
                             </div>
                         </header>
 
+                        <!-- Key Performance Indicator Cards (Clickable to switch graph metric) -->
                         <section class="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-7" aria-label="Indicateurs de performance">
-                            ${cards.map(card => `
-                                <article class="min-w-0 rounded-2xl border border-zinc-200/80 bg-white p-4 shadow-sm sm:rounded-3xl sm:p-5">
+                            ${cards.map(card => {
+                                const isSelected = activeMetric === card.key;
+                                return `
+                                <button type="button" 
+                                    data-select-metric="${card.key}"
+                                    class="text-left w-full cursor-pointer relative min-w-0 rounded-2xl sm:rounded-3xl border transition-all duration-200 p-4 sm:p-5 group bg-white ${isSelected ? 'border-zinc-950 shadow-md ring-2 ' + card.ring : 'border-zinc-200/80 hover:border-zinc-300 hover:shadow-sm'}">
                                     <div class="flex items-center justify-between gap-2">
-                                        <h2 class="text-[11px] font-bold uppercase tracking-wide text-zinc-500">${card.label}</h2>
-                                        <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl ${card.color}"><i class="ti ${card.icon} text-base" aria-hidden="true"></i></span>
+                                        <h2 class="text-[11px] font-bold uppercase tracking-wider text-zinc-500 group-hover:text-zinc-700 transition truncate">${card.label}</h2>
+                                        <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl transition ${card.color} group-hover:scale-105">
+                                            <i class="ti ${card.icon} text-base" aria-hidden="true"></i>
+                                        </span>
                                     </div>
-                                    <p class="mt-4 truncate text-xl font-black tracking-tight text-zinc-950 sm:text-2xl" title="${card.value}">${card.value}</p>
-                                    <p class="mt-1 min-h-8 text-[10px] leading-4 text-zinc-400">${card.note}</p>
-                                </article>`).join('')}
+                                    <p class="mt-3 truncate text-xl font-black tracking-tight text-zinc-950 sm:text-2xl" title="${card.value}">
+                                        ${card.value}
+                                    </p>
+                                    <div class="mt-1 flex items-center justify-between">
+                                        <span class="text-[10px] text-zinc-400 truncate">${card.note}</span>
+                                        ${isSelected ? '<span class="text-[9px] font-bold uppercase tracking-wide text-pink-600 bg-pink-50 px-1.5 py-0.5 rounded-md shrink-0">Actif</span>' : ''}
+                                    </div>
+                                </button>`;
+                            }).join('')}
                         </section>
 
-                        <section class="rounded-3xl border border-zinc-200/80 bg-white p-5 shadow-sm sm:p-7" aria-labelledby="performance-visitors-title">
-                            <div class="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
+                        <!-- Main Interactive Curve Graph Card -->
+                        <section class="rounded-3xl border border-zinc-200/80 bg-white p-5 shadow-sm sm:p-7 relative overflow-hidden" aria-labelledby="performance-chart-title">
+                            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b border-zinc-100 pb-4">
                                 <div>
-                                    <h2 id="performance-visitors-title" class="text-base font-black text-zinc-950">Visiteurs uniques</h2>
-                                    <p class="mt-1 text-xs text-zinc-500">Personnes distinctes par session, jour après jour.</p>
+                                    <div class="flex items-center gap-2">
+                                        <span class="w-2.5 h-2.5 rounded-full" style="background-color: ${currentConfig.color}"></span>
+                                        <h2 id="performance-chart-title" class="text-base font-black text-zinc-950">
+                                            Évolution : ${currentConfig.label}
+                                        </h2>
+                                    </div>
+                                    <p class="mt-1 text-xs text-zinc-500">
+                                        Période du <span class="font-bold text-zinc-700">${escapeHtml(firstDate)}</span> au <span class="font-bold text-zinc-700">${escapeHtml(lastDate)}</span> (${appState.analyticsDays} jours)
+                                    </p>
                                 </div>
-                                <span class="text-xs font-semibold text-zinc-400">${escapeHtml(firstDate)} – ${escapeHtml(lastDate)}</span>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-[11px] font-semibold text-zinc-400 bg-zinc-50 border border-zinc-200/70 rounded-xl px-3 py-1.5">
+                                        Pic max : <strong class="text-zinc-900">${currentConfig.format(max)}</strong>
+                                    </span>
+                                </div>
                             </div>
-                            <div class="mt-5 overflow-hidden" role="img" aria-label="Évolution quotidienne du nombre de visiteurs uniques">
-                                <svg viewBox="0 0 ${width} ${height}" class="h-44 w-full sm:h-56" preserveAspectRatio="none" aria-hidden="true">
-                                    <line x1="${pad}" y1="${height - pad}" x2="${width - pad}" y2="${height - pad}" stroke="#e4e4e7" stroke-width="1" />
-                                    <line x1="${pad}" y1="${height / 2}" x2="${width - pad}" y2="${height / 2}" stroke="#f4f4f5" stroke-width="1" />
-                                    <polyline points="${line}" fill="none" stroke="#db2777" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
-                                    ${points.map(point => `<circle cx="${point.x}" cy="${point.y}" r="3.5" fill="#db2777"><title>${escapeHtml(point.date)} : ${point.visitors} visiteur${point.visitors > 1 ? 's' : ''}</title></circle>`).join('')}
+
+                            <!-- Interactive Chart SVG Container -->
+                            <div class="relative mt-6 select-none" id="analytics-chart-container">
+                                <svg viewBox="0 0 ${width} ${height}" class="h-48 w-full sm:h-64 overflow-visible" preserveAspectRatio="none" aria-hidden="true">
+                                    <defs>
+                                        <linearGradient id="areaGradient" x1="0" y1="0" x2="0" y2="1">
+                                            <stop offset="0%" stop-color="${currentConfig.color}" stop-opacity="0.25" />
+                                            <stop offset="100%" stop-color="${currentConfig.color}" stop-opacity="0.0" />
+                                        </linearGradient>
+                                    </defs>
+
+                                    <!-- Grid lines -->
+                                    <line x1="${padX}" y1="${height - padY}" x2="${width - padX}" y2="${height - padY}" stroke="#f4f4f5" stroke-width="1.5" />
+                                    <line x1="${padX}" y1="${height / 2}" x2="${width - padX}" y2="${height / 2}" stroke="#f4f4f5" stroke-width="1" stroke-dasharray="4 4" />
+                                    <line x1="${padX}" y1="${padY}" x2="${width - padX}" y2="${padY}" stroke="#f4f4f5" stroke-width="1" stroke-dasharray="4 4" />
+
+                                    <!-- Shaded Area -->
+                                    ${areaPath ? `<path d="${areaPath}" fill="url(#areaGradient)" />` : ''}
+
+                                    <!-- Polyline Curve -->
+                                    <polyline points="${linePath}" fill="none" stroke="${currentConfig.strokeColor}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+
+                                    <!-- Hover & Interactive Data Points -->
+                                    ${points.map((point, i) => `
+                                        <g class="cursor-pointer group/dot" data-point-idx="${i}">
+                                            <circle cx="${point.x.toFixed(1)}" cy="${point.y.toFixed(1)}" r="4" fill="#ffffff" stroke="${currentConfig.color}" stroke-width="2.5" class="transition-transform duration-150 group-hover/dot:scale-150" />
+                                        </g>
+                                    `).join('')}
                                 </svg>
-                                <div class="flex justify-between px-1 text-[10px] font-medium text-zinc-400"><span>${escapeHtml(firstDate)}</span><span>${escapeHtml(lastDate)}</span></div>
+
+                                <!-- Floating Tooltip on Hover -->
+                                <div id="chart-tooltip" class="pointer-events-none absolute hidden -translate-x-1/2 -translate-y-full rounded-2xl bg-zinc-900/95 backdrop-blur-md px-3.5 py-2 text-white shadow-2xl transition-all duration-100 z-20 text-center border border-zinc-700/50">
+                                    <p id="tooltip-date" class="text-[10px] font-medium text-zinc-400"></p>
+                                    <p id="tooltip-value" class="text-xs font-black text-pink-400 mt-0.5"></p>
+                                </div>
+
+                                <div class="flex justify-between px-2 pt-3 text-[10px] font-semibold text-zinc-400 border-t border-zinc-100 mt-2">
+                                    <span>${escapeHtml(firstDate)}</span>
+                                    <span class="text-zinc-500">Cliquez sur un indicateur ci-dessus pour changer de courbe</span>
+                                    <span>${escapeHtml(lastDate)}</span>
+                                </div>
                             </div>
-                            ${Number(metrics.visitors || 0) === 0 ? `<p class="mt-4 rounded-2xl bg-zinc-50 px-4 py-3 text-xs text-zinc-500">Les statistiques de visites et de clics commencent à partir de l’activation du suivi.</p>` : ''}
-                            <p class="mt-3 text-[10px] leading-4 text-zinc-400">Le GMV est une estimation basée sur la valeur des commandes non annulées. Les clics WhatsApp et web comptent les sessions ayant choisi chaque option.</p>
+
+                            ${visitorsCount === 0 ? `
+                                <div class="mt-4 rounded-2xl bg-amber-50/70 border border-amber-200/60 p-4 flex items-start gap-3">
+                                    <i class="ti ti-info-circle text-amber-600 text-lg shrink-0 mt-0.5"></i>
+                                    <div>
+                                        <p class="text-xs font-bold text-amber-900">Suivi actif</p>
+                                        <p class="text-[11px] text-amber-700 mt-0.5">Les statistiques de visites et clics s'enregistrent en direct dès que des clients parcourent la boutique.</p>
+                                    </div>
+                                </div>
+                            ` : ''}
+                        </section>
+
+                        <!-- Secondary Bento Row: Conversion Funnel & Actionable Insights -->
+                        <section class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                            <!-- Conversion Funnel Card -->
+                            <article class="md:col-span-2 rounded-3xl border border-zinc-200/80 bg-white p-6 shadow-sm">
+                                <div class="flex items-center justify-between pb-4 border-b border-zinc-100">
+                                    <div>
+                                        <h3 class="text-sm font-black text-zinc-950">Tunnel de Conversion & Choix d'Achat</h3>
+                                        <p class="text-xs text-zinc-500 mt-0.5">De la visite initiale au choix du canal de commande.</p>
+                                    </div>
+                                    <span class="px-2.5 py-1 rounded-xl bg-zinc-100 text-zinc-700 text-[11px] font-bold">
+                                        ${intentRate}% d'intention
+                                    </span>
+                                </div>
+
+                                <div class="space-y-4 mt-5">
+                                    <!-- Step 1: Visitors -->
+                                    <div>
+                                        <div class="flex justify-between text-xs font-bold mb-1.5">
+                                            <span class="flex items-center gap-1.5 text-zinc-700">
+                                                <i class="ti ti-users text-pink-500"></i> Visiteurs uniques
+                                            </span>
+                                            <span class="text-zinc-900">${visitorsCount.toLocaleString('fr-FR')} (100%)</span>
+                                        </div>
+                                        <div class="w-full bg-zinc-100 h-2.5 rounded-full overflow-hidden">
+                                            <div class="bg-pink-500 h-full rounded-full transition-all duration-500" style="width: 100%"></div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Step 2: Order Path Intent -->
+                                    <div>
+                                        <div class="flex justify-between text-xs font-bold mb-1.5">
+                                            <span class="flex items-center gap-1.5 text-zinc-700">
+                                                <i class="ti ti-click text-indigo-500"></i> Intention de commande (WhatsApp + Panier Web)
+                                            </span>
+                                            <span class="text-zinc-900">${totalOrderIntent.toLocaleString('fr-FR')} (${intentRate}%)</span>
+                                        </div>
+                                        <div class="w-full bg-zinc-100 h-2.5 rounded-full overflow-hidden">
+                                            <div class="bg-indigo-500 h-full rounded-full transition-all duration-500" style="width: ${Math.min(100, Number(intentRate))}%"></div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Step 3: Orders Completed -->
+                                    <div>
+                                        <div class="flex justify-between text-xs font-bold mb-1.5">
+                                            <span class="flex items-center gap-1.5 text-zinc-700">
+                                                <i class="ti ti-check text-emerald-500"></i> Commandes enregistrées
+                                            </span>
+                                            <span class="text-zinc-900">${ordersCount.toLocaleString('fr-FR')} (${conversionRate}%)</span>
+                                        </div>
+                                        <div class="w-full bg-zinc-100 h-2.5 rounded-full overflow-hidden">
+                                            <div class="bg-emerald-500 h-full rounded-full transition-all duration-500" style="width: ${Math.min(100, Number(conversionRate))}%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mt-6 pt-4 border-t border-zinc-100 grid grid-cols-2 gap-4">
+                                    <div class="p-3 rounded-2xl bg-emerald-50/60 border border-emerald-100">
+                                        <div class="text-[10px] font-bold uppercase tracking-wider text-emerald-800">Canal WhatsApp</div>
+                                        <div class="text-lg font-black text-emerald-950 mt-1">${waClicks.toLocaleString('fr-FR')}</div>
+                                        <div class="text-[10px] text-emerald-700">sessions ayant cliqué WhatsApp</div>
+                                    </div>
+                                    <div class="p-3 rounded-2xl bg-indigo-50/60 border border-indigo-100">
+                                        <div class="text-[10px] font-bold uppercase tracking-wider text-indigo-800">Canal Panier Web</div>
+                                        <div class="text-lg font-black text-indigo-950 mt-1">${webClicks.toLocaleString('fr-FR')}</div>
+                                        <div class="text-[10px] text-indigo-700">sessions ayant ouvert la commande web</div>
+                                    </div>
+                                </div>
+                            </article>
+
+                            <!-- Insights & Efficiency Card -->
+                            <article class="rounded-3xl border border-zinc-200/80 bg-white p-6 shadow-sm flex flex-col justify-between">
+                                <div>
+                                    <div class="flex items-center gap-2 pb-4 border-b border-zinc-100">
+                                        <span class="flex h-8 w-8 items-center justify-center rounded-xl bg-pink-50 text-pink-600">
+                                            <i class="ti ti-sparkles text-base"></i>
+                                        </span>
+                                        <div>
+                                            <h3 class="text-sm font-black text-zinc-950">Ratios Clés</h3>
+                                            <p class="text-xs text-zinc-400">Indicateurs de rentabilité</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="mt-5 space-y-4">
+                                        <div class="flex items-center justify-between p-3 rounded-2xl bg-zinc-50 border border-zinc-100">
+                                            <span class="text-xs font-semibold text-zinc-600">Panier moyen (AOV)</span>
+                                            <strong class="text-sm font-black text-zinc-900">${formatDH(aov)}</strong>
+                                        </div>
+
+                                        <div class="flex items-center justify-between p-3 rounded-2xl bg-zinc-50 border border-zinc-100">
+                                            <span class="text-xs font-semibold text-zinc-600">Taux de conversion</span>
+                                            <strong class="text-sm font-black text-zinc-900">${conversionRate}%</strong>
+                                        </div>
+
+                                        <div class="flex items-center justify-between p-3 rounded-2xl bg-zinc-50 border border-zinc-100">
+                                            <span class="text-xs font-semibold text-zinc-600">Pages par visiteur</span>
+                                            <strong class="text-sm font-black text-zinc-900">
+                                                ${visitorsCount > 0 ? (Number(metrics.page_views || 0) / visitorsCount).toFixed(1) : '1.0'}
+                                            </strong>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mt-6 pt-4 border-t border-zinc-100 text-[10px] text-zinc-400 leading-relaxed">
+                                    <p>Les données sont agrégées conformément au respect de la vie privée (aucune IP ou information personnelle n'est enregistrée).</p>
+                                </div>
+                            </article>
                         </section>
                     </div>`;
 
+                // Handle Period Switcher clicks
                 this.root.querySelectorAll('[data-analytics-days]').forEach(button => {
                     button.addEventListener('click', () => this.renderPerformance(button.dataset.analyticsDays));
                 });
+
+                // Handle Metric Switcher clicks
+                this.root.querySelectorAll('[data-select-metric]').forEach(button => {
+                    button.addEventListener('click', () => {
+                        appState.analyticsMetric = button.dataset.selectMetric;
+                        this.renderPerformance(appState.analyticsDays);
+                    });
+                });
+
+                // Attach Tooltip events for SVG points
+                const tooltip = document.getElementById('chart-tooltip');
+                const tooltipDate = document.getElementById('tooltip-date');
+                const tooltipValue = document.getElementById('tooltip-value');
+                const container = document.getElementById('analytics-chart-container');
+
+                if (tooltip && container) {
+                    this.root.querySelectorAll('[data-point-idx]').forEach(group => {
+                        group.addEventListener('mouseenter', (e) => {
+                            const idx = Number(group.dataset.pointIdx);
+                            const p = points[idx];
+                            if (!p) return;
+
+                            const formattedDate = new Date(`${p.date}T12:00:00`).toLocaleDateString('fr-MA', {
+                                weekday: 'short', day: 'numeric', month: 'short'
+                            });
+
+                            tooltipDate.textContent = formattedDate;
+                            tooltipValue.textContent = `${currentConfig.label}: ${currentConfig.format(p.val)}`;
+
+                            const rect = container.getBoundingClientRect();
+                            const xPercent = (p.x / width) * 100;
+                            const yPercent = (p.y / height) * 100;
+
+                            tooltip.style.left = `${xPercent}%`;
+                            tooltip.style.top = `${yPercent}%`;
+                            tooltip.classList.remove('hidden');
+                        });
+
+                        group.addEventListener('mouseleave', () => {
+                            tooltip.classList.add('hidden');
+                        });
+                    });
+                }
+
             } catch (err) {
                 this.root.innerHTML = `
-                    <div class="mx-auto mt-12 max-w-lg rounded-3xl border border-red-200 bg-red-50 p-8 text-center">
-                        <div class="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-red-100 text-2xl text-red-600"><i class="ti ti-alert-circle" aria-hidden="true"></i></div>
+                    <div class="mx-auto mt-12 max-w-lg rounded-3xl border border-red-200 bg-red-50 p-8 text-center animate-fadeIn">
+                        <div class="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-red-100 text-2xl text-red-600">
+                            <i class="ti ti-alert-circle" aria-hidden="true"></i>
+                        </div>
                         <h2 class="text-base font-bold text-red-900">Impossible de charger les performances</h2>
                         <p class="mt-1 text-xs text-red-600">${escapeHtml(err.message)}</p>
-                        <button type="button" id="performance-retry" class="mt-4 rounded-xl bg-red-600 px-4 py-2 text-xs font-bold text-white hover:bg-red-700">Réessayer</button>
+                        <button type="button" id="performance-retry" class="mt-4 rounded-xl bg-red-600 px-4 py-2 text-xs font-bold text-white hover:bg-red-700 transition">
+                            Réessayer
+                        </button>
                     </div>`;
                 document.getElementById('performance-retry')?.addEventListener('click', () => this.renderPerformance());
             }
