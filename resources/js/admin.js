@@ -937,19 +937,42 @@
 
                 const currentConfig = metricConfigs[activeMetric] || metricConfigs.visitors;
                 const metricValues = series.map(p => Number(p[activeMetric]) || 0);
-                const max = Math.max(1, ...metricValues);
-                const width = 860, height = 240, padX = 28, padY = 24;
+                const rawMax = Math.max(0, ...metricValues);
+                const chartMax = rawMax > 0 ? (rawMax <= 5 ? rawMax + 1 : Math.ceil(rawMax * 1.25)) : 5;
+                const width = 860, height = 240, padLeft = 45, padRight = 20, padTop = 20, padBottom = 30;
+                const plotWidth = width - padLeft - padRight;
+                const plotHeight = height - padTop - padBottom;
 
                 const points = series.map((point, index) => {
-                    const x = padX + (series.length < 2 ? 0 : index * (width - padX * 2) / (series.length - 1));
+                    const x = padLeft + (series.length < 2 ? 0 : index * plotWidth / (series.length - 1));
                     const val = Number(point[activeMetric]) || 0;
-                    const y = height - padY - (val / max) * (height - padY * 2);
+                    const y = padTop + plotHeight - (val / chartMax) * plotHeight;
                     return { x, y, date: point.date, val };
                 });
 
-                const linePath = points.map(p => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ');
-                const areaPath = points.length > 0 
-                    ? `M ${points[0].x.toFixed(1)} ${height - padY} L ${points.map(p => `${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(' L ')} L ${points[points.length - 1].x.toFixed(1)} ${height - padY} Z`
+                // Generate smooth cubic bezier curve
+                let bezierPath = '';
+                if (points.length === 1) {
+                    bezierPath = `M ${points[0].x},${points[0].y} L ${points[0].x + 10},${points[0].y}`;
+                } else if (points.length > 1) {
+                    bezierPath = `M ${points[0].x.toFixed(1)},${points[0].y.toFixed(1)}`;
+                    for (let i = 0; i < points.length - 1; i++) {
+                        const p0 = i > 0 ? points[i - 1] : points[i];
+                        const p1 = points[i];
+                        const p2 = points[i + 1];
+                        const p3 = i + 2 < points.length ? points[i + 2] : p2;
+
+                        const cp1x = p1.x + (p2.x - p0.x) / 6;
+                        const cp1y = p1.y + (p2.y - p0.y) / 6;
+                        const cp2x = p2.x - (p3.x - p1.x) / 6;
+                        const cp2y = p2.y - (p3.y - p1.y) / 6;
+                        bezierPath += ` C ${cp1x.toFixed(1)},${cp1y.toFixed(1)} ${cp2x.toFixed(1)},${cp2y.toFixed(1)} ${p2.x.toFixed(1)},${p2.y.toFixed(1)}`;
+                    }
+                }
+
+                const areaBottomY = padTop + plotHeight;
+                const areaPath = points.length > 1 
+                    ? `${bezierPath} L ${points[points.length - 1].x.toFixed(1)},${areaBottomY} L ${points[0].x.toFixed(1)},${areaBottomY} Z`
                     : '';
 
                 const firstDate = report.period?.from ? new Date(`${report.period.from}T12:00:00`).toLocaleDateString('fr-MA', { day: 'numeric', month: 'short' }) : '';
@@ -1050,43 +1073,60 @@
                             </div>
 
                             <!-- Interactive Chart SVG Container -->
-                            <div class="relative mt-6 select-none" id="analytics-chart-container">
-                                <svg viewBox="0 0 ${width} ${height}" class="h-48 w-full sm:h-64 overflow-visible" preserveAspectRatio="none" aria-hidden="true">
+                            <div class="relative mt-6 select-none bg-zinc-50/50 p-3 sm:p-5 rounded-2xl border border-zinc-100" id="analytics-chart-container">
+                                <svg viewBox="0 0 ${width} ${height}" class="h-52 w-full sm:h-64 overflow-visible" preserveAspectRatio="none" aria-hidden="true">
                                     <defs>
                                         <linearGradient id="areaGradient" x1="0" y1="0" x2="0" y2="1">
-                                            <stop offset="0%" stop-color="${currentConfig.color}" stop-opacity="0.25" />
+                                            <stop offset="0%" stop-color="${currentConfig.color}" stop-opacity="0.30" />
+                                            <stop offset="60%" stop-color="${currentConfig.color}" stop-opacity="0.08" />
                                             <stop offset="100%" stop-color="${currentConfig.color}" stop-opacity="0.0" />
                                         </linearGradient>
+                                        <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                                            <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="${currentConfig.color}" flood-opacity="0.3" />
+                                        </filter>
                                     </defs>
 
-                                    <!-- Grid lines -->
-                                    <line x1="${padX}" y1="${height - padY}" x2="${width - padX}" y2="${height - padY}" stroke="#f4f4f5" stroke-width="1.5" />
-                                    <line x1="${padX}" y1="${height / 2}" x2="${width - padX}" y2="${height / 2}" stroke="#f4f4f5" stroke-width="1" stroke-dasharray="4 4" />
-                                    <line x1="${padX}" y1="${padY}" x2="${width - padX}" y2="${padY}" stroke="#f4f4f5" stroke-width="1" stroke-dasharray="4 4" />
+                                    <!-- Horizontal Grid lines & Y Axis Labels -->
+                                    <g stroke="#e4e4e7" stroke-width="1" stroke-dasharray="3 3">
+                                        <line x1="${padLeft}" y1="${padTop}" x2="${width - padRight}" y2="${padTop}" />
+                                        <line x1="${padLeft}" y1="${padTop + plotHeight * 0.5}" x2="${width - padRight}" y2="${padTop + plotHeight * 0.5}" />
+                                        <line x1="${padLeft}" y1="${padTop + plotHeight}" x2="${width - padRight}" y2="${padTop + plotHeight}" stroke-dasharray="0" stroke="#d4d4d8" />
+                                    </g>
 
-                                    <!-- Shaded Area -->
+                                    <g fill="#a1a1aa" font-size="9" font-weight="600" text-anchor="end" font-family="sans-serif">
+                                        <text x="${padLeft - 8}" y="${padTop + 4}">${currentConfig.format(chartMax)}</text>
+                                        <text x="${padLeft - 8}" y="${padTop + plotHeight * 0.5 + 3}">${currentConfig.format(Math.round(chartMax * 0.5))}</text>
+                                        <text x="${padLeft - 8}" y="${padTop + plotHeight + 3}">0</text>
+                                    </g>
+
+                                    <!-- Shaded Area with smooth curve -->
                                     ${areaPath ? `<path d="${areaPath}" fill="url(#areaGradient)" />` : ''}
 
-                                    <!-- Polyline Curve -->
-                                    <polyline points="${linePath}" fill="none" stroke="${currentConfig.strokeColor}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+                                    <!-- Smooth Bezier Line with subtle glow -->
+                                    ${bezierPath ? `<path d="${bezierPath}" fill="none" stroke="${currentConfig.strokeColor}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)" />` : ''}
 
                                     <!-- Hover & Interactive Data Points -->
                                     ${points.map((point, i) => `
                                         <g class="cursor-pointer group/dot" data-point-idx="${i}">
-                                            <circle cx="${point.x.toFixed(1)}" cy="${point.y.toFixed(1)}" r="4" fill="#ffffff" stroke="${currentConfig.color}" stroke-width="2.5" class="transition-transform duration-150 group-hover/dot:scale-150" />
+                                            <!-- Transparent wider hit target -->
+                                            <circle cx="${point.x.toFixed(1)}" cy="${point.y.toFixed(1)}" r="14" fill="transparent" />
+                                            <!-- Outer ring on active value -->
+                                            ${point.val > 0 ? `<circle cx="${point.x.toFixed(1)}" cy="${point.y.toFixed(1)}" r="5" fill="${currentConfig.color}" fill-opacity="0.2" class="animate-ping" />` : ''}
+                                            <!-- Core point -->
+                                            <circle cx="${point.x.toFixed(1)}" cy="${point.y.toFixed(1)}" r="${point.val > 0 ? '4' : '2.5'}" fill="#ffffff" stroke="${currentConfig.color}" stroke-width="${point.val > 0 ? '2.5' : '1.5'}" class="transition-transform duration-150 group-hover/dot:scale-150" />
                                         </g>
                                     `).join('')}
                                 </svg>
 
                                 <!-- Floating Tooltip on Hover -->
-                                <div id="chart-tooltip" class="pointer-events-none absolute hidden -translate-x-1/2 -translate-y-full rounded-2xl bg-zinc-900/95 backdrop-blur-md px-3.5 py-2 text-white shadow-2xl transition-all duration-100 z-20 text-center border border-zinc-700/50">
+                                <div id="chart-tooltip" class="pointer-events-none absolute hidden -translate-x-1/2 -translate-y-full rounded-2xl bg-zinc-950/95 backdrop-blur-md px-3.5 py-2 text-white shadow-2xl transition-all duration-100 z-30 text-center border border-zinc-800">
                                     <p id="tooltip-date" class="text-[10px] font-medium text-zinc-400"></p>
                                     <p id="tooltip-value" class="text-xs font-black text-pink-400 mt-0.5"></p>
                                 </div>
 
-                                <div class="flex justify-between px-2 pt-3 text-[10px] font-semibold text-zinc-400 border-t border-zinc-100 mt-2">
+                                <div class="flex justify-between px-2 pt-3 text-[10px] font-semibold text-zinc-400 border-t border-zinc-200/60 mt-2">
                                     <span>${escapeHtml(firstDate)}</span>
-                                    <span class="text-zinc-500">Cliquez sur un indicateur ci-dessus pour changer de courbe</span>
+                                    <span class="text-zinc-500 hidden sm:inline">Passez la souris sur les points pour les détails</span>
                                     <span>${escapeHtml(lastDate)}</span>
                                 </div>
                             </div>
