@@ -14,13 +14,13 @@
             <button type="button"
                     id="cart-drawer-close-btn"
                     aria-label="Fermer le panier"
-                    class="btn-circle-action w-9 h-9 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 flex items-center justify-center cursor-pointer">
-                <i class="uil uil-multiply text-lg"></i>
+                    class="btn-circle-action w-7 h-7 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 flex items-center justify-center cursor-pointer">
+                <i class="uil uil-multiply text-sm"></i>
             </button>
         </div>
 
         <!-- Discount / Promo Code Card -->
-        <div class="px-5 py-3.5 bg-[#f8f9fa] border-b border-zinc-100">
+        <div class="px-5 py-3 bg-[#f8f9fa] border-b border-zinc-100">
             <!-- Discount / Promo Code Form in Same Card -->
             <div id="cart-coupon-card-section">
                 <!-- Input Form when no coupon is applied -->
@@ -29,28 +29,28 @@
                            id="cart-coupon-input"
                            placeholder="Code promo"
                            autocomplete="off"
-                           class="flex-1 !h-10.5 !px-4 text-xs uppercase font-bold !rounded-full bg-white border border-zinc-200 hover:border-pink-300 focus:border-pink-500 focus:ring-4 focus:ring-pink-500/12 outline-none transition-all placeholder:normal-case placeholder:font-normal placeholder:text-zinc-400">
+                           class="flex-1 !h-8 !px-3 text-[11px] uppercase font-bold !rounded-full bg-white border border-zinc-200 hover:border-pink-300 focus:border-pink-500 focus:ring-2 focus:ring-pink-500/12 outline-none transition-all placeholder:normal-case placeholder:font-normal placeholder:text-zinc-400">
                     <button type="button"
                             id="cart-coupon-apply-btn"
-                            class="btn-card-pill !h-10.5 !px-5 text-xs uppercase font-extrabold tracking-wider transition-all cursor-pointer shrink-0">
+                            class="btn-card-pill !h-8 !px-3.5 text-[10px] uppercase font-extrabold tracking-wider transition-all cursor-pointer shrink-0">
                         Appliquer
                     </button>
                 </div>
 
                 <!-- Active Applied Coupon Pill (hidden by default) -->
-                <div id="coupon-applied-badge" class="hidden flex items-center justify-between px-4 py-2 !rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold shadow-2xs">
+                <div id="coupon-applied-badge" class="hidden flex items-center justify-between px-3 py-1.5 !rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-[11px] font-bold shadow-2xs">
                     <div class="flex items-center gap-1.5 truncate">
-                        <span class="w-2 h-2 rounded-full bg-emerald-500 shrink-0"></span>
-                        <span class="text-xs font-semibold text-emerald-700">Code :</span>
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0"></span>
+                        <span class="text-[11px] font-semibold text-emerald-700">Code :</span>
                         <span id="applied-coupon-code" class="tracking-wide uppercase font-black"></span>
-                        <span id="applied-coupon-discount" class="text-emerald-600 font-extrabold text-xs"></span>
+                        <span id="applied-coupon-discount" class="text-emerald-600 font-extrabold text-[11px]"></span>
                     </div>
                     <button type="button"
                             id="coupon-remove-btn"
                             title="Retirer le code promo"
                             aria-label="Retirer le code promo"
-                            class="w-6 h-6 rounded-full hover:bg-emerald-200/70 text-emerald-800 flex items-center justify-center cursor-pointer transition-colors shrink-0 ml-1">
-                        <i class="uil uil-multiply text-xs font-bold"></i>
+                            class="w-5 h-5 rounded-full hover:bg-emerald-200/70 text-emerald-800 flex items-center justify-center cursor-pointer transition-colors shrink-0 ml-1">
+                        <i class="uil uil-multiply text-[10px] font-bold"></i>
                     </button>
                 </div>
 
@@ -95,8 +95,8 @@
                        href="https://wa.me/212704231498?text=Bonjour%20zizo%20aura%2C%20je%20souhaite%20commander"
                        target="_blank"
                        rel="noopener noreferrer"
-                       class="btn-card-pill w-full !py-3 !px-2 text-[11px] font-black uppercase tracking-wider bg-emerald-600 hover:bg-emerald-700 hover:border-emerald-700 flex items-center justify-center gap-1.5 shadow-sm text-center">
-                        <i class="uil uil-whatsapp text-base shrink-0"></i>
+                       class="btn-card-pill w-full !py-2 !px-2 text-[10px] font-black uppercase tracking-wider bg-emerald-600 hover:bg-emerald-700 hover:border-emerald-700 flex items-center justify-center gap-1 shadow-sm text-center">
+                        <i class="uil uil-whatsapp text-sm shrink-0"></i>
                         <span class="truncate">WhatsApp</span>
                     </a>
 
@@ -104,15 +104,15 @@
                     <button type="button"
                             id="cart-online-checkout-btn"
                             data-store-analytics="web_checkout_click"
-                            class="btn-card-pill w-full !py-3 !px-2 text-[11px] font-black uppercase tracking-wider bg-zinc-900 hover:bg-black hover:border-black flex items-center justify-center gap-1.5 shadow-sm text-center cursor-pointer">
-                        <i class="uil uil-shopping-cart text-base shrink-0 text-white"></i>
+                            class="btn-card-pill w-full !py-2 !px-2 text-[10px] font-black uppercase tracking-wider bg-zinc-900 hover:bg-black hover:border-black flex items-center justify-center gap-1 shadow-sm text-center cursor-pointer">
+                        <i class="uil uil-shopping-cart text-sm shrink-0 text-white"></i>
                         <span class="truncate">Commander</span>
                     </button>
                 </div>
 
                 <button type="button"
                         id="cart-continue-shopping-btn"
-                        class="w-full py-2 text-center text-xs font-bold text-zinc-500 hover:text-black transition-colors block cursor-pointer">
+                        class="w-full py-1 text-center text-[11px] font-bold text-zinc-500 hover:text-black transition-colors block cursor-pointer">
                     Continuer mes achats &rarr;
                 </button>
             </div>

@@ -237,9 +237,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     <p class="text-xs text-zinc-400 max-w-xs mb-6 font-medium">
                         Découvrez nos formules solaires et coffrets exclusifs pour composer votre rituel beauté.
                     </p>
-                    <a href="/boutique" id="empty-cart-shop-btn" class="btn-card-pill py-3 px-6 text-xs uppercase font-extrabold">
+                    <a href="/boutique" id="empty-cart-shop-btn" class="btn-card-pill py-2 px-4 text-[11px] uppercase font-extrabold">
                         <span>Explorer la boutique</span>
-                        <i class="uil uil-arrow-right text-sm"></i>
+                        <i class="uil uil-arrow-right text-xs"></i>
                     </a>
                 </div>
             `;
@@ -265,17 +265,17 @@ document.addEventListener('DOMContentLoaded', () => {
                             <div class="flex items-center justify-between gap-2 mt-2">
                                 <span class="text-xs font-extrabold text-pink-600 shrink-0">${item.price} DH</span>
                                 <div class="flex items-center gap-1.5 shrink-0">
-                                    <div class="flex items-center bg-[#f8f9fa] border border-zinc-200 rounded-full px-1.5 py-0.5 shadow-2xs">
-                                        <button type="button" data-cart-action="dec" data-index="${index}" class="btn-circle-action w-7 h-7 min-w-[28px] min-h-[28px] bg-white text-zinc-700 flex items-center justify-center cursor-pointer shadow-2xs text-xs" aria-label="Diminuer">
+                                    <div class="flex items-center bg-[#f8f9fa] border border-zinc-200 rounded-full px-1 py-0.5 shadow-2xs">
+                                        <button type="button" data-cart-action="dec" data-index="${index}" class="btn-circle-action w-5 h-5 min-w-[20px] min-h-[20px] bg-white text-zinc-700 flex items-center justify-center cursor-pointer shadow-2xs text-[10px]" aria-label="Diminuer">
                                             <i class="uil uil-minus"></i>
                                         </button>
-                                        <span class="w-6 text-center text-xs font-bold text-zinc-900 select-none">${item.quantity || 1}</span>
-                                        <button type="button" data-cart-action="inc" data-index="${index}" class="btn-circle-action w-7 h-7 min-w-[28px] min-h-[28px] bg-white text-zinc-700 flex items-center justify-center cursor-pointer shadow-2xs text-xs" aria-label="Augmenter">
+                                        <span class="w-5 text-center text-[11px] font-bold text-zinc-900 select-none">${item.quantity || 1}</span>
+                                        <button type="button" data-cart-action="inc" data-index="${index}" class="btn-circle-action w-5 h-5 min-w-[20px] min-h-[20px] bg-white text-zinc-700 flex items-center justify-center cursor-pointer shadow-2xs text-[10px]" aria-label="Augmenter">
                                             <i class="uil uil-plus"></i>
                                         </button>
                                     </div>
-                                    <button type="button" data-cart-action="remove" data-index="${index}" class="w-8 h-8 rounded-full flex items-center justify-center text-zinc-400 hover:text-rose-500 hover:bg-rose-50 transition-colors cursor-pointer shrink-0" aria-label="Supprimer du panier">
-                                        <i class="uil uil-trash-alt text-base leading-none"></i>
+                                    <button type="button" data-cart-action="remove" data-index="${index}" class="w-5.5 h-5.5 min-w-[22px] min-h-[22px] rounded-full flex items-center justify-center text-zinc-400 hover:text-rose-500 hover:bg-rose-50 transition-colors cursor-pointer shrink-0" aria-label="Supprimer du panier">
+                                        <i class="uil uil-trash-alt text-xs leading-none"></i>
                                     </button>
                                 </div>
                             </div>
