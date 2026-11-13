@@ -355,6 +355,22 @@
         }).format(val) + ' DH';
     };
 
+    const formatShortDH = (num) => {
+        const val = parseFloat(num) || 0;
+        if (val >= 1000000000) return (val / 1000000000).toFixed(val % 1000000000 === 0 ? 0 : 1) + 'B DH';
+        if (val >= 1000000) return (val / 1000000).toFixed(val % 1000000 === 0 ? 0 : 1) + 'M DH';
+        if (val >= 1000) return (val / 1000).toFixed(val % 1000 === 0 ? 0 : 1) + 'k DH';
+        return val.toLocaleString('fr-FR') + ' DH';
+    };
+
+    const formatCompact = (num) => {
+        const val = parseFloat(num) || 0;
+        if (val >= 1000000000) return (val / 1000000000).toFixed(val % 1000000000 === 0 ? 0 : 1) + 'B';
+        if (val >= 1000000) return (val / 1000000).toFixed(val % 1000000 === 0 ? 0 : 1) + 'M';
+        if (val >= 1000) return (val / 1000).toFixed(val % 1000 === 0 ? 0 : 1) + 'k';
+        return val.toLocaleString('fr-FR');
+    };
+
     const escapeHtml = (str) => {
         if (str === null || str === undefined) return '';
         return String(str)
@@ -926,34 +942,56 @@
                 const activeMetric = appState.analyticsMetric || 'visitors';
 
                 const metricConfigs = {
-                    visitors: { label: 'Visiteurs uniques', color: '#db2777', bgGradient: 'from-pink-500/10 to-transparent', strokeColor: '#db2777', unit: '', format: n => Number(n || 0).toLocaleString('fr-FR') },
-                    page_views: { label: 'Pages vues', color: '#8b5cf6', bgGradient: 'from-violet-500/10 to-transparent', strokeColor: '#8b5cf6', unit: '', format: n => Number(n || 0).toLocaleString('fr-FR') },
-                    store_clicks: { label: 'Clics boutique', color: '#f59e0b', bgGradient: 'from-amber-500/10 to-transparent', strokeColor: '#f59e0b', unit: '', format: n => Number(n || 0).toLocaleString('fr-FR') },
-                    orders: { label: 'Commandes', color: '#0284c7', bgGradient: 'from-sky-500/10 to-transparent', strokeColor: '#0284c7', unit: '', format: n => Number(n || 0).toLocaleString('fr-FR') },
-                    gmv: { label: 'GMV estimé', color: '#059669', bgGradient: 'from-emerald-500/10 to-transparent', strokeColor: '#059669', unit: ' DH', format: n => formatDH(n) },
-                    whatsapp_clicks: { label: 'Clics WhatsApp', color: '#10b981', bgGradient: 'from-emerald-500/10 to-transparent', strokeColor: '#10b981', unit: '', format: n => Number(n || 0).toLocaleString('fr-FR') },
-                    web_checkout_clicks: { label: 'Commande web', color: '#6366f1', bgGradient: 'from-indigo-500/10 to-transparent', strokeColor: '#6366f1', unit: '', format: n => Number(n || 0).toLocaleString('fr-FR') },
+                    gmv: { label: 'Revenu global', color: '#10b981', strokeColor: '#10b981', unit: ' DH', format: n => formatDH(n), shortFormat: n => formatShortDH(n) },
+                    visitors: { label: 'Visiteurs uniques', color: '#0d9488', strokeColor: '#0d9488', unit: '', format: n => Number(n || 0).toLocaleString('fr-FR'), shortFormat: n => formatCompact(n) },
+                    orders: { label: 'Commandes', color: '#059669', strokeColor: '#059669', unit: '', format: n => Number(n || 0).toLocaleString('fr-FR'), shortFormat: n => formatCompact(n) },
+                    page_views: { label: 'Pages vues', color: '#0284c7', strokeColor: '#0284c7', unit: '', format: n => Number(n || 0).toLocaleString('fr-FR'), shortFormat: n => formatCompact(n) },
+                    store_clicks: { label: 'Clics boutique', color: '#f59e0b', strokeColor: '#f59e0b', unit: '', format: n => Number(n || 0).toLocaleString('fr-FR'), shortFormat: n => formatCompact(n) },
+                    whatsapp_clicks: { label: 'Clics WhatsApp', color: '#10b981', strokeColor: '#10b981', unit: '', format: n => Number(n || 0).toLocaleString('fr-FR'), shortFormat: n => formatCompact(n) },
+                    web_checkout_clicks: { label: 'Commande web', color: '#6366f1', strokeColor: '#6366f1', unit: '', format: n => Number(n || 0).toLocaleString('fr-FR'), shortFormat: n => formatCompact(n) },
                 };
 
-                const currentConfig = metricConfigs[activeMetric] || metricConfigs.visitors;
+                const currentConfig = metricConfigs[activeMetric] || metricConfigs.gmv;
                 const metricValues = series.map(p => Number(p[activeMetric]) || 0);
                 const rawMax = Math.max(0, ...metricValues);
-                const chartMax = rawMax > 0 ? (rawMax <= 5 ? rawMax + 1 : Math.ceil(rawMax * 1.25)) : 5;
-                const width = 860, height = 240, padLeft = 45, padRight = 20, padTop = 20, padBottom = 30;
+                const rawMin = Math.min(...metricValues, 0);
+
+                // Calculate smart ceiling for chart ticks
+                let chartMax = 100;
+                if (rawMax > 0) {
+                    const magnitude = Math.pow(10, Math.floor(Math.log10(rawMax)));
+                    const normalized = rawMax / magnitude;
+                    if (normalized <= 1) chartMax = magnitude;
+                    else if (normalized <= 2) chartMax = 2 * magnitude;
+                    else if (normalized <= 5) chartMax = 5 * magnitude;
+                    else chartMax = 10 * magnitude;
+                }
+                const chartMin = 0;
+
+                // 4-tick steps (0, 25%, 50%, 75%, 100% or 0, 33%, 66%, 100%)
+                const yTicks = [
+                    { value: chartMax, ratio: 1 },
+                    { value: chartMax * 0.75, ratio: 0.75 },
+                    { value: chartMax * 0.5, ratio: 0.5 },
+                    { value: chartMax * 0.25, ratio: 0.25 },
+                    { value: 0, ratio: 0 }
+                ];
+
+                const width = 900, height = 300, padLeft = 65, padRight = 35, padTop = 20, padBottom = 40;
                 const plotWidth = width - padLeft - padRight;
                 const plotHeight = height - padTop - padBottom;
 
                 const points = series.map((point, index) => {
-                    const x = padLeft + (series.length < 2 ? 0 : index * plotWidth / (series.length - 1));
+                    const x = padLeft + (series.length < 2 ? plotWidth / 2 : (index * plotWidth) / (series.length - 1));
                     const val = Number(point[activeMetric]) || 0;
-                    const y = padTop + plotHeight - (val / chartMax) * plotHeight;
+                    const y = padTop + plotHeight - (chartMax > 0 ? (val / chartMax) * plotHeight : plotHeight);
                     return { x, y, date: point.date, val };
                 });
 
-                // Generate smooth cubic bezier curve
+                // Generate smooth cubic bezier curve with gentle tension
                 let bezierPath = '';
                 if (points.length === 1) {
-                    bezierPath = `M ${points[0].x},${points[0].y} L ${points[0].x + 10},${points[0].y}`;
+                    bezierPath = `M ${points[0].x - 20},${points[0].y} L ${points[0].x + 20},${points[0].y}`;
                 } else if (points.length > 1) {
                     bezierPath = `M ${points[0].x.toFixed(1)},${points[0].y.toFixed(1)}`;
                     for (let i = 0; i < points.length - 1; i++) {
@@ -962,10 +1000,10 @@
                         const p2 = points[i + 1];
                         const p3 = i + 2 < points.length ? points[i + 2] : p2;
 
-                        const cp1x = p1.x + (p2.x - p0.x) / 6;
-                        const cp1y = p1.y + (p2.y - p0.y) / 6;
-                        const cp2x = p2.x - (p3.x - p1.x) / 6;
-                        const cp2y = p2.y - (p3.y - p1.y) / 6;
+                        const cp1x = p1.x + (p2.x - p0.x) / 5;
+                        const cp1y = p1.y + (p2.y - p0.y) / 5;
+                        const cp2x = p2.x - (p3.x - p1.x) / 5;
+                        const cp2y = p2.y - (p3.y - p1.y) / 5;
                         bezierPath += ` C ${cp1x.toFixed(1)},${cp1y.toFixed(1)} ${cp2x.toFixed(1)},${cp2y.toFixed(1)} ${p2.x.toFixed(1)},${p2.y.toFixed(1)}`;
                     }
                 }
@@ -1051,88 +1089,145 @@
                             }).join('')}
                         </section>
 
-                        <!-- Main Interactive Curve Graph Card -->
-                        <section class="rounded-3xl border border-zinc-200/80 bg-white p-5 shadow-sm sm:p-7 relative overflow-hidden" aria-labelledby="performance-chart-title">
-                            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b border-zinc-100 pb-4">
+                        <!-- Main Interactive Curve Graph Card (Styled like high-end analytics dashboard) -->
+                        <section class="rounded-[2.5rem] border border-zinc-200/90 bg-white p-6 sm:p-8 md:p-10 shadow-sm relative" aria-labelledby="performance-chart-title">
+                            <!-- Card Header: Title, Big Metric Value, Sub-stat and Controls -->
+                            <div class="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
                                 <div>
-                                    <div class="flex items-center gap-2">
-                                        <span class="w-2.5 h-2.5 rounded-full" style="background-color: ${currentConfig.color}"></span>
-                                        <h2 id="performance-chart-title" class="text-base font-black text-zinc-950">
-                                            Évolution : ${currentConfig.label}
-                                        </h2>
+                                    <h2 id="performance-chart-title" class="text-base sm:text-lg font-medium text-zinc-600">
+                                        ${escapeHtml(currentConfig.label)}
+                                    </h2>
+                                    <div class="mt-2 text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-zinc-950 font-[system-ui]">
+                                        ${currentConfig.format(currentConfig === metricConfigs.gmv ? gmvTotal : (activeMetric === 'orders' ? ordersCount : (activeMetric === 'visitors' ? visitorsCount : (metrics[activeMetric] || 0))))}
                                     </div>
-                                    <p class="mt-1 text-xs text-zinc-500">
-                                        Période du <span class="font-bold text-zinc-700">${escapeHtml(firstDate)}</span> au <span class="font-bold text-zinc-700">${escapeHtml(lastDate)}</span> (${appState.analyticsDays} jours)
-                                    </p>
+                                    <div class="mt-2.5 flex items-center gap-2 text-xs sm:text-sm font-semibold">
+                                        <span class="text-emerald-500 font-bold">+${rawMax > 0 ? (rawMax).toLocaleString('fr-FR') : '0'} (${visitorsCount > 0 ? conversionRate : '0.0'}%)</span>
+                                        <span class="text-zinc-300">•</span>
+                                        <span class="text-zinc-400 font-normal">derniers ${appState.analyticsDays} jours (${escapeHtml(firstDate)} - ${escapeHtml(lastDate)})</span>
+                                    </div>
                                 </div>
-                                <div class="flex items-center gap-2">
-                                    <span class="text-[11px] font-semibold text-zinc-400 bg-zinc-50 border border-zinc-200/70 rounded-xl px-3 py-1.5">
-                                        Pic max : <strong class="text-zinc-900">${currentConfig.format(rawMax)}</strong>
-                                    </span>
+
+                                <div class="flex items-center gap-2 self-start sm:self-auto">
+                                    <!-- Period selector dropdown style -->
+                                    <div class="relative inline-flex items-center">
+                                        <select id="analytics-period-select" class="appearance-none bg-white hover:bg-zinc-50 border border-zinc-200 text-zinc-700 text-xs sm:text-sm font-semibold rounded-2xl pl-9 pr-8 py-2.5 shadow-xs cursor-pointer focus:outline-none focus:ring-2 focus:ring-zinc-900/10 transition">
+                                            <option value="7" ${appState.analyticsDays === 7 ? 'selected' : ''}>Derniers 7 jours</option>
+                                            <option value="30" ${appState.analyticsDays === 30 ? 'selected' : ''}>Derniers 30 jours</option>
+                                            <option value="90" ${appState.analyticsDays === 90 ? 'selected' : ''}>Derniers 90 jours</option>
+                                        </select>
+                                        <i class="ti ti-calendar absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 pointer-events-none text-base"></i>
+                                        <i class="ti ti-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 pointer-events-none text-xs"></i>
+                                    </div>
+
+                                    <!-- Expand / Fullscreen icon button -->
+                                    <button type="button" id="chart-fullscreen-btn" title="Plein écran" class="p-2.5 rounded-2xl border border-zinc-200 text-zinc-500 hover:text-zinc-900 hover:bg-zinc-50 transition cursor-pointer flex items-center justify-center">
+                                        <i class="ti ti-maximize text-base"></i>
+                                    </button>
                                 </div>
                             </div>
 
                             <!-- Interactive Chart SVG Container -->
-                            <div class="relative mt-6 select-none bg-zinc-50/50 p-3 sm:p-5 rounded-2xl border border-zinc-100" id="analytics-chart-container">
-                                <svg viewBox="0 0 ${width} ${height}" class="h-52 w-full sm:h-64 overflow-visible" preserveAspectRatio="none" aria-hidden="true">
+                            <div class="relative mt-8 sm:mt-12 select-none" id="analytics-chart-container">
+                                <svg viewBox="0 0 ${width} ${height}" class="h-64 sm:h-80 md:h-96 w-full overflow-visible" preserveAspectRatio="none" aria-hidden="true">
                                     <defs>
+                                        <!-- Gradient fill under curve with emerald/teal tone -->
                                         <linearGradient id="areaGradient" x1="0" y1="0" x2="0" y2="1">
-                                            <stop offset="0%" stop-color="${currentConfig.color}" stop-opacity="0.30" />
-                                            <stop offset="60%" stop-color="${currentConfig.color}" stop-opacity="0.08" />
-                                            <stop offset="100%" stop-color="${currentConfig.color}" stop-opacity="0.0" />
+                                            <stop offset="0%" stop-color="#10b981" stop-opacity="0.18" />
+                                            <stop offset="65%" stop-color="#10b981" stop-opacity="0.05" />
+                                            <stop offset="100%" stop-color="#10b981" stop-opacity="0.0" />
                                         </linearGradient>
-                                        <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-                                            <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="${currentConfig.color}" flood-opacity="0.3" />
+
+                                        <!-- Subtle Glow Filter for Line -->
+                                        <filter id="lineGlow" x="-20%" y="-20%" width="140%" height="140%">
+                                            <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#10b981" flood-opacity="0.15" />
                                         </filter>
+
+                                        <!-- Dotted Grid Pattern for clean reference aesthetic -->
+                                        <pattern id="chartDots" x="${padLeft}" y="${padTop}" width="38" height="38" patternUnits="userSpaceOnUse">
+                                            <circle cx="2" cy="2" r="1.2" fill="#e4e4e7" />
+                                        </pattern>
                                     </defs>
 
-                                    <!-- Horizontal Grid lines & Y Axis Labels -->
-                                    <g stroke="#e4e4e7" stroke-width="1" stroke-dasharray="3 3">
-                                        <line x1="${padLeft}" y1="${padTop}" x2="${width - padRight}" y2="${padTop}" />
-                                        <line x1="${padLeft}" y1="${padTop + plotHeight * 0.5}" x2="${width - padRight}" y2="${padTop + plotHeight * 0.5}" />
-                                        <line x1="${padLeft}" y1="${padTop + plotHeight}" x2="${width - padRight}" y2="${padTop + plotHeight}" stroke-dasharray="0" stroke="#d4d4d8" />
-                                    </g>
+                                    <!-- Subtle Dotted Grid Background -->
+                                    <rect x="${padLeft}" y="${padTop}" width="${plotWidth}" height="${plotHeight}" fill="url(#chartDots)" />
 
-                                    <g fill="#a1a1aa" font-size="9" font-weight="600" text-anchor="end" font-family="sans-serif">
-                                        <text x="${padLeft - 8}" y="${padTop + 4}">${currentConfig.format(chartMax)}</text>
-                                        <text x="${padLeft - 8}" y="${padTop + plotHeight * 0.5 + 3}">${currentConfig.format(Math.round(chartMax * 0.5))}</text>
-                                        <text x="${padLeft - 8}" y="${padTop + plotHeight + 3}">0</text>
+                                    <!-- Y-Axis Labels (Left side, minimal & clean) -->
+                                    <g fill="#71717a" font-size="11" font-weight="500" text-anchor="start" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">
+                                        ${yTicks.map(tick => {
+                                            const yPos = padTop + plotHeight - (tick.ratio * plotHeight);
+                                            const formatted = tick.value === 0 ? '0' : currentConfig.shortFormat(tick.value);
+                                            return `<text x="4" y="${yPos + 4}">${escapeHtml(formatted)}</text>`;
+                                        }).join('')}
                                     </g>
 
                                     <!-- Shaded Area with smooth curve -->
                                     ${areaPath ? `<path d="${areaPath}" fill="url(#areaGradient)" />` : ''}
 
-                                    <!-- Smooth Bezier Line with subtle glow -->
-                                    ${bezierPath ? `<path d="${bezierPath}" fill="none" stroke="${currentConfig.strokeColor}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)" />` : ''}
+                                    <!-- Smooth Line in rich Emerald/Teal (#22c55e / #10b981 / #14b8a6) -->
+                                    ${bezierPath ? `<path d="${bezierPath}" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#lineGlow)" />` : ''}
 
-                                    <!-- Hover & Interactive Data Points -->
+                                    <!-- Interactive Vertical Guide Line (Hidden by default, shown on hover) -->
+                                    <line id="chart-cursor-line" x1="0" y1="${padTop}" x2="0" y2="${padTop + plotHeight}" stroke="#22c55e" stroke-width="1.5" stroke-dasharray="2 3" opacity="0" class="transition-opacity duration-150 pointer-events-none" />
+
+                                    <!-- Active Hover Reticle Halo & Target Point (Smooth dynamic tracking) -->
+                                    <g id="chart-active-reticle" opacity="0" class="pointer-events-none transition-opacity duration-150">
+                                        <!-- Vertical subtle stem / beam -->
+                                        <line id="reticle-stem" x1="0" y1="0" x2="0" y2="${padTop + plotHeight}" stroke="#10b981" stroke-width="2" stroke-linecap="round" opacity="0.65" />
+                                        <!-- Outer pulsing ring -->
+                                        <circle id="reticle-halo" cx="0" cy="0" r="12" fill="none" stroke="#10b981" stroke-width="2.5" stroke-opacity="0.8" />
+                                        <!-- Inner dot -->
+                                        <circle id="reticle-dot" cx="0" cy="0" r="4.5" fill="#ffffff" stroke="#10b981" stroke-width="2.5" />
+                                    </g>
+
+                                    <!-- Hit Targets for Each Data Point -->
                                     ${points.map((point, i) => `
                                         <g class="cursor-pointer group/dot" data-point-idx="${i}">
-                                            <!-- Transparent wider hit target -->
-                                            <circle cx="${point.x.toFixed(1)}" cy="${point.y.toFixed(1)}" r="14" fill="transparent" />
-                                            <!-- Outer ring on active value -->
-                                            ${point.val > 0 ? `<circle cx="${point.x.toFixed(1)}" cy="${point.y.toFixed(1)}" r="5" fill="${currentConfig.color}" fill-opacity="0.2" class="animate-ping" />` : ''}
-                                            <!-- Core point -->
-                                            <circle cx="${point.x.toFixed(1)}" cy="${point.y.toFixed(1)}" r="${point.val > 0 ? '4' : '2.5'}" fill="#ffffff" stroke="${currentConfig.color}" stroke-width="${point.val > 0 ? '2.5' : '1.5'}" class="transition-transform duration-150 group-hover/dot:scale-150" />
+                                            <circle cx="${point.x.toFixed(1)}" cy="${point.y.toFixed(1)}" r="18" fill="transparent" />
                                         </g>
                                     `).join('')}
+
+                                    <!-- Bottom X-Axis Month / Date Labels -->
+                                    <g fill="#71717a" font-size="11" font-weight="500" text-anchor="middle" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">
+                                        ${(() => {
+                                            if (points.length === 0) return '';
+                                            // Determine stride so dates don't overlap (approx 8-12 labels max)
+                                            const step = Math.max(1, Math.ceil(points.length / 10));
+                                            const labels = [];
+                                            for (let i = 0; i < points.length; i += step) {
+                                                const p = points[i];
+                                                const d = new Date(`${p.date}T12:00:00`);
+                                                const labelStr = appState.analyticsDays > 60 
+                                                    ? d.toLocaleDateString('fr-MA', { month: 'short' })
+                                                    : d.toLocaleDateString('fr-MA', { day: 'numeric', month: 'short' });
+                                                labels.push(`<text x="${p.x.toFixed(1)}" y="${padTop + plotHeight + 25}">${escapeHtml(labelStr)}</text>`);
+                                            }
+                                            // Make sure the last point has a label if not too close
+                                            const lastPt = points[points.length - 1];
+                                            const lastIdx = points.length - 1;
+                                            if ((lastIdx % step) !== 0 && (lastIdx - (lastIdx % step)) >= 2) {
+                                                const d = new Date(`${lastPt.date}T12:00:00`);
+                                                const labelStr = appState.analyticsDays > 60 
+                                                    ? d.toLocaleDateString('fr-MA', { month: 'short' })
+                                                    : d.toLocaleDateString('fr-MA', { day: 'numeric', month: 'short' });
+                                                labels.push(`<text x="${lastPt.x.toFixed(1)}" y="${padTop + plotHeight + 25}">${escapeHtml(labelStr)}</text>`);
+                                            }
+                                            return labels.join('');
+                                        })()}
+                                    </g>
                                 </svg>
 
-                                <!-- Floating Tooltip on Hover -->
-                                <div id="chart-tooltip" class="pointer-events-none absolute hidden -translate-x-1/2 -translate-y-full rounded-2xl bg-zinc-950/95 backdrop-blur-md px-3.5 py-2 text-white shadow-2xl transition-all duration-100 z-30 text-center border border-zinc-800">
-                                    <p id="tooltip-date" class="text-[10px] font-medium text-zinc-400"></p>
-                                    <p id="tooltip-value" class="text-xs font-black text-pink-400 mt-0.5"></p>
-                                </div>
-
-                                <div class="flex justify-between px-2 pt-3 text-[10px] font-semibold text-zinc-400 border-t border-zinc-200/60 mt-2">
-                                    <span>${escapeHtml(firstDate)}</span>
-                                    <span class="text-zinc-500 hidden sm:inline">Passez la souris sur les points pour les détails</span>
-                                    <span>${escapeHtml(lastDate)}</span>
+                                <!-- Floating Dark Pill Tooltip matching reference design -->
+                                <div id="chart-tooltip" class="pointer-events-none absolute hidden -translate-x-1/2 -translate-y-full rounded-2xl bg-zinc-950 px-4 py-3 text-white shadow-2xl transition-all duration-150 z-30 border border-zinc-800/80 min-w-[140px]">
+                                    <div id="tooltip-date" class="text-[11px] font-medium text-zinc-400"></div>
+                                    <div class="mt-1 flex items-baseline gap-1.5">
+                                        <span class="text-[11px] text-zinc-400" id="tooltip-label">Cumulé:</span>
+                                        <span id="tooltip-value" class="text-xs sm:text-sm font-bold text-white tracking-tight"></span>
+                                    </div>
                                 </div>
                             </div>
 
                             ${visitorsCount === 0 ? `
-                                <div class="mt-4 rounded-2xl bg-amber-50/70 border border-amber-200/60 p-4 flex items-start gap-3">
+                                <div class="mt-6 rounded-2xl bg-amber-50/70 border border-amber-200/60 p-4 flex items-start gap-3">
                                     <i class="ti ti-info-circle text-amber-600 text-lg shrink-0 mt-0.5"></i>
                                     <div>
                                         <p class="text-xs font-bold text-amber-900">Suivi actif</p>
@@ -1251,10 +1346,31 @@
                         </section>
                     </div>`;
 
-                // Handle Period Switcher clicks
+                // Handle Period Switcher select change & buttons
+                const periodSelect = document.getElementById('analytics-period-select');
+                if (periodSelect) {
+                    periodSelect.addEventListener('change', (e) => {
+                        this.renderPerformance(e.target.value);
+                    });
+                }
+
                 this.root.querySelectorAll('[data-analytics-days]').forEach(button => {
                     button.addEventListener('click', () => this.renderPerformance(button.dataset.analyticsDays));
                 });
+
+                // Fullscreen button toggle for chart
+                const fullscreenBtn = document.getElementById('chart-fullscreen-btn');
+                if (fullscreenBtn && container) {
+                    fullscreenBtn.addEventListener('click', () => {
+                        const card = container.closest('section');
+                        if (!card) return;
+                        if (!document.fullscreenElement) {
+                            card.requestFullscreen?.().catch(() => {});
+                        } else {
+                            document.exitFullscreen?.().catch(() => {});
+                        }
+                    });
+                }
 
                 // Handle Metric Switcher clicks
                 this.root.querySelectorAll('[data-select-metric]').forEach(button => {
@@ -1264,37 +1380,63 @@
                     });
                 });
 
-                // Attach Tooltip events for SVG points
+                // Attach Tooltip & Reticle cursor events for SVG points
                 const tooltip = document.getElementById('chart-tooltip');
                 const tooltipDate = document.getElementById('tooltip-date');
                 const tooltipValue = document.getElementById('tooltip-value');
-                const container = document.getElementById('analytics-chart-container');
+                const tooltipLabel = document.getElementById('tooltip-label');
+                const reticle = document.getElementById('chart-active-reticle');
+                const reticleHalo = document.getElementById('reticle-halo');
+                const reticleDot = document.getElementById('reticle-dot');
+                const reticleStem = document.getElementById('reticle-stem');
+                const cursorLine = document.getElementById('chart-cursor-line');
 
                 if (tooltip && container) {
                     this.root.querySelectorAll('[data-point-idx]').forEach(group => {
-                        group.addEventListener('mouseenter', (e) => {
+                        group.addEventListener('mouseenter', () => {
                             const idx = Number(group.dataset.pointIdx);
                             const p = points[idx];
                             if (!p) return;
 
-                            const formattedDate = new Date(`${p.date}T12:00:00`).toLocaleDateString('fr-MA', {
-                                weekday: 'short', day: 'numeric', month: 'short'
-                            });
+                            const d = new Date(`${p.date}T12:00:00`);
+                            const formattedDate = d.toLocaleDateString('fr-MA', {
+                                day: 'numeric', month: 'short', year: 'numeric'
+                            }) + ', ' + d.toLocaleTimeString('fr-MA', { hour: '2-digit', minute: '2-digit' });
 
                             tooltipDate.textContent = formattedDate;
-                            tooltipValue.textContent = `${currentConfig.label}: ${currentConfig.format(p.val)}`;
+                            if (tooltipLabel) tooltipLabel.textContent = `${currentConfig.label}:`;
+                            tooltipValue.textContent = currentConfig.format(p.val);
 
-                            const rect = container.getBoundingClientRect();
                             const xPercent = (p.x / width) * 100;
                             const yPercent = (p.y / height) * 100;
 
                             tooltip.style.left = `${xPercent}%`;
-                            tooltip.style.top = `${yPercent}%`;
+                            tooltip.style.top = `${Math.max(10, yPercent - 8)}%`;
                             tooltip.classList.remove('hidden');
+
+                            if (reticle && reticleHalo && reticleDot && reticleStem) {
+                                reticleHalo.setAttribute('cx', p.x.toFixed(1));
+                                reticleHalo.setAttribute('cy', p.y.toFixed(1));
+                                reticleDot.setAttribute('cx', p.x.toFixed(1));
+                                reticleDot.setAttribute('cy', p.y.toFixed(1));
+                                reticleStem.setAttribute('x1', p.x.toFixed(1));
+                                reticleStem.setAttribute('y1', p.y.toFixed(1));
+                                reticleStem.setAttribute('x2', p.x.toFixed(1));
+                                reticleStem.setAttribute('y2', (padTop + plotHeight).toString());
+                                reticle.setAttribute('opacity', '1');
+                            }
+
+                            if (cursorLine) {
+                                cursorLine.setAttribute('x1', p.x.toFixed(1));
+                                cursorLine.setAttribute('x2', p.x.toFixed(1));
+                                cursorLine.setAttribute('opacity', '0.4');
+                            }
                         });
 
                         group.addEventListener('mouseleave', () => {
                             tooltip.classList.add('hidden');
+                            if (reticle) reticle.setAttribute('opacity', '0');
+                            if (cursorLine) cursorLine.setAttribute('opacity', '0');
                         });
                     });
                 }
