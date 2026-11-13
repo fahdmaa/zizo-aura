@@ -2467,6 +2467,27 @@
                     });
 
                     // Toggle Size and Flavor sections
+                    const inStockCb = panel.querySelector('input[name="in_stock"]');
+                    const isActiveCb = panel.querySelector('input[name="is_active"]');
+
+                    // Link in_stock and is_active: if out of stock, uncheck and disable isActive
+                    const syncStockAndActive = () => {
+                        if (!inStockCb || !isActiveCb) return;
+                        if (!inStockCb.checked) {
+                            isActiveCb.checked = false;
+                            isActiveCb.disabled = true;
+                            isActiveCb.closest('label')?.classList.add('opacity-50', 'cursor-not-allowed');
+                        } else {
+                            isActiveCb.disabled = false;
+                            isActiveCb.closest('label')?.classList.remove('opacity-50', 'cursor-not-allowed');
+                        }
+                    };
+
+                    inStockCb?.addEventListener('change', () => {
+                        syncStockAndActive();
+                    });
+                    syncStockAndActive();
+
                     const hasSizesCb = panel.querySelector('#pe-has-sizes');
                     const sizesWrapper = panel.querySelector('#pe-sizes-wrapper');
                     hasSizesCb?.addEventListener('change', () => {

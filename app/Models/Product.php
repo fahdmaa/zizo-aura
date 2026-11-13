@@ -11,6 +11,23 @@ class Product extends Model
 {
     use SoftDeletes;
 
+    protected $attributes = [
+        'in_stock' => true,
+        'is_active' => true,
+    ];
+
+    protected static function booted(): void
+    {
+        static::saving(function (Product $product) {
+            // Business rule: If product is explicitly not in stock or stock quantity is 0, it cannot be active
+            $hasNoStock = $product->in_stock === false || ($product->stock_quantity !== null && (int) $product->stock_quantity <= 0);
+            if ($hasNoStock) {
+                $product->in_stock = false;
+                $product->is_active = false;
+            }
+        });
+    }
+
     protected $fillable = [
         'category_id',
         'name',

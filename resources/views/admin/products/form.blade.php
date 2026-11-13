@@ -187,5 +187,24 @@ function addSize() {
     `);
     sizeIdx++;
 }
+
+document.addEventListener('DOMContentLoaded', function () {
+    const inStockCb = document.querySelector('input[type="checkbox"][name="in_stock"]');
+    const isActiveCb = document.querySelector('input[type="checkbox"][name="is_active"]');
+    if (inStockCb && isActiveCb) {
+        const sync = () => {
+            if (!inStockCb.checked) {
+                isActiveCb.checked = false;
+                isActiveCb.disabled = true;
+                isActiveCb.closest('label')?.classList.add('opacity-50', 'cursor-not-allowed');
+            } else {
+                isActiveCb.disabled = false;
+                isActiveCb.closest('label')?.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+        };
+        inStockCb.addEventListener('change', sync);
+        sync();
+    }
+});
 </script>
 @endsection

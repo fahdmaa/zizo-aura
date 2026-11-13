@@ -178,6 +178,12 @@ class AdminApiController extends Controller
 
     public function toggleProductStatus(Product $product): JsonResponse
     {
+        if (! $product->is_active && (! $product->in_stock || ($product->stock_quantity !== null && (int) $product->stock_quantity <= 0))) {
+            return response()->json([
+                'message' => 'Impossible d\'activer un produit en rupture de stock. Veuillez d\'abord marquer le produit comme en stock.',
+            ], 422);
+        }
+
         $product->update([
             'is_active' => ! $product->is_active,
         ]);

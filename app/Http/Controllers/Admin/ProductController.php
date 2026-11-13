@@ -94,6 +94,10 @@ class ProductController extends Controller
 
     public function toggleStatus(Product $product)
     {
+        if (! $product->is_active && (! $product->in_stock || ($product->stock_quantity !== null && (int) $product->stock_quantity <= 0))) {
+            return back()->with('error', 'Impossible d\'activer un produit en rupture de stock. Marquez-le d\'abord en stock.');
+        }
+
         $product->update([
             'is_active' => ! $product->is_active,
         ]);
