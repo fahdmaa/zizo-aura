@@ -24,15 +24,15 @@
             <!-- Discount / Promo Code Form in Same Card -->
             <div id="cart-coupon-card-section">
                 <!-- Input Form when no coupon is applied -->
-                <div id="coupon-input-wrapper" class="flex items-center gap-2">
+                <div id="coupon-input-wrapper" class="flex items-stretch gap-2 h-9">
                     <input type="text"
                            id="cart-coupon-input"
                            placeholder="Code promo"
                            autocomplete="off"
-                           class="flex-1 !h-8 !px-3 text-[11px] uppercase font-bold !rounded-full bg-white border border-zinc-200 hover:border-pink-300 focus:border-pink-500 focus:ring-2 focus:ring-pink-500/12 outline-none transition-all placeholder:normal-case placeholder:font-normal placeholder:text-zinc-400">
+                           class="flex-1 !h-9 !min-h-[36px] !max-h-[36px] !px-3.5 text-xs uppercase font-bold !rounded-full bg-white border border-zinc-200 hover:border-pink-300 focus:border-pink-500 focus:ring-2 focus:ring-pink-500/12 outline-none transition-all placeholder:normal-case placeholder:font-normal placeholder:text-zinc-400 box-border">
                     <button type="button"
                             id="cart-coupon-apply-btn"
-                            class="btn-card-pill !h-8 !px-3.5 text-[10px] uppercase font-extrabold tracking-wider transition-all cursor-pointer shrink-0">
+                            class="btn-card-pill !h-9 !min-h-[36px] !max-h-[36px] !py-0 !px-4 text-[10px] uppercase font-extrabold tracking-wider transition-all cursor-pointer shrink-0 box-border flex items-center justify-center">
                         Appliquer
                     </button>
                 </div>
@@ -95,7 +95,7 @@
                        href="https://wa.me/212704231498?text=Bonjour%20zizo%20aura%2C%20je%20souhaite%20commander"
                        target="_blank"
                        rel="noopener noreferrer"
-                       class="btn-card-pill w-full !py-2 !px-2 text-[10px] font-black uppercase tracking-wider bg-emerald-600 hover:bg-emerald-700 hover:border-emerald-700 flex items-center justify-center gap-1 shadow-sm text-center">
+                       class="btn-card-pill w-full !h-9 !min-h-[36px] !max-h-[36px] !py-0 !px-2 text-[10px] font-black uppercase tracking-wider bg-emerald-600 hover:bg-emerald-700 hover:border-emerald-700 flex items-center justify-center gap-1 shadow-sm text-center box-border">
                         <i class="uil uil-whatsapp text-sm shrink-0"></i>
                         <span class="truncate">WhatsApp</span>
                     </a>
@@ -104,7 +104,7 @@
                     <button type="button"
                             id="cart-online-checkout-btn"
                             data-store-analytics="web_checkout_click"
-                            class="btn-card-pill w-full !py-2 !px-2 text-[10px] font-black uppercase tracking-wider bg-zinc-900 hover:bg-black hover:border-black flex items-center justify-center gap-1 shadow-sm text-center cursor-pointer">
+                            class="btn-card-pill w-full !h-9 !min-h-[36px] !max-h-[36px] !py-0 !px-2 text-[10px] font-black uppercase tracking-wider bg-zinc-900 hover:bg-black hover:border-black flex items-center justify-center gap-1 shadow-sm text-center cursor-pointer box-border">
                         <i class="uil uil-shopping-cart text-sm shrink-0 text-white"></i>
                         <span class="truncate">Commander</span>
                     </button>
