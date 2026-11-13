@@ -988,29 +988,18 @@
                     return { x, y, date: point.date, val };
                 });
 
-                // Generate smooth cubic bezier curve with gentle tension
-                let bezierPath = '';
+                // Generate clean straight segmented line (polyline) matching modern financial UI
+                let linePath = '';
                 if (points.length === 1) {
-                    bezierPath = `M ${points[0].x - 20},${points[0].y} L ${points[0].x + 20},${points[0].y}`;
+                    linePath = `M ${points[0].x - 20},${points[0].y} L ${points[0].x + 20},${points[0].y}`;
                 } else if (points.length > 1) {
-                    bezierPath = `M ${points[0].x.toFixed(1)},${points[0].y.toFixed(1)}`;
-                    for (let i = 0; i < points.length - 1; i++) {
-                        const p0 = i > 0 ? points[i - 1] : points[i];
-                        const p1 = points[i];
-                        const p2 = points[i + 1];
-                        const p3 = i + 2 < points.length ? points[i + 2] : p2;
-
-                        const cp1x = p1.x + (p2.x - p0.x) / 5;
-                        const cp1y = p1.y + (p2.y - p0.y) / 5;
-                        const cp2x = p2.x - (p3.x - p1.x) / 5;
-                        const cp2y = p2.y - (p3.y - p1.y) / 5;
-                        bezierPath += ` C ${cp1x.toFixed(1)},${cp1y.toFixed(1)} ${cp2x.toFixed(1)},${cp2y.toFixed(1)} ${p2.x.toFixed(1)},${p2.y.toFixed(1)}`;
-                    }
+                    linePath = `M ${points[0].x.toFixed(1)},${points[0].y.toFixed(1)}` + 
+                        points.slice(1).map(p => ` L ${p.x.toFixed(1)},${p.y.toFixed(1)}`).join('');
                 }
 
                 const areaBottomY = padTop + plotHeight;
                 const areaPath = points.length > 1 
-                    ? `${bezierPath} L ${points[points.length - 1].x.toFixed(1)},${areaBottomY} L ${points[0].x.toFixed(1)},${areaBottomY} Z`
+                    ? `${linePath} L ${points[points.length - 1].x.toFixed(1)},${areaBottomY} L ${points[0].x.toFixed(1)},${areaBottomY} Z`
                     : '';
 
                 const firstDate = report.period?.from ? new Date(`${report.period.from}T12:00:00`).toLocaleDateString('fr-MA', { day: 'numeric', month: 'short' }) : '';
@@ -1107,21 +1096,31 @@
                                     </div>
                                 </div>
 
-                                <div class="flex items-center gap-2 self-start sm:self-auto">
-                                    <!-- Period selector dropdown style -->
-                                    <div class="relative inline-flex items-center">
-                                        <select id="analytics-period-select" class="appearance-none bg-white hover:bg-zinc-50 border border-zinc-200 text-zinc-700 text-xs sm:text-sm font-semibold rounded-2xl pl-9 pr-8 py-2.5 shadow-xs cursor-pointer focus:outline-none focus:ring-2 focus:ring-zinc-900/10 transition">
-                                            <option value="7" ${appState.analyticsDays === 7 ? 'selected' : ''}>Derniers 7 jours</option>
-                                            <option value="30" ${appState.analyticsDays === 30 ? 'selected' : ''}>Derniers 30 jours</option>
-                                            <option value="90" ${appState.analyticsDays === 90 ? 'selected' : ''}>Derniers 90 jours</option>
-                                        </select>
-                                        <i class="ti ti-calendar absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 pointer-events-none text-base"></i>
-                                        <i class="ti ti-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 pointer-events-none text-xs"></i>
+                                <div class="flex items-center gap-2 self-start sm:self-auto flex-wrap">
+                                    <!-- Period custom dropdown using website luxury pill styling -->
+                                    <div class="relative custom-admin-dropdown" id="analytics-period-dropdown-wrap">
+                                        <button type="button" class="btn-pill-secondary btn-pill-sm cursor-pointer inline-flex items-center justify-between gap-2.5 select-none whitespace-nowrap" id="analytics-period-trigger">
+                                            <i class="ti ti-calendar text-xs text-zinc-400"></i>
+                                            <span class="text-zinc-900 font-bold" id="analytics-period-label">${appState.analyticsDays === 7 ? '7 derniers jours' : (appState.analyticsDays === 90 ? '90 derniers jours' : '30 derniers jours')}</span>
+                                            <i class="ti ti-chevron-down text-xs text-zinc-400 transition-transform duration-200 chevron-icon"></i>
+                                        </button>
+                                        <div class="custom-dropdown-panel absolute right-0 top-full mt-2 min-w-[170px] bg-white/95 backdrop-blur-md rounded-2xl shadow-[0_20px_45px_rgba(0,0,0,0.14)] border border-zinc-100 p-1.5 z-50 hidden">
+                                            ${[
+                                                [7, '7 derniers jours'],
+                                                [30, '30 derniers jours'],
+                                                [90, '90 derniers jours']
+                                            ].map(([days, lbl]) => `
+                                                <button type="button" class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${appState.analyticsDays === days ? 'bg-pink-50 text-pink-600' : 'text-zinc-700 hover:bg-zinc-50 hover:text-black'}" data-period-val="${days}">
+                                                    <span>${lbl}</span>
+                                                    ${appState.analyticsDays === days ? '<i class="ti ti-check text-xs"></i>' : ''}
+                                                </button>
+                                            `).join('')}
+                                        </div>
                                     </div>
 
-                                    <!-- Expand / Fullscreen icon button -->
-                                    <button type="button" id="chart-fullscreen-btn" title="Plein écran" class="p-2.5 rounded-2xl border border-zinc-200 text-zinc-500 hover:text-zinc-900 hover:bg-zinc-50 transition cursor-pointer flex items-center justify-center">
-                                        <i class="ti ti-maximize text-base"></i>
+                                    <!-- Expand / Fullscreen icon button (matching btn-circle-action) -->
+                                    <button type="button" id="chart-fullscreen-btn" title="Plein écran" class="btn-circle-action w-9 h-9 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-600 text-sm transition cursor-pointer shrink-0" aria-label="Afficher en plein écran">
+                                        <i class="ti ti-maximize"></i>
                                     </button>
                                 </div>
                             </div>
@@ -1160,11 +1159,11 @@
                                         }).join('')}
                                     </g>
 
-                                    <!-- Shaded Area with smooth curve -->
+                                    <!-- Shaded Area under straight segmented line -->
                                     ${areaPath ? `<path d="${areaPath}" fill="url(#areaGradient)" />` : ''}
 
-                                    <!-- Smooth Line in rich Emerald/Teal (#22c55e / #10b981 / #14b8a6) -->
-                                    ${bezierPath ? `<path d="${bezierPath}" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#lineGlow)" />` : ''}
+                                    <!-- Clean Straight Segmented Line in rich Emerald (#10b981) -->
+                                    ${linePath ? `<path d="${linePath}" fill="none" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#lineGlow)" />` : ''}
 
                                     <!-- Interactive Vertical Guide Line (Hidden by default, shown on hover) -->
                                     <line id="chart-cursor-line" x1="0" y1="${padTop}" x2="0" y2="${padTop + plotHeight}" stroke="#22c55e" stroke-width="1.5" stroke-dasharray="2 3" opacity="0" class="transition-opacity duration-150 pointer-events-none" />
@@ -1346,14 +1345,34 @@
                         </section>
                     </div>`;
 
-                // Handle Period Switcher select change & buttons
+                // Wiring for Period Custom Dropdown
                 const container = document.getElementById('analytics-chart-container');
-                const periodSelect = document.getElementById('analytics-period-select');
-                if (periodSelect) {
-                    periodSelect.addEventListener('change', (e) => {
-                        this.renderPerformance(e.target.value);
+                const periodWrap = document.getElementById('analytics-period-dropdown-wrap');
+                const periodTrigger = document.getElementById('analytics-period-trigger');
+                const periodPanel = periodWrap?.querySelector('.custom-dropdown-panel');
+                const periodChevron = periodTrigger?.querySelector('.chevron-icon');
+
+                periodTrigger?.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    document.querySelectorAll('.custom-dropdown-panel').forEach(p => {
+                        if (p !== periodPanel) p.classList.add('hidden');
                     });
-                }
+                    document.querySelectorAll('.custom-admin-dropdown .chevron-icon').forEach(c => {
+                        if (c !== periodChevron) c.classList.remove('rotate-180');
+                    });
+                    const isHidden = periodPanel.classList.toggle('hidden');
+                    periodChevron?.classList.toggle('rotate-180', !isHidden);
+                });
+
+                periodWrap?.querySelectorAll('[data-period-val]').forEach(opt => {
+                    opt.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        periodPanel?.classList.add('hidden');
+                        periodChevron?.classList.remove('rotate-180');
+                        const days = Number(opt.dataset.periodVal);
+                        this.renderPerformance(days);
+                    });
+                });
 
                 this.root.querySelectorAll('[data-analytics-days]').forEach(button => {
                     button.addEventListener('click', () => this.renderPerformance(button.dataset.analyticsDays));
