@@ -262,22 +262,24 @@ document.addEventListener('DOMContentLoaded', () => {
                                 ${item.name}
                             </a>
                             ${variantInfo ? `<p class="text-[10px] text-zinc-400 font-medium truncate mt-0.5">${variantInfo}</p>` : ''}
-                            <div class="flex items-center justify-between mt-2">
-                                <span class="text-xs font-extrabold text-pink-600">${item.price} DH</span>
-                                <div class="flex items-center bg-[#f8f9fa] border border-zinc-200 rounded-full px-1.5 py-0.5 shadow-2xs">
-                                    <button type="button" data-cart-action="dec" data-index="${index}" class="btn-circle-action w-7 h-7 min-w-[28px] min-h-[28px] bg-white text-zinc-700 flex items-center justify-center cursor-pointer shadow-2xs text-xs" aria-label="Diminuer">
-                                        <i class="uil uil-minus"></i>
-                                    </button>
-                                    <span class="w-6 text-center text-xs font-bold text-zinc-900 select-none">${item.quantity || 1}</span>
-                                    <button type="button" data-cart-action="inc" data-index="${index}" class="btn-circle-action w-7 h-7 min-w-[28px] min-h-[28px] bg-white text-zinc-700 flex items-center justify-center cursor-pointer shadow-2xs text-xs" aria-label="Augmenter">
-                                        <i class="uil uil-plus"></i>
+                            <div class="flex items-center justify-between gap-2 mt-2">
+                                <span class="text-xs font-extrabold text-pink-600 shrink-0">${item.price} DH</span>
+                                <div class="flex items-center gap-1.5 shrink-0">
+                                    <div class="flex items-center bg-[#f8f9fa] border border-zinc-200 rounded-full px-1.5 py-0.5 shadow-2xs">
+                                        <button type="button" data-cart-action="dec" data-index="${index}" class="btn-circle-action w-7 h-7 min-w-[28px] min-h-[28px] bg-white text-zinc-700 flex items-center justify-center cursor-pointer shadow-2xs text-xs" aria-label="Diminuer">
+                                            <i class="uil uil-minus"></i>
+                                        </button>
+                                        <span class="w-6 text-center text-xs font-bold text-zinc-900 select-none">${item.quantity || 1}</span>
+                                        <button type="button" data-cart-action="inc" data-index="${index}" class="btn-circle-action w-7 h-7 min-w-[28px] min-h-[28px] bg-white text-zinc-700 flex items-center justify-center cursor-pointer shadow-2xs text-xs" aria-label="Augmenter">
+                                            <i class="uil uil-plus"></i>
+                                        </button>
+                                    </div>
+                                    <button type="button" data-cart-action="remove" data-index="${index}" class="w-8 h-8 rounded-full flex items-center justify-center text-zinc-400 hover:text-rose-500 hover:bg-rose-50 transition-colors cursor-pointer shrink-0" aria-label="Supprimer du panier">
+                                        <i class="uil uil-trash-alt text-base leading-none"></i>
                                     </button>
                                 </div>
                             </div>
                         </div>
-                        <button type="button" data-cart-action="remove" data-index="${index}" class="p-2 text-zinc-400 hover:text-rose-500 rounded-xl transition-colors cursor-pointer shrink-0" aria-label="Supprimer du panier">
-                            <i class="uil uil-trash-alt text-base"></i>
-                        </button>
                     </div>
                 `;
             });
