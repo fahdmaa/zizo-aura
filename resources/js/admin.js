@@ -944,8 +944,8 @@
                 const metricConfigs = {
                     gmv: { label: 'Revenu global', color: '#10b981', strokeColor: '#10b981', unit: ' DH', format: n => formatDH(n), shortFormat: n => formatShortDH(n) },
                     visitors: { label: 'Visiteurs uniques', color: '#0d9488', strokeColor: '#0d9488', unit: '', format: n => Number(n || 0).toLocaleString('fr-FR'), shortFormat: n => formatCompact(n) },
+                    conversion_rate: { label: 'Taux de conversion', color: '#ec4899', strokeColor: '#ec4899', unit: '%', format: n => Number(n || 0).toFixed(1) + '%', shortFormat: n => Number(n || 0).toFixed(1) + '%' },
                     orders: { label: 'Commandes', color: '#059669', strokeColor: '#059669', unit: '', format: n => Number(n || 0).toLocaleString('fr-FR'), shortFormat: n => formatCompact(n) },
-                    page_views: { label: 'Pages vues', color: '#0284c7', strokeColor: '#0284c7', unit: '', format: n => Number(n || 0).toLocaleString('fr-FR'), shortFormat: n => formatCompact(n) },
                     store_clicks: { label: 'Clics boutique', color: '#f59e0b', strokeColor: '#f59e0b', unit: '', format: n => Number(n || 0).toLocaleString('fr-FR'), shortFormat: n => formatCompact(n) },
                     whatsapp_clicks: { label: 'Clics WhatsApp', color: '#10b981', strokeColor: '#10b981', unit: '', format: n => Number(n || 0).toLocaleString('fr-FR'), shortFormat: n => formatCompact(n) },
                     web_checkout_clicks: { label: 'Commande web', color: '#6366f1', strokeColor: '#6366f1', unit: '', format: n => Number(n || 0).toLocaleString('fr-FR'), shortFormat: n => formatCompact(n) },
@@ -957,8 +957,8 @@
                 const rawMin = Math.min(...metricValues, 0);
 
                 // Calculate smart ceiling for chart ticks
-                let chartMax = 100;
-                if (rawMax > 0) {
+                let chartMax = activeMetric === 'conversion_rate' ? (rawMax > 0 ? Math.min(100, Math.ceil(rawMax * 1.25)) : 10) : 100;
+                if (activeMetric !== 'conversion_rate' && rawMax > 0) {
                     const magnitude = Math.pow(10, Math.floor(Math.log10(rawMax)));
                     const normalized = rawMax / magnitude;
                     if (normalized <= 1) chartMax = magnitude;
@@ -1013,15 +1013,16 @@
                 const webClicks = Number(metrics.web_checkout_clicks || 0);
                 const totalOrderIntent = waClicks + webClicks;
 
-                const conversionRate = visitorsCount > 0 ? ((ordersCount / visitorsCount) * 100).toFixed(1) : '0.0';
-                const intentRate = visitorsCount > 0 ? ((totalOrderIntent / visitorsCount) * 100).toFixed(1) : '0.0';
+                // Taux de conversion : intentions de commande (clics bouton commande) / visiteurs totaux
+                const conversionRate = visitorsCount > 0 ? ((totalOrderIntent / visitorsCount) * 100).toFixed(1) : '0.0';
+                const ordersConversionRate = visitorsCount > 0 ? ((ordersCount / visitorsCount) * 100).toFixed(1) : '0.0';
                 const aov = ordersCount > 0 ? (gmvTotal / ordersCount).toFixed(0) : '0';
 
                 const cards = [
                     { key: 'gmv', label: 'GMV estimé', value: formatDH(metrics.gmv), note: 'Commandes non annulées', icon: 'ti-currency-dirham', color: 'bg-emerald-50 text-emerald-600', ring: 'ring-emerald-400' },
-                    { key: 'orders', label: 'Commandes', value: Number(metrics.orders || 0).toLocaleString('fr-FR'), note: 'Toutes les commandes', icon: 'ti-shopping-bag', color: 'bg-sky-50 text-sky-600', ring: 'ring-sky-400' },
-                    { key: 'page_views', label: 'Pages vues', value: Number(metrics.page_views || 0).toLocaleString('fr-FR'), note: 'Affichages boutique', icon: 'ti-eye', color: 'bg-violet-50 text-violet-600', ring: 'ring-violet-400' },
                     { key: 'visitors', label: 'Visiteurs', value: Number(metrics.visitors || 0).toLocaleString('fr-FR'), note: 'Sessions uniques', icon: 'ti-users', color: 'bg-pink-50 text-pink-600', ring: 'ring-pink-400' },
+                    { key: 'conversion_rate', label: 'Taux conversion', value: `${conversionRate}%`, note: 'Clics commande / visites', icon: 'ti-percentage', color: 'bg-violet-50 text-violet-600', ring: 'ring-violet-400' },
+                    { key: 'orders', label: 'Commandes', value: Number(metrics.orders || 0).toLocaleString('fr-FR'), note: 'Toutes les commandes', icon: 'ti-shopping-bag', color: 'bg-sky-50 text-sky-600', ring: 'ring-sky-400' },
                     { key: 'store_clicks', label: 'Clics boutique', value: Number(metrics.store_clicks || 0).toLocaleString('fr-FR'), note: 'Interactions totales', icon: 'ti-pointer', color: 'bg-amber-50 text-amber-600', ring: 'ring-amber-400' },
                     { key: 'whatsapp_clicks', label: 'Choix WhatsApp', value: Number(metrics.whatsapp_clicks || 0).toLocaleString('fr-FR'), note: 'Clics commande WhatsApp', icon: 'ti-brand-whatsapp', color: 'bg-emerald-50 text-emerald-600', ring: 'ring-emerald-400' },
                     { key: 'web_checkout_clicks', label: 'Commande web', value: Number(metrics.web_checkout_clicks || 0).toLocaleString('fr-FR'), note: 'Clics panier en ligne', icon: 'ti-shopping-cart', color: 'bg-indigo-50 text-indigo-600', ring: 'ring-indigo-400' },
@@ -1087,10 +1088,10 @@
                                         ${escapeHtml(currentConfig.label)}
                                     </h2>
                                     <div class="mt-2 text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-zinc-950 font-[system-ui]">
-                                        ${currentConfig.format(currentConfig === metricConfigs.gmv ? gmvTotal : (activeMetric === 'orders' ? ordersCount : (activeMetric === 'visitors' ? visitorsCount : (metrics[activeMetric] || 0))))}
+                                        ${activeMetric === 'conversion_rate' ? (conversionRate + '%') : currentConfig.format(currentConfig === metricConfigs.gmv ? gmvTotal : (activeMetric === 'orders' ? ordersCount : (activeMetric === 'visitors' ? visitorsCount : (metrics[activeMetric] || 0))))}
                                     </div>
                                     <div class="mt-2.5 flex items-center gap-2 text-xs sm:text-sm font-semibold">
-                                        <span class="text-emerald-500 font-bold">+${rawMax > 0 ? (rawMax).toLocaleString('fr-FR') : '0'} (${visitorsCount > 0 ? conversionRate : '0.0'}%)</span>
+                                        <span class="text-emerald-500 font-bold">+${activeMetric === 'conversion_rate' ? conversionRate + '%' : (rawMax > 0 ? (rawMax).toLocaleString('fr-FR') : '0')}${activeMetric !== 'conversion_rate' ? ` (${visitorsCount > 0 ? conversionRate : '0.0'}%)` : ''}</span>
                                         <span class="text-zinc-300">•</span>
                                         <span class="text-zinc-400 font-normal">derniers ${appState.analyticsDays} jours (${escapeHtml(firstDate)} - ${escapeHtml(lastDate)})</span>
                                     </div>

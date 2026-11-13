@@ -17,12 +17,17 @@ class StoreAnalyticsReport
         $events = StoreAnalyticsEvent::query()->whereBetween('created_at', [$start, $end]);
         $orders = Order::query()->whereBetween('created_at', [$start, $end]);
 
+        $totalOrderClicks = (clone $events)->whereIn('event_type', ['whatsapp_order_click', 'web_checkout_click'])->distinct()->count('visitor_hash');
+        $totalVisitors = (clone $events)->where('event_type', 'page_view')->distinct()->count('visitor_hash');
+        $conversionRate = $totalVisitors > 0 ? round(($totalOrderClicks / $totalVisitors) * 100, 1) : 0.0;
+
         $metrics = [
             'gmv' => (float) (clone $orders)->where('status', '!=', 'cancelled')->sum('total'),
             'orders' => (clone $orders)->count(),
             'page_views' => (clone $events)->where('event_type', 'page_view')->count(),
+            'conversion_rate' => $conversionRate,
             'store_clicks' => (clone $events)->where('event_type', 'store_click')->count(),
-            'visitors' => (clone $events)->where('event_type', 'page_view')->distinct()->count('visitor_hash'),
+            'visitors' => $totalVisitors,
             'whatsapp_clicks' => (clone $events)->where('event_type', 'whatsapp_order_click')->distinct()->count('visitor_hash'),
             'web_checkout_clicks' => (clone $events)->where('event_type', 'web_checkout_click')->distinct()->count('visitor_hash'),
         ];
@@ -30,12 +35,14 @@ class StoreAnalyticsReport
         $series = collect(CarbonPeriod::create($start->toDateString(), $end->toDateString()))
             ->mapWithKeys(fn ($date) => [$date->toDateString() => [
                 'date' => $date->toDateString(), 'page_views' => 0, 'visitors' => 0,
+                'conversion_rate' => 0.0,
                 'store_clicks' => 0, 'whatsapp_clicks' => 0, 'web_checkout_clicks' => 0,
                 'orders' => 0, 'gmv' => 0.0,
             ]]);
 
         $this->addEventSeries($series, $start, $end);
         $this->addOrderSeries($series, $start, $end);
+        $this->computeConversionRateSeries($series);
 
         return [
             'period' => ['days' => $days, 'from' => $start->toDateString(), 'to' => $end->toDateString()],
@@ -84,6 +91,16 @@ class StoreAnalyticsReport
             $point['orders'] = (int) $row->orders;
             $point['gmv'] = (float) $row->gmv;
             $series->put($row->day, $point);
+        }
+    }
+
+    private function computeConversionRateSeries(Collection $series): void
+    {
+        foreach ($series as $day => $point) {
+            $visitors = (int) ($point['visitors'] ?? 0);
+            $orderClicks = ((int) ($point['whatsapp_clicks'] ?? 0)) + ((int) ($point['web_checkout_clicks'] ?? 0));
+            $point['conversion_rate'] = $visitors > 0 ? round(($orderClicks / $visitors) * 100, 1) : 0.0;
+            $series->put($day, $point);
         }
     }
 }
