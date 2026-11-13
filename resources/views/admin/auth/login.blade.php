@@ -13,13 +13,13 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600;700;800;900&family=Google+Sans+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     @vite(['resources/css/app.css'])
     
     <style>
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-family: 'Google Sans', 'Google Sans Text', sans-serif;
             background-color: #faf9f6;
             color: #0f172a;
         }
