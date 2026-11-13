@@ -1015,6 +1015,7 @@
 
                 // Taux de conversion : intentions de commande (clics bouton commande) / visiteurs totaux
                 const conversionRate = visitorsCount > 0 ? ((totalOrderIntent / visitorsCount) * 100).toFixed(1) : '0.0';
+                const intentRate = conversionRate;
                 const ordersConversionRate = visitorsCount > 0 ? ((ordersCount / visitorsCount) * 100).toFixed(1) : '0.0';
                 const aov = ordersCount > 0 ? (gmvTotal / ordersCount).toFixed(0) : '0';
 
