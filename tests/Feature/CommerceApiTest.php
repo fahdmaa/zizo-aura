@@ -411,5 +411,32 @@ class CommerceApiTest extends TestCase
         $followRes = $this->get('/boutique/victorias-secret');
         $followRes->assertOk();
     }
+
+    public function test_shop_ajax_filtering_returns_json_and_rendered_html(): void
+    {
+        // 1. All products via AJAX
+        $res = $this->get('/boutique', ['X-Requested-With' => 'XMLHttpRequest']);
+        $res->assertOk();
+        $res->assertJsonStructure([
+            'html',
+            'count',
+            'count_text',
+            'category',
+            'sort',
+            'heading',
+            'intro',
+            'page_title'
+        ]);
+        $this->assertSame('all', $res->json('category'));
+        $this->assertStringContainsString('shop-product-grid', $res->json('html'));
+
+        // 2. Specific category + sort via AJAX without full page reload
+        $catRes = $this->get('/boutique/rituals?sort=price-asc', ['X-Requested-With' => 'XMLHttpRequest']);
+        $catRes->assertOk();
+        $this->assertSame('rituals', $catRes->json('category'));
+        $this->assertSame('price-asc', $catRes->json('sort'));
+        $this->assertStringContainsString('Rituals', $catRes->json('heading'));
+        $this->assertStringContainsString('Rituals', $catRes->json('html'));
+    }
 }
 

@@ -611,7 +611,69 @@ class ShopController extends Controller
             usort($products, fn($a, $b) => $b['rating'] <=> $a['rating']);
         }
 
-        return view('shop.index', compact('products', 'categories', 'selectedCategory', 'sortBy', 'searchQuery'));
+        $meta = self::categoryMeta($selectedCategory);
+
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'html' => view('shop.partials.product-grid', compact('products'))->render(),
+                'count' => count($products),
+                'count_text' => count($products) . ' produit' . (count($products) > 1 ? 's' : ''),
+                'category' => $selectedCategory,
+                'sort' => $sortBy,
+                'search_query' => $searchQuery,
+                'heading' => $meta['heading'],
+                'intro' => $meta['intro'],
+                'page_title' => $meta['title'],
+            ]);
+        }
+
+        return view('shop.index', compact('products', 'categories', 'selectedCategory', 'sortBy', 'searchQuery', 'meta'));
+    }
+
+    /**
+     * Category SEO and Header Metadata
+     */
+    public static function categoryMeta(?string $categorySlug): array
+    {
+        $slug = $categorySlug ?: 'all';
+        return match ($slug) {
+            'rituals' => [
+                'title' => 'Coffrets Rituals Maroc — Sakura, Ayurveda & Karma en DH',
+                'heading' => 'Coffrets Cadeaux Rituals Maroc',
+                'description' => 'Coffrets Rituals 100% authentiques au Maroc dès 150 DH : The Ritual of Sakura, Ayurveda, Karma et Mehr. Livraison rapide 24-48h et paiement à la livraison.',
+                'intro' => 'Explorez notre collection exclusive de coffrets cadeaux Rituals au Maroc. Mousse de douche onctueuse, gommages exfoliants et crèmes hydratantes aux senteurs iconiques. 100% Originaux avec livraison 24-48h et paiement à la livraison.',
+            ],
+            'sol-de-janeiro' => [
+                'title' => 'Sol de Janeiro Maroc — Brumes Cheirosa 62, 68 & 59',
+                'heading' => 'Brumes & Soins Sol de Janeiro Maroc',
+                'description' => 'Brumes Sol de Janeiro Cheirosa et soins Bum Bum au Maroc (340 DH). Produits 100% authentiques, livraison express 24-48h et paiement sécurisé à la livraison.',
+                'intro' => 'Sublimez votre sillage avec les brumes parfumées iconiques Sol de Janeiro Cheirosa au Maroc. Des notes gourmandes et solaires irrésistibles. 100% Authentiques, livraison 24-48h partout au Royaume.',
+            ],
+            'victorias-secret' => [
+                'title' => 'Brumes Victoria\'s Secret Maroc — Bare Vanilla (240 DH)',
+                'heading' => 'Brumes Parfumées Victoria\'s Secret Maroc (En Promotion)',
+                'description' => 'Brumes Victoria\'s Secret 250ml originales en promo à 240 DH : Bare Vanilla, Velvet Petals, Aqua Kiss, Amber Romance. Livraison express partout au Maroc.',
+                'intro' => 'Profitez de notre offre spéciale sur les brumes corporelles 250ml Victoria\'s Secret au Maroc : 240 DH au lieu de 280 DH. Parfums irrésistibles, formules originales et livraison express 24-48h dans toutes les villes.',
+            ],
+            'the-ordinary' => [
+                'title' => 'The Ordinary Maroc — Sérum Niacinamide & Acide Glycolique',
+                'heading' => 'Sérums & Soins The Ordinary Maroc (100% Authentiques)',
+                'description' => 'Soins The Ordinary 100% authentiques au Maroc dès 160 DH : Niacinamide 10% et Acide Glycolique 7%. Livraison express 24-48h et paiement cash à la livraison.',
+                'intro' => 'Traitements dermatologiques ultra-ciblés The Ordinary au Maroc. Corrigez les imperfections et sublimez l\'éclat de votre peau avec nos formules certifiées 100% originales importées.',
+            ],
+            'garden-bouquet' => [
+                'title' => 'Coffret Garden Bouquet Maroc — Soins & Bain (120 DH)',
+                'heading' => 'Coffrets Cadeaux Garden Bouquet Maroc',
+                'description' => 'Coffret cadeau Garden Bouquet au Maroc à 120 DH : soins floraux doux pour le corps et le bain. Idée cadeau idéale, livraison express 24-48h et paiement COD.',
+                'intro' => 'Craquez pour la fraîcheur florale des coffrets cadeaux Garden Bouquet. Une idée cadeau raffinée et accessible avec livraison express 24-48h partout au Maroc.',
+            ],
+            default => [
+                'title' => 'Boutique Cosmétiques & Parfums Maroc | Zizo Aura',
+                'heading' => 'Nos Formules, Coffrets & Brumes d\'Exception',
+                'description' => 'Boutique officielle au Maroc : soins, brumes et coffrets Sol de Janeiro, Victoria\'s Secret, Rituals, The Ordinary. Livraison 24-48h et paiement à la livraison.',
+                'intro' => 'Découvrez nos brumes Cheirosa emblématiques, coffrets cadeaux Rituals, brumes Victoria\'s Secret et soins The Ordinary formulés pour sublimer chaque routine.',
+            ],
+        };
     }
 
     public function apiSearch(Request $request)

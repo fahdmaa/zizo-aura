@@ -185,17 +185,17 @@
         <!-- Shop Header Banner -->
         <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8 border-b border-zinc-100 mb-8">
             <div>
-                <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-black tracking-tight leading-tight">
+                <h1 id="shop-seo-heading" class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-black tracking-tight leading-tight">
                     {{ $seoHeading }}
                 </h1>
-                <p class="text-sm sm:text-base text-zinc-500 font-normal mt-2 max-w-xl">
+                <p id="shop-seo-intro" class="text-sm sm:text-base text-zinc-500 font-normal mt-2 max-w-xl">
                     {{ $seoIntro }}
                 </p>
             </div>
 
             <!-- Total Count & Custom Themed Sort Dropdown -->
             <div class="flex items-center gap-3">
-                <span class="text-xs font-bold text-zinc-400 uppercase tracking-wider whitespace-nowrap">
+                <span id="shop-product-count" class="text-xs font-bold text-zinc-400 uppercase tracking-wider whitespace-nowrap">
                     {{ count($products) }} produit{{ count($products) > 1 ? 's' : '' }}
                 </span>
 
@@ -204,7 +204,7 @@
                     <button type="button"
                             id="sort-dropdown-btn"
                             class="btn-pill-secondary btn-pill-sm uppercase tracking-wider">
-                        <span class="text-zinc-900 font-extrabold">
+                        <span id="sort-current-label" class="text-zinc-900 font-extrabold">
                             @if($sortBy === 'rating') Mieux notés
                             @elseif($sortBy === 'price-asc') Prix croissant
                             @elseif($sortBy === 'price-desc') Prix décroissant
@@ -223,24 +223,28 @@
                             $sortCatParam = $isCleanCat ? ['category' => $selectedCategory] : [];
                         @endphp
                         <a href="{{ route($sortBaseRoute, array_merge($sortCatParam, array_filter(['sort' => 'popular', 'q' => $searchQuery ?: null]))) }}"
-                           class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all {{ $sortBy === 'popular' ? 'bg-pink-50 text-pink-600' : 'text-zinc-700 hover:bg-zinc-50 hover:text-black' }}">
+                           data-sort="popular"
+                           class="shop-sort-item flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all {{ $sortBy === 'popular' ? 'bg-pink-50 text-pink-600' : 'text-zinc-700 hover:bg-zinc-50 hover:text-black' }}">
                             <span>Popularité</span>
-                            @if($sortBy === 'popular') <i class="uil uil-check text-xs"></i> @endif
+                            <i class="uil uil-check text-xs sort-check-icon {{ $sortBy === 'popular' ? '' : 'hidden' }}"></i>
                         </a>
                         <a href="{{ route($sortBaseRoute, array_merge($sortCatParam, array_filter(['sort' => 'rating', 'q' => $searchQuery ?: null]))) }}"
-                           class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all {{ $sortBy === 'rating' ? 'bg-pink-50 text-pink-600' : 'text-zinc-700 hover:bg-zinc-50 hover:text-black' }}">
+                           data-sort="rating"
+                           class="shop-sort-item flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all {{ $sortBy === 'rating' ? 'bg-pink-50 text-pink-600' : 'text-zinc-700 hover:bg-zinc-50 hover:text-black' }}">
                             <span>Mieux notés</span>
-                            @if($sortBy === 'rating') <i class="uil uil-check text-xs"></i> @endif
+                            <i class="uil uil-check text-xs sort-check-icon {{ $sortBy === 'rating' ? '' : 'hidden' }}"></i>
                         </a>
                         <a href="{{ route($sortBaseRoute, array_merge($sortCatParam, array_filter(['sort' => 'price-asc', 'q' => $searchQuery ?: null]))) }}"
-                           class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all {{ $sortBy === 'price-asc' ? 'bg-pink-50 text-pink-600' : 'text-zinc-700 hover:bg-zinc-50 hover:text-black' }}">
+                           data-sort="price-asc"
+                           class="shop-sort-item flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all {{ $sortBy === 'price-asc' ? 'bg-pink-50 text-pink-600' : 'text-zinc-700 hover:bg-zinc-50 hover:text-black' }}">
                             <span>Prix croissant</span>
-                            @if($sortBy === 'price-asc') <i class="uil uil-check text-xs"></i> @endif
+                            <i class="uil uil-check text-xs sort-check-icon {{ $sortBy === 'price-asc' ? '' : 'hidden' }}"></i>
                         </a>
                         <a href="{{ route($sortBaseRoute, array_merge($sortCatParam, array_filter(['sort' => 'price-desc', 'q' => $searchQuery ?: null]))) }}"
-                           class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all {{ $sortBy === 'price-desc' ? 'bg-pink-50 text-pink-600' : 'text-zinc-700 hover:bg-zinc-50 hover:text-black' }}">
+                           data-sort="price-desc"
+                           class="shop-sort-item flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all {{ $sortBy === 'price-desc' ? 'bg-pink-50 text-pink-600' : 'text-zinc-700 hover:bg-zinc-50 hover:text-black' }}">
                             <span>Prix décroissant</span>
-                            @if($sortBy === 'price-desc') <i class="uil uil-check text-xs"></i> @endif
+                            <i class="uil uil-check text-xs sort-check-icon {{ $sortBy === 'price-desc' ? '' : 'hidden' }}"></i>
                         </a>
                     </div>
                 </div>
@@ -248,7 +252,7 @@
         </div>
 
         <!-- Category Filter Pills Bar -->
-        <div class="flex items-center gap-2 overflow-x-auto pb-4 mb-6 no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0 scroll-smooth">
+        <div id="shop-category-pills" class="flex items-center gap-2 overflow-x-auto pb-4 mb-6 no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0 scroll-smooth">
             @foreach($categories as $cat)
                 @php
                     $isCatAll = empty($cat['slug']) || $cat['slug'] === 'all';
@@ -257,7 +261,8 @@
                         : route('shop.category', array_merge(['category' => $cat['slug']], array_filter(['sort' => $sortBy !== 'popular' ? $sortBy : null, 'q' => $searchQuery ?: null])));
                 @endphp
                 <a href="{{ $pillUrl }}"
-                   class="px-5 py-2 rounded-full text-xs font-extrabold uppercase tracking-wider whitespace-nowrap transition-all duration-200 shrink-0 {{ $selectedCategory === $cat['slug'] ? 'bg-black text-white shadow-md' : 'bg-zinc-100 text-zinc-700 hover:bg-zinc-200 active:scale-95' }}">
+                   data-category="{{ $cat['slug'] }}"
+                   class="shop-category-pill px-5 py-2 rounded-full text-xs font-extrabold uppercase tracking-wider whitespace-nowrap transition-all duration-200 shrink-0 {{ $selectedCategory === $cat['slug'] ? 'bg-black text-white shadow-md' : 'bg-zinc-100 text-zinc-700 hover:bg-zinc-200 active:scale-95' }}">
                     {{ $cat['name'] }}
                 </a>
             @endforeach
@@ -265,7 +270,7 @@
 
         <!-- Active Search Filter Banner -->
         @if(!empty($searchQuery))
-            <div class="mb-8 p-4 bg-pink-50/70 border border-pink-200/80 rounded-2xl flex flex-wrap items-center justify-between gap-3 shadow-xs">
+            <div id="shop-search-banner" class="mb-8 p-4 bg-pink-50/70 border border-pink-200/80 rounded-2xl flex flex-wrap items-center justify-between gap-3 shadow-xs">
                 <div class="flex items-center gap-3">
                     <div class="w-9 h-9 rounded-xl bg-pink-600 text-white flex items-center justify-center text-base shrink-0 shadow-xs">
                         <i class="uil uil-search"></i>
@@ -274,131 +279,34 @@
                         <p class="text-xs sm:text-sm font-bold text-zinc-900">
                             Résultats pour : <span class="text-pink-600 font-extrabold">&laquo; {{ $searchQuery }} &raquo;</span>
                         </p>
-                        <p class="text-[11px] text-zinc-500 font-medium">
+                        <p id="shop-search-count" class="text-[11px] text-zinc-500 font-medium">
                             {{ count($products) }} résultat{{ count($products) > 1 ? 's trouvés' : ' trouvé' }}
                         </p>
                     </div>
                 </div>
 
                 <a href="{{ ($selectedCategory && $selectedCategory !== 'all') ? route('shop.category', $selectedCategory) : route('shop.index') }}"
-                   class="btn-pill-secondary btn-pill-sm">
+                   class="shop-clear-search-btn btn-pill-secondary btn-pill-sm">
                     <i class="uil uil-multiply text-xs"></i>
                     <span>Effacer la recherche</span>
                 </a>
             </div>
         @endif
 
-        <!-- 4-Column Product Catalog Grid -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-            @forelse($products as $product)
-                <div class="product-card reveal-on-scroll group flex flex-col bg-white rounded-2xl p-3.5 sm:p-4 border border-zinc-100 shadow-[0_2px_10px_rgba(0,0,0,0.03)] hover:shadow-[0_12px_30px_rgba(0,0,0,0.08)] transition-all duration-300"
-                     style="transition-delay: {{ ($loop->index % 4) * 80 }}ms;">
-                    
-                    <!-- Product Image Box linking to Product Subpage -->
-                    <a href="{{ route('shop.product', $product['slug']) }}" class="relative aspect-square w-full bg-[#f8f9fa] rounded-xl overflow-hidden flex items-center justify-center p-6 mb-4 block">
-                        
-                        <!-- Watermark Typography Discount -->
-                        @if(!empty($product['discount']))
-                            <div class="absolute inset-0 flex flex-col justify-between p-3 select-none pointer-events-none z-0">
-                                <span class="watermark-discount text-zinc-200/70 text-left font-black tracking-tighter">
-                                    {{ $product['discount'] }}
-                                </span>
-                                <span class="watermark-discount text-zinc-200/70 text-right font-black tracking-tighter">
-                                    remise
-                                </span>
-                            </div>
-                        @endif
-
-                        <!-- Top Floating Pill Badge -->
-                        @if(!empty($product['badge']))
-                            <div class="absolute top-2.5 inset-x-0 flex justify-center z-20">
-                                <span class="px-3 py-1 rounded-full text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider shadow-sm {{ $product['badge_color'] }}">
-                                    {{ $product['badge'] }}
-                                </span>
-                            </div>
-                        @endif
-
-                        <!-- Product Image Asset -->
-                        <img src="{{ $product['image'] }}"
-                             alt="{{ $product['name'] }}"
-                             class="product-img relative z-10 w-full h-full object-contain max-h-[190px] group-hover:scale-108 transition-transform duration-500 ease-out" />
-                    </a>
-
-                    <!-- Product Details -->
-                    <div class="flex flex-col items-center text-center flex-1">
-                        <!-- Rating Stars -->
-                        <div class="flex items-center gap-1 text-amber-400 text-xs mb-1.5">
-                            <div class="flex items-center">
-                                @for($i = 1; $i <= 5; $i++)
-                                    @if($i <= round($product['rating']))
-                                        <i class="uis uis-star text-[11px]"></i>
-                                    @else
-                                        <i class="uil uil-star text-[11px] text-zinc-200"></i>
-                                    @endif
-                                @endfor
-                            </div>
-                            <span class="text-[10px] font-bold text-zinc-400">({{ $product['review_count'] }})</span>
-                        </div>
-
-                        <!-- Product Title with Link -->
-                        <h3 class="text-sm sm:text-[15px] font-bold text-zinc-900 leading-snug mb-1 min-h-[40px] flex items-center justify-center">
-                            <a href="{{ route('shop.product', $product['slug']) }}" class="hover:text-pink-600 transition-colors">
-                                {{ $product['name'] }}
-                            </a>
-                        </h3>
-
-                        <!-- Scent / Flavor Name Indicator -->
-                        @if(!empty($product['flavors']))
-                            <p class="flavor-label text-[11px] font-semibold text-zinc-400 mb-2">
-                                {{ $product['flavors'][0]['name'] }}
-                            </p>
-                        @endif
-
-                        <!-- Price in DH -->
-                        <div class="flex flex-col items-center justify-center gap-0.5 mb-4">
-                            <span class="text-lg sm:text-xl font-extrabold text-pink-600 tracking-tight">
-                                {{ $product['price'] }} DH
-                            </span>
-                            @if(!empty($product['discount']) && !empty($product['original_price']) && $product['original_price'] !== $product['price'])
-                                <span class="text-xs font-semibold text-zinc-400 line-through">
-                                    {{ $product['original_price'] }} DH
-                                </span>
-                            @endif
-                        </div>
-
-                        @if($product['is_active'] ?? true)
-                            <!-- Black Pill "Ajouter au panier" Button -->
-                            <button class="btn-card-pill w-full mt-auto cursor-pointer"
-                                    data-add-to-cart
-                                    data-product-name="{{ $product['name'] }}"
-                                    data-product-price="{{ $product['price'] }}"
-                                    data-product-image="{{ $product['image'] }}"
-                                    data-product-slug="{{ $product['slug'] }}">
-                                <i class="uil uil-shopping-bag text-base"></i>
-                                <span>Ajouter au panier</span>
-                            </button>
-                        @else
-                            <!-- Black Pill "Précommander" Button -->
-                            <button class="btn-card-pill w-full mt-auto !bg-zinc-900 hover:!bg-black text-white cursor-pointer"
-                                    data-preorder-product
-                                    data-product-id="{{ $product['id'] ?? '' }}"
-                                    data-product-name="{{ $product['name'] }}"
-                                    data-product-price="{{ $product['price'] }}"
-                                    data-product-image="{{ $product['image'] }}"
-                                    data-product-slug="{{ $product['slug'] }}">
-                                <i class="uil uil-clock text-base text-amber-400"></i>
-                                <span>Précommander</span>
-                            </button>
-                        @endif
-                    </div>
-
+        <!-- Catalog Container with Grid & Loading State -->
+        <div id="shop-catalog-wrapper" class="relative min-h-[350px]">
+            <div id="shop-grid-loading" class="absolute inset-0 bg-white/70 backdrop-blur-[1px] z-30 flex items-center justify-center rounded-2xl opacity-0 pointer-events-none transition-opacity duration-200">
+                <div class="flex items-center gap-2.5 px-5 py-2.5 rounded-full bg-white shadow-xl border border-zinc-100 text-xs font-black uppercase tracking-wider text-black">
+                    <svg class="animate-spin h-4 w-4 text-pink-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                    </svg>
+                    <span>Chargement...</span>
                 </div>
-            @empty
-                <div class="col-span-full py-16 text-center text-zinc-400">
-                    <i class="uil uil-box text-4xl mb-3 block"></i>
-                    <p class="text-sm font-semibold">Aucun produit trouvé dans cette catégorie.</p>
-                </div>
-            @endforelse
+            </div>
+            <div id="shop-grid-container">
+                @include('shop.partials.product-grid')
+            </div>
         </div>
 
         <!-- SEO Content & Moroccan FAQ Accordion Section -->

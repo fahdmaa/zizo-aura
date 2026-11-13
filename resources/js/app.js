@@ -833,30 +833,30 @@ document.addEventListener('DOMContentLoaded', () => {
         showToast(`${cleanQuantity}x ${name} ajouté${cleanQuantity > 1 ? 's' : ''} au panier !`);
     };
 
-    // Generic Add-to-Cart Buttons across Catalog, Marquee, Home
-    document.querySelectorAll('button[data-add-to-cart]').forEach(button => {
-        button.addEventListener('click', (e) => {
-            e.preventDefault();
+    // Generic Add-to-Cart Buttons across Catalog, Marquee, Home (Event Delegation for dynamic updates)
+    document.addEventListener('click', (e) => {
+        const button = e.target.closest('button[data-add-to-cart]');
+        if (!button) return;
+        e.preventDefault();
 
-            const name = button.dataset.productName || 'Produit';
-            const price = parseFloat(button.dataset.productPrice) || 350;
-            const image = button.dataset.productImage || '';
-            const slug = button.dataset.productSlug || '';
+        const name = button.dataset.productName || 'Produit';
+        const price = parseFloat(button.dataset.productPrice) || 350;
+        const image = button.dataset.productImage || '';
+        const slug = button.dataset.productSlug || '';
 
-            addItemToCart({ name, price, image, slug, quantity: 1 });
+        addItemToCart({ name, price, image, slug, quantity: 1 });
 
-            // Button Feedback Animation
-            const origHtml = button.innerHTML;
-            button.style.backgroundColor = '#10b981';
-            button.innerHTML = `<i class="uil uil-check text-base"></i><span>Ajouté ✓</span>`;
-            button.disabled = true;
+        // Button Feedback Animation
+        const origHtml = button.innerHTML;
+        button.style.backgroundColor = '#10b981';
+        button.innerHTML = `<i class="uil uil-check text-base"></i><span>Ajouté ✓</span>`;
+        button.disabled = true;
 
-            setTimeout(() => {
-                button.style.backgroundColor = '';
-                button.innerHTML = origHtml;
-                button.disabled = false;
-            }, 1400);
-        });
+        setTimeout(() => {
+            button.style.backgroundColor = '';
+            button.innerHTML = origHtml;
+            button.disabled = false;
+        }, 1400);
     });
 
     // =========================================================================
@@ -1187,6 +1187,195 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    // =========================================================================
+    // 5b. Boutique Catalog Dynamic Filtering (AJAX Without Full Page Reload)
+    // =========================================================================
+    const shopCategoryPills = document.getElementById('shop-category-pills');
+    const shopGridContainer = document.getElementById('shop-grid-container');
+    const shopGridLoading = document.getElementById('shop-grid-loading');
+    const shopProductCount = document.getElementById('shop-product-count');
+    const shopSeoHeading = document.getElementById('shop-seo-heading');
+    const shopSeoIntro = document.getElementById('shop-seo-intro');
+    const sortCurrentLabel = document.getElementById('sort-current-label');
+
+    const sortLabels = {
+        'popular': 'Popularité',
+        'rating': 'Mieux notés',
+        'price-asc': 'Prix croissant',
+        'price-desc': 'Prix décroissant',
+    };
+
+    let isFilterFetching = false;
+
+    async function applyShopFilter(targetUrl, updateHistory = true) {
+        if (!shopGridContainer || isFilterFetching) return;
+        isFilterFetching = true;
+
+        if (shopGridLoading) {
+            shopGridLoading.classList.remove('opacity-0', 'pointer-events-none');
+            shopGridLoading.classList.add('opacity-100', 'pointer-events-auto');
+        }
+        shopGridContainer.classList.add('opacity-40', 'transition-opacity', 'duration-200');
+
+        try {
+            const response = await fetch(targetUrl, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json',
+                }
+            });
+
+            if (!response.ok) {
+                window.location.href = targetUrl;
+                return;
+            }
+
+            const data = await response.json();
+
+            // 1. Update Grid Content
+            if (data.html !== undefined) {
+                shopGridContainer.innerHTML = data.html;
+            }
+
+            // 2. Update Product Count
+            if (shopProductCount && data.count_text) {
+                shopProductCount.textContent = data.count_text;
+            }
+
+            // 3. Update Heading, Intro & Title
+            if (shopSeoHeading && data.heading) {
+                shopSeoHeading.textContent = data.heading;
+            }
+            if (shopSeoIntro && data.intro) {
+                shopSeoIntro.textContent = data.intro;
+            }
+            if (data.page_title) {
+                document.title = data.page_title;
+            }
+
+            // 4. Update Category Pills Active State & Target URLs
+            const currentCat = data.category || 'all';
+            const currentSort = data.sort || 'popular';
+            const currentQ = data.search_query || '';
+
+            if (shopCategoryPills) {
+                shopCategoryPills.querySelectorAll('.shop-category-pill').forEach(pill => {
+                    const pillCat = pill.dataset.category;
+                    if (pillCat === currentCat) {
+                        pill.className = 'shop-category-pill px-5 py-2 rounded-full text-xs font-extrabold uppercase tracking-wider whitespace-nowrap transition-all duration-200 shrink-0 bg-black text-white shadow-md';
+                    } else {
+                        pill.className = 'shop-category-pill px-5 py-2 rounded-full text-xs font-extrabold uppercase tracking-wider whitespace-nowrap transition-all duration-200 shrink-0 bg-zinc-100 text-zinc-700 hover:bg-zinc-200 active:scale-95';
+                    }
+
+                    // Update pill href with current sort & query
+                    const baseCatUrl = (pillCat && pillCat !== 'all') ? `/boutique/${pillCat}` : '/boutique';
+                    const params = new URLSearchParams();
+                    if (currentSort && currentSort !== 'popular') params.set('sort', currentSort);
+                    if (currentQ) params.set('q', currentQ);
+                    const queryString = params.toString();
+                    pill.href = queryString ? `${baseCatUrl}?${queryString}` : baseCatUrl;
+                });
+            }
+
+            // 5. Update Sort Dropdown Button & Options
+            if (sortCurrentLabel && sortLabels[currentSort]) {
+                sortCurrentLabel.textContent = sortLabels[currentSort];
+            }
+
+            const sortPanel = document.getElementById('sort-dropdown-panel');
+            if (sortPanel) {
+                sortPanel.querySelectorAll('.shop-sort-item').forEach(item => {
+                    const itemSort = item.dataset.sort;
+                    const checkIcon = item.querySelector('.sort-check-icon');
+                    if (itemSort === currentSort) {
+                        item.className = 'shop-sort-item flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all bg-pink-50 text-pink-600';
+                        if (checkIcon) checkIcon.classList.remove('hidden');
+                    } else {
+                        item.className = 'shop-sort-item flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all text-zinc-700 hover:bg-zinc-50 hover:text-black';
+                        if (checkIcon) checkIcon.classList.add('hidden');
+                    }
+
+                    // Update sort item href with current category & query
+                    const baseSortCatUrl = (currentCat && currentCat !== 'all') ? `/boutique/${currentCat}` : '/boutique';
+                    const params = new URLSearchParams();
+                    if (itemSort) params.set('sort', itemSort);
+                    if (currentQ) params.set('q', currentQ);
+                    const queryString = params.toString();
+                    item.href = queryString ? `${baseSortCatUrl}?${queryString}` : baseSortCatUrl;
+                });
+
+                sortPanel.classList.remove('opacity-100', 'visible');
+                sortPanel.classList.add('opacity-0', 'invisible');
+                if (sortDropdownChevron) sortDropdownChevron.classList.remove('rotate-180');
+            }
+
+            // 6. Update Search Banner if present
+            const searchBanner = document.getElementById('shop-search-banner');
+            const searchCount = document.getElementById('shop-search-count');
+            if (searchBanner && !currentQ) {
+                searchBanner.remove();
+            } else if (searchCount && data.count !== undefined) {
+                searchCount.textContent = `${data.count} résultat${data.count > 1 ? 's trouvés' : ' trouvé'}`;
+            }
+
+            // 7. Update browser history state
+            if (updateHistory) {
+                window.history.pushState({ url: targetUrl }, '', targetUrl);
+            }
+
+            // 8. Trigger scroll reveal on newly loaded items
+            shopGridContainer.querySelectorAll('.reveal-on-scroll').forEach(el => {
+                el.classList.add('is-revealed');
+            });
+
+        } catch (err) {
+            console.error('Boutique dynamic filter error:', err);
+            window.location.href = targetUrl;
+        } finally {
+            if (shopGridLoading) {
+                shopGridLoading.classList.remove('opacity-100', 'pointer-events-auto');
+                shopGridLoading.classList.add('opacity-0', 'pointer-events-none');
+            }
+            shopGridContainer.classList.remove('opacity-40');
+            isFilterFetching = false;
+        }
+    }
+
+    // Intercept clicks on category pills
+    if (shopCategoryPills) {
+        shopCategoryPills.addEventListener('click', (e) => {
+            const link = e.target.closest('a.shop-category-pill');
+            if (!link) return;
+            e.preventDefault();
+            applyShopFilter(link.href, true);
+        });
+    }
+
+    // Intercept clicks on sort dropdown items
+    if (sortDropdownPanel) {
+        sortDropdownPanel.addEventListener('click', (e) => {
+            const link = e.target.closest('a.shop-sort-item');
+            if (!link) return;
+            e.preventDefault();
+            applyShopFilter(link.href, true);
+        });
+    }
+
+    // Intercept clicks on clear search button
+    document.addEventListener('click', (e) => {
+        const clearBtn = e.target.closest('a.shop-clear-search-btn');
+        if (!clearBtn) return;
+        e.preventDefault();
+        applyShopFilter(clearBtn.href, true);
+    });
+
+    // Handle browser back/forward buttons
+    window.addEventListener('popstate', () => {
+        if (shopGridContainer) {
+            applyShopFilter(window.location.href, false);
+        }
+    });
 
     // =========================================================================
     // 6. Summer Discount Promo Popup Modal
