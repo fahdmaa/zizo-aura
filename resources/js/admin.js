@@ -1347,6 +1347,7 @@
                     </div>`;
 
                 // Handle Period Switcher select change & buttons
+                const container = document.getElementById('analytics-chart-container');
                 const periodSelect = document.getElementById('analytics-period-select');
                 if (periodSelect) {
                     periodSelect.addEventListener('change', (e) => {
