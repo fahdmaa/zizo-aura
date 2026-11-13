@@ -577,6 +577,15 @@ class ShopController extends Controller
         $sortBy = $request->query('sort', 'popular');
         $searchQuery = trim($request->query('q', ''));
 
+        // Sort allProducts according to sortBy for initial server render
+        if ($sortBy === 'price-asc') {
+            usort($allProducts, fn($a, $b) => $a['raw_price'] <=> $b['raw_price']);
+        } elseif ($sortBy === 'price-desc') {
+            usort($allProducts, fn($a, $b) => $b['raw_price'] <=> $a['raw_price']);
+        } elseif ($sortBy === 'rating') {
+            usort($allProducts, fn($a, $b) => $b['rating'] <=> $a['rating']);
+        }
+
         $products = $allProducts;
 
         // 1. Filter by Search Query if present
@@ -602,20 +611,17 @@ class ShopController extends Controller
             }));
         }
 
-        // 3. Sorting
-        if ($sortBy === 'price-asc') {
-            usort($products, fn($a, $b) => $a['raw_price'] <=> $b['raw_price']);
-        } elseif ($sortBy === 'price-desc') {
-            usort($products, fn($a, $b) => $b['raw_price'] <=> $a['raw_price']);
-        } elseif ($sortBy === 'rating') {
-            usort($products, fn($a, $b) => $b['rating'] <=> $a['rating']);
-        }
-
         $meta = self::categoryMeta($selectedCategory);
 
         if ($request->ajax() || $request->wantsJson()) {
             return response()->json([
-                'html' => view('shop.partials.product-grid', compact('products'))->render(),
+                'html' => view('shop.partials.product-grid', [
+                    'products' => $products,
+                    'allProducts' => $allProducts,
+                    'selectedCategory' => $selectedCategory,
+                    'sortBy' => $sortBy,
+                    'searchQuery' => $searchQuery,
+                ])->render(),
                 'count' => count($products),
                 'count_text' => count($products) . ' produit' . (count($products) > 1 ? 's' : ''),
                 'category' => $selectedCategory,
@@ -627,7 +633,7 @@ class ShopController extends Controller
             ]);
         }
 
-        return view('shop.index', compact('products', 'categories', 'selectedCategory', 'sortBy', 'searchQuery', 'meta'));
+        return view('shop.index', compact('products', 'allProducts', 'categories', 'selectedCategory', 'sortBy', 'searchQuery', 'meta'));
     }
 
     /**

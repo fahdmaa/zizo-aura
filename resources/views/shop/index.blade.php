@@ -293,17 +293,8 @@
             </div>
         @endif
 
-        <!-- Catalog Container with Grid & Loading State -->
+        <!-- Catalog Container with Grid -->
         <div id="shop-catalog-wrapper" class="relative min-h-[350px]">
-            <div id="shop-grid-loading" class="absolute inset-0 bg-white/70 backdrop-blur-[1px] z-30 flex items-center justify-center rounded-2xl opacity-0 pointer-events-none transition-opacity duration-200">
-                <div class="flex items-center gap-2.5 px-5 py-2.5 rounded-full bg-white shadow-xl border border-zinc-100 text-xs font-black uppercase tracking-wider text-black">
-                    <svg class="animate-spin h-4 w-4 text-pink-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
-                    </svg>
-                    <span>Chargement...</span>
-                </div>
-            </div>
             <div id="shop-grid-container">
                 @include('shop.partials.product-grid')
             </div>

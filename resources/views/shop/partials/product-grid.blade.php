@@ -1,7 +1,31 @@
 <!-- 4-Column Product Catalog Grid -->
 <div id="shop-product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-    @forelse($products as $product)
-        <div class="product-card reveal-on-scroll group flex flex-col bg-white rounded-2xl p-3.5 sm:p-4 border border-zinc-100 shadow-[0_2px_10px_rgba(0,0,0,0.03)] hover:shadow-[0_12px_30px_rgba(0,0,0,0.08)] transition-all duration-300"
+    @php
+        $catalogList = $allProducts ?? $products;
+    @endphp
+    @forelse($catalogList as $product)
+        @php
+            $isMatch = ($selectedCategory === 'all' || empty($selectedCategory) || ($product['category'] ?? '') === $selectedCategory);
+            if (!empty($searchQuery)) {
+                $qLower = mb_strtolower($searchQuery);
+                $searchable = mb_strtolower(
+                    ($product['name'] ?? '') . ' ' .
+                    ($product['subtitle'] ?? '') . ' ' .
+                    ($product['brand'] ?? '') . ' ' .
+                    ($product['category_label'] ?? '') . ' ' .
+                    ($product['description'] ?? '')
+                );
+                if (!str_contains($searchable, $qLower)) {
+                    $isMatch = false;
+                }
+            }
+        @endphp
+        <div class="product-card reveal-on-scroll is-revealed group flex flex-col bg-white rounded-2xl p-3.5 sm:p-4 border border-zinc-100 shadow-[0_2px_10px_rgba(0,0,0,0.03)] hover:shadow-[0_12px_30px_rgba(0,0,0,0.08)] transition-all duration-300 {{ $isMatch ? '' : 'hidden' }}"
+             data-product-category="{{ $product['category'] ?? '' }}"
+             data-product-price="{{ $product['raw_price'] ?? 0 }}"
+             data-product-rating="{{ $product['rating'] ?? 5 }}"
+             data-product-order="{{ $loop->index }}"
+             data-product-search="{{ strtolower(($product['name'] ?? '') . ' ' . ($product['subtitle'] ?? '') . ' ' . ($product['brand'] ?? '') . ' ' . ($product['category_label'] ?? '')) }}"
              style="transition-delay: {{ ($loop->index % 4) * 80 }}ms;">
             
             <!-- Product Image Box linking to Product Subpage -->
@@ -104,9 +128,11 @@
 
         </div>
     @empty
-        <div class="col-span-full py-16 text-center text-zinc-400">
-            <i class="uil uil-box text-4xl mb-3 block"></i>
-            <p class="text-sm font-semibold">Aucun produit trouvé dans cette catégorie.</p>
-        </div>
     @endforelse
+
+    <!-- Empty State -->
+    <div id="shop-empty-state" class="col-span-full py-16 text-center text-zinc-400 {{ count($products) === 0 ? '' : 'hidden' }}">
+        <i class="uil uil-box text-4xl mb-3 block"></i>
+        <p class="text-sm font-semibold">Aucun produit trouvé dans cette catégorie.</p>
+    </div>
 </div>

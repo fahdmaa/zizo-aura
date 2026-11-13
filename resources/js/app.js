@@ -1189,15 +1189,49 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // =========================================================================
-    // 5b. Boutique Catalog Dynamic Filtering (AJAX Without Full Page Reload)
+    // 5b. Boutique Catalog Dynamic Filtering (100% Instant Client-Side)
     // =========================================================================
     const shopCategoryPills = document.getElementById('shop-category-pills');
     const shopGridContainer = document.getElementById('shop-grid-container');
-    const shopGridLoading = document.getElementById('shop-grid-loading');
+    const shopProductGrid = document.getElementById('shop-product-grid');
     const shopProductCount = document.getElementById('shop-product-count');
     const shopSeoHeading = document.getElementById('shop-seo-heading');
     const shopSeoIntro = document.getElementById('shop-seo-intro');
     const sortCurrentLabel = document.getElementById('sort-current-label');
+    const sortDropdownPanelEl = document.getElementById('sort-dropdown-panel');
+
+    const shopCategoryMeta = {
+        'all': {
+            heading: "Nos Formules, Coffrets & Brumes d'Exception",
+            intro: "Découvrez nos brumes Cheirosa emblématiques, coffrets cadeaux Rituals, brumes Victoria's Secret et soins The Ordinary formulés pour sublimer chaque routine.",
+            title: "Boutique Cosmétiques & Parfums Maroc | Zizo Aura",
+        },
+        'rituals': {
+            heading: "Coffrets Cadeaux Rituals Maroc",
+            intro: "Explorez notre collection exclusive de coffrets cadeaux Rituals au Maroc. Mousse de douche onctueuse, gommages exfoliants et crèmes hydratantes aux senteurs iconiques. 100% Originaux avec livraison 24-48h et paiement à la livraison.",
+            title: "Coffrets Rituals Maroc — Sakura, Ayurveda & Karma en DH",
+        },
+        'sol-de-janeiro': {
+            heading: "Brumes & Soins Sol de Janeiro Maroc",
+            intro: "Sublimez votre sillage avec les brumes parfumées iconiques Sol de Janeiro Cheirosa au Maroc. Des notes gourmandes et solaires irrésistibles. 100% Authentiques, livraison 24-48h partout au Royaume.",
+            title: "Sol de Janeiro Maroc — Brumes Cheirosa 62, 68 & 59",
+        },
+        'victorias-secret': {
+            heading: "Brumes Parfumées Victoria's Secret Maroc (En Promotion)",
+            intro: "Profitez de notre offre spéciale sur les brumes corporelles 250ml Victoria's Secret au Maroc : 240 DH au lieu de 280 DH. Parfums irrésistibles, formules originales et livraison express 24-48h dans toutes les villes.",
+            title: "Brumes Victoria's Secret Maroc — Bare Vanilla (240 DH)",
+        },
+        'the-ordinary': {
+            heading: "Sérums & Soins The Ordinary Maroc (100% Authentiques)",
+            intro: "Traitements dermatologiques ultra-ciblés The Ordinary au Maroc. Corrigez les imperfections et sublimez l'éclat de votre peau avec nos formules certifiées 100% originales importées.",
+            title: "The Ordinary Maroc — Sérum Niacinamide & Acide Glycolique",
+        },
+        'garden-bouquet': {
+            heading: "Coffrets Cadeaux Garden Bouquet Maroc",
+            intro: "Craquez pour la fraîcheur florale des coffrets cadeaux Garden Bouquet. Une idée cadeau raffinée et accessible avec livraison express 24-48h partout au Maroc.",
+            title: "Coffret Garden Bouquet Maroc — Soins & Bain (120 DH)",
+        },
+    };
 
     const sortLabels = {
         'popular': 'Popularité',
@@ -1206,174 +1240,199 @@ document.addEventListener('DOMContentLoaded', () => {
         'price-desc': 'Prix décroissant',
     };
 
-    let isFilterFetching = false;
-
-    async function applyShopFilter(targetUrl, updateHistory = true) {
-        if (!shopGridContainer || isFilterFetching) return;
-        isFilterFetching = true;
-
-        if (shopGridLoading) {
-            shopGridLoading.classList.remove('opacity-0', 'pointer-events-none');
-            shopGridLoading.classList.add('opacity-100', 'pointer-events-auto');
-        }
-        shopGridContainer.classList.add('opacity-40', 'transition-opacity', 'duration-200');
-
+    // Determine initial state from current URL
+    function parseShopUrl(urlStr) {
         try {
-            const response = await fetch(targetUrl, {
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'Accept': 'application/json',
-                }
-            });
-
-            if (!response.ok) {
-                window.location.href = targetUrl;
-                return;
+            const url = new URL(urlStr, window.location.origin);
+            const pathname = url.pathname.replace(/\/+$/, '');
+            let category = 'all';
+            const catMatch = pathname.match(/\/boutique\/([a-z0-9-]+)/i);
+            if (catMatch && catMatch[1]) {
+                category = catMatch[1];
             }
-
-            const data = await response.json();
-
-            // 1. Update Grid Content
-            if (data.html !== undefined) {
-                shopGridContainer.innerHTML = data.html;
-            }
-
-            // 2. Update Product Count
-            if (shopProductCount && data.count_text) {
-                shopProductCount.textContent = data.count_text;
-            }
-
-            // 3. Update Heading, Intro & Title
-            if (shopSeoHeading && data.heading) {
-                shopSeoHeading.textContent = data.heading;
-            }
-            if (shopSeoIntro && data.intro) {
-                shopSeoIntro.textContent = data.intro;
-            }
-            if (data.page_title) {
-                document.title = data.page_title;
-            }
-
-            // 4. Update Category Pills Active State & Target URLs
-            const currentCat = data.category || 'all';
-            const currentSort = data.sort || 'popular';
-            const currentQ = data.search_query || '';
-
-            if (shopCategoryPills) {
-                shopCategoryPills.querySelectorAll('.shop-category-pill').forEach(pill => {
-                    const pillCat = pill.dataset.category;
-                    if (pillCat === currentCat) {
-                        pill.className = 'shop-category-pill px-5 py-2 rounded-full text-xs font-extrabold uppercase tracking-wider whitespace-nowrap transition-all duration-200 shrink-0 bg-black text-white shadow-md';
-                    } else {
-                        pill.className = 'shop-category-pill px-5 py-2 rounded-full text-xs font-extrabold uppercase tracking-wider whitespace-nowrap transition-all duration-200 shrink-0 bg-zinc-100 text-zinc-700 hover:bg-zinc-200 active:scale-95';
-                    }
-
-                    // Update pill href with current sort & query
-                    const baseCatUrl = (pillCat && pillCat !== 'all') ? `/boutique/${pillCat}` : '/boutique';
-                    const params = new URLSearchParams();
-                    if (currentSort && currentSort !== 'popular') params.set('sort', currentSort);
-                    if (currentQ) params.set('q', currentQ);
-                    const queryString = params.toString();
-                    pill.href = queryString ? `${baseCatUrl}?${queryString}` : baseCatUrl;
-                });
-            }
-
-            // 5. Update Sort Dropdown Button & Options
-            if (sortCurrentLabel && sortLabels[currentSort]) {
-                sortCurrentLabel.textContent = sortLabels[currentSort];
-            }
-
-            const sortPanel = document.getElementById('sort-dropdown-panel');
-            if (sortPanel) {
-                sortPanel.querySelectorAll('.shop-sort-item').forEach(item => {
-                    const itemSort = item.dataset.sort;
-                    const checkIcon = item.querySelector('.sort-check-icon');
-                    if (itemSort === currentSort) {
-                        item.className = 'shop-sort-item flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all bg-pink-50 text-pink-600';
-                        if (checkIcon) checkIcon.classList.remove('hidden');
-                    } else {
-                        item.className = 'shop-sort-item flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all text-zinc-700 hover:bg-zinc-50 hover:text-black';
-                        if (checkIcon) checkIcon.classList.add('hidden');
-                    }
-
-                    // Update sort item href with current category & query
-                    const baseSortCatUrl = (currentCat && currentCat !== 'all') ? `/boutique/${currentCat}` : '/boutique';
-                    const params = new URLSearchParams();
-                    if (itemSort) params.set('sort', itemSort);
-                    if (currentQ) params.set('q', currentQ);
-                    const queryString = params.toString();
-                    item.href = queryString ? `${baseSortCatUrl}?${queryString}` : baseSortCatUrl;
-                });
-
-                sortPanel.classList.remove('opacity-100', 'visible');
-                sortPanel.classList.add('opacity-0', 'invisible');
-                if (sortDropdownChevron) sortDropdownChevron.classList.remove('rotate-180');
-            }
-
-            // 6. Update Search Banner if present
-            const searchBanner = document.getElementById('shop-search-banner');
-            const searchCount = document.getElementById('shop-search-count');
-            if (searchBanner && !currentQ) {
-                searchBanner.remove();
-            } else if (searchCount && data.count !== undefined) {
-                searchCount.textContent = `${data.count} résultat${data.count > 1 ? 's trouvés' : ' trouvé'}`;
-            }
-
-            // 7. Update browser history state
-            if (updateHistory) {
-                window.history.pushState({ url: targetUrl }, '', targetUrl);
-            }
-
-            // 8. Trigger scroll reveal on newly loaded items
-            shopGridContainer.querySelectorAll('.reveal-on-scroll').forEach(el => {
-                el.classList.add('is-revealed');
-            });
-
-        } catch (err) {
-            console.error('Boutique dynamic filter error:', err);
-            window.location.href = targetUrl;
-        } finally {
-            if (shopGridLoading) {
-                shopGridLoading.classList.remove('opacity-100', 'pointer-events-auto');
-                shopGridLoading.classList.add('opacity-0', 'pointer-events-none');
-            }
-            shopGridContainer.classList.remove('opacity-40');
-            isFilterFetching = false;
+            const sort = url.searchParams.get('sort') || 'popular';
+            const query = url.searchParams.get('q') || '';
+            return { category, sort, query, url: url.pathname + url.search };
+        } catch {
+            return { category: 'all', sort: 'popular', query: '', url: urlStr };
         }
     }
 
-    // Intercept clicks on category pills
+    let currentShopState = parseShopUrl(window.location.href);
+
+    function applyShopFilterInstant(category, sort, searchQuery, newUrl = null, updateHistory = true) {
+        if (!shopProductGrid) return;
+
+        currentShopState.category = category || 'all';
+        currentShopState.sort = sort || 'popular';
+        currentShopState.query = searchQuery !== undefined ? searchQuery : currentShopState.query;
+
+        const cards = Array.from(shopProductGrid.querySelectorAll('.product-card'));
+        const emptyState = document.getElementById('shop-empty-state');
+        const qLower = (currentShopState.query || '').trim().toLowerCase();
+
+        // 1. Instant Category & Search Filter
+        let visibleCount = 0;
+        cards.forEach(card => {
+            const cardCat = card.dataset.productCategory || '';
+            const cardSearch = card.dataset.productSearch || '';
+            const matchesCategory = (currentShopState.category === 'all' || !currentShopState.category || cardCat === currentShopState.category);
+            const matchesSearch = (!qLower || cardSearch.includes(qLower));
+
+            if (matchesCategory && matchesSearch) {
+                card.classList.remove('hidden');
+                card.classList.add('flex', 'is-revealed');
+                visibleCount++;
+            } else {
+                card.classList.add('hidden');
+                card.classList.remove('flex');
+            }
+        });
+
+        // 2. Empty State Toggle
+        if (emptyState) {
+            if (visibleCount === 0) {
+                emptyState.classList.remove('hidden');
+            } else {
+                emptyState.classList.add('hidden');
+            }
+        }
+
+        // 3. Instant Sorting (in-place DOM re-append)
+        cards.sort((a, b) => {
+            if (currentShopState.sort === 'price-asc') {
+                return (parseFloat(a.dataset.productPrice) || 0) - (parseFloat(b.dataset.productPrice) || 0);
+            }
+            if (currentShopState.sort === 'price-desc') {
+                return (parseFloat(b.dataset.productPrice) || 0) - (parseFloat(a.dataset.productPrice) || 0);
+            }
+            if (currentShopState.sort === 'rating') {
+                return (parseFloat(b.dataset.productRating) || 0) - (parseFloat(a.dataset.productRating) || 0);
+            }
+            return (parseInt(a.dataset.productOrder, 10) || 0) - (parseInt(b.dataset.productOrder, 10) || 0);
+        });
+        cards.forEach(card => shopProductGrid.appendChild(card));
+        if (emptyState) shopProductGrid.appendChild(emptyState);
+
+        // 4. Instant Count Update
+        if (shopProductCount) {
+            shopProductCount.textContent = `${visibleCount} produit${visibleCount > 1 ? 's' : ''}`;
+        }
+
+        // 5. Instant SEO Heading, Intro & Page Title Update
+        const meta = shopCategoryMeta[currentShopState.category] || shopCategoryMeta['all'];
+        if (shopSeoHeading && meta.heading) shopSeoHeading.textContent = meta.heading;
+        if (shopSeoIntro && meta.intro) shopSeoIntro.textContent = meta.intro;
+        if (meta.title) document.title = meta.title;
+
+        // 6. Instant Category Pills Active State & Dynamic URLs
+        if (shopCategoryPills) {
+            shopCategoryPills.querySelectorAll('.shop-category-pill').forEach(pill => {
+                const pillCat = pill.dataset.category;
+                if (pillCat === currentShopState.category) {
+                    pill.className = 'shop-category-pill px-5 py-2 rounded-full text-xs font-extrabold uppercase tracking-wider whitespace-nowrap transition-all duration-200 shrink-0 bg-black text-white shadow-md';
+                } else {
+                    pill.className = 'shop-category-pill px-5 py-2 rounded-full text-xs font-extrabold uppercase tracking-wider whitespace-nowrap transition-all duration-200 shrink-0 bg-zinc-100 text-zinc-700 hover:bg-zinc-200 active:scale-95';
+                }
+
+                const baseCatUrl = (pillCat && pillCat !== 'all') ? `/boutique/${pillCat}` : '/boutique';
+                const params = new URLSearchParams();
+                if (currentShopState.sort && currentShopState.sort !== 'popular') params.set('sort', currentShopState.sort);
+                if (currentShopState.query) params.set('q', currentShopState.query);
+                const qs = params.toString();
+                pill.href = qs ? `${baseCatUrl}?${qs}` : baseCatUrl;
+            });
+        }
+
+        // 7. Instant Sort Dropdown Button Label & Checkmarks
+        if (sortCurrentLabel && sortLabels[currentShopState.sort]) {
+            sortCurrentLabel.textContent = sortLabels[currentShopState.sort];
+        }
+
+        if (sortDropdownPanelEl) {
+            sortDropdownPanelEl.querySelectorAll('.shop-sort-item').forEach(item => {
+                const itemSort = item.dataset.sort;
+                const checkIcon = item.querySelector('.sort-check-icon');
+                if (itemSort === currentShopState.sort) {
+                    item.className = 'shop-sort-item flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all bg-pink-50 text-pink-600';
+                    if (checkIcon) checkIcon.classList.remove('hidden');
+                } else {
+                    item.className = 'shop-sort-item flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all text-zinc-700 hover:bg-zinc-50 hover:text-black';
+                    if (checkIcon) checkIcon.classList.add('hidden');
+                }
+
+                const baseSortCatUrl = (currentShopState.category && currentShopState.category !== 'all') ? `/boutique/${currentShopState.category}` : '/boutique';
+                const params = new URLSearchParams();
+                if (itemSort) params.set('sort', itemSort);
+                if (currentShopState.query) params.set('q', currentShopState.query);
+                const qs = params.toString();
+                item.href = qs ? `${baseSortCatUrl}?${qs}` : baseSortCatUrl;
+            });
+
+            // Close dropdown
+            sortDropdownPanelEl.classList.remove('opacity-100', 'visible');
+            sortDropdownPanelEl.classList.add('opacity-0', 'invisible');
+            if (sortDropdownChevron) sortDropdownChevron.classList.remove('rotate-180');
+        }
+
+        // 8. Search Banner Count Update
+        const searchCount = document.getElementById('shop-search-count');
+        if (searchCount) {
+            searchCount.textContent = `${visibleCount} résultat${visibleCount > 1 ? 's trouvés' : ' trouvé'}`;
+        }
+
+        // 9. Update History State
+        const targetUrl = newUrl || (() => {
+            const base = (currentShopState.category && currentShopState.category !== 'all') ? `/boutique/${currentShopState.category}` : '/boutique';
+            const params = new URLSearchParams();
+            if (currentShopState.sort && currentShopState.sort !== 'popular') params.set('sort', currentShopState.sort);
+            if (currentShopState.query) params.set('q', currentShopState.query);
+            const qs = params.toString();
+            return qs ? `${base}?${qs}` : base;
+        })();
+
+        if (updateHistory) {
+            window.history.pushState({ ...currentShopState, url: targetUrl }, '', targetUrl);
+        }
+    }
+
+    // Intercept clicks on category pills -> INSTANT
     if (shopCategoryPills) {
         shopCategoryPills.addEventListener('click', (e) => {
             const link = e.target.closest('a.shop-category-pill');
             if (!link) return;
             e.preventDefault();
-            applyShopFilter(link.href, true);
+            const targetCat = link.dataset.category || 'all';
+            applyShopFilterInstant(targetCat, currentShopState.sort, currentShopState.query, link.href, true);
         });
     }
 
-    // Intercept clicks on sort dropdown items
-    if (sortDropdownPanel) {
-        sortDropdownPanel.addEventListener('click', (e) => {
+    // Intercept clicks on sort dropdown options -> INSTANT
+    if (sortDropdownPanelEl) {
+        sortDropdownPanelEl.addEventListener('click', (e) => {
             const link = e.target.closest('a.shop-sort-item');
             if (!link) return;
             e.preventDefault();
-            applyShopFilter(link.href, true);
+            const targetSort = link.dataset.sort || 'popular';
+            applyShopFilterInstant(currentShopState.category, targetSort, currentShopState.query, link.href, true);
         });
     }
 
-    // Intercept clicks on clear search button
+    // Intercept clear search button -> INSTANT
     document.addEventListener('click', (e) => {
         const clearBtn = e.target.closest('a.shop-clear-search-btn');
         if (!clearBtn) return;
         e.preventDefault();
-        applyShopFilter(clearBtn.href, true);
+        const searchBanner = document.getElementById('shop-search-banner');
+        if (searchBanner) searchBanner.remove();
+        applyShopFilterInstant(currentShopState.category, currentShopState.sort, '', clearBtn.href, true);
     });
 
-    // Handle browser back/forward buttons
+    // Handle browser back/forward buttons -> INSTANT
     window.addEventListener('popstate', () => {
-        if (shopGridContainer) {
-            applyShopFilter(window.location.href, false);
+        if (shopProductGrid) {
+            const state = parseShopUrl(window.location.href);
+            applyShopFilterInstant(state.category, state.sort, state.query, null, false);
         }
     });
 
